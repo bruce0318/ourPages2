@@ -30,6 +30,13 @@ html, body{
   font-family: 'STZHONGS', 'TIMES', monospace;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
 
 #m1_home .heading h1 {
   font-size: 4rem; 
@@ -69,7 +76,11 @@ html, body{
   line-height: 1.6;
 }
 
-/* 如果想同时调整按钮文字 */
+
 #about .message-box .sim-btn span {
   font-size: 1rem;      /* 比如原来 14px，现在约等于 16px */
+}
+
+#hobby {
+  min-height: calc(100vh - 80px);
 }
