@@ -28,7 +28,7 @@
     // 加载面数据（cycle1）
     async function loadPolygonData() {
       try {
-        const response = await fetch('http://localhost:3000/cycle1');
+        const response = await fetch('http://47.110.54.187:3000/cycle1');
         const geojson = await response.json();
 
         geojson.features.forEach(feature => {
@@ -57,7 +57,7 @@
 
     async function loadPointsData() {
     try {
-        const response = await fetch('http://localhost:3000/cycle1_points');
+        const response = await fetch('http://47.110.54.187:3000/cycle1_points');
         const geojson = await response.json();
 
         geojson.features.forEach(feature => {
