@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>GeoJSON 数据展示</title>
+  <style>
+    #container {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+
+  <!-- 高德地图 API -->
+  <script src="https://webapi.amap.com/maps?v=2.0&key=3e2e653db491e066d4d488ff8e7e7ba6"></script>
+
+  <script>
+    // 初始化地图
+    const map = new AMap.Map('container', {
+      zoom: 13,
+      center: [114.312151, 30.564019] // 北京中心点坐标
+    });
+
+    // 加载面数据（cycle1）
+    async function loadPolygonData() {
+      try {
+        const response = await fetch('http://localhost:3000/cycle1');
+        const geojson = await response.json();
+
+        geojson.features.forEach(feature => {
+          // 线数据需要处理 LineString 或 MultiLineString
+          const coordinates = feature.geometry.type === 'MultiLineString' ?
+            feature.geometry.coordinates.flat() :
+            feature.geometry.coordinates;
+
+          const path = coordinates.map(
+            coord => new AMap.LngLat(coord[0], coord[1])
+          );
+
+          // 使用 Polyline 替代 Polygon
+          new AMap.Polyline({
+            path: path,
+            strokeColor: "#1890FF",  // 更改为适合线条的颜色
+            strokeWeight: 3,         // 线宽
+            strokeOpacity: 0.8,      // 线透明度
+            lineJoin: 'round'        // 线条连接样式
+          }).setMap(map);
+        });
+      } catch (error) {
+        console.error('加载线数据失败:', error);
+      }
+    }
+
+    async function loadPointsData() {
+    try {
+        const response = await fetch('http://localhost:3000/cycle1_points');
+        const geojson = await response.json();
+
+        geojson.features.forEach(feature => {
+            const [lng, lat] = feature.geometry.coordinates;
+            
+            // 创建圆形点标记
+            new AMap.Marker({
+                position: new AMap.LngLat(lng, lat),
+                title: feature.properties.name || '未命名点',
+                icon: new AMap.Icon({
+                    image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSI4Ij48Y2lyY2xlIGN4PSI0IiBjeT0iNCIgcj0iNCIgZmlsbD0iI0ZGMzMzMyIvPjwvc3ZnPg==', // 红色圆点
+                    size: [2, 2],     // 图标尺寸
+                    anchor: [1, 1]    // 图标锚点（居中）
+                }),
+                map: map
+            });
+        });
+    } catch (error) {
+        console.error('加载点数据失败:', error);
+    }
+}
+
+    // 页面加载完成后执行
+    window.onload = () => {
+      loadPolygonData();
+      loadPointsData();
+    };
+  </script>
+</body>
+
+</html>

@@ -2522,3 +2522,10 @@ select.mobile-device {
   margin: 0;           /* 去掉原来的 margin */
   height: auto;        /* 让高度自适应 */
 }
+
+.map-container {
+    border: 2px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
