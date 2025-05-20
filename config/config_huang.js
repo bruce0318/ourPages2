@@ -1,0 +1,1 @@
+const TDT_KEY = "c696a63eb65a93f18f23a897c28f20b6";
