@@ -15,15 +15,16 @@
 <body>
   <div id="container"></div>
 
-  <!-- 高德地图 API -->
-  <script src="https://webapi.amap.com/maps?v=2.0&key=3e2e653db491e066d4d488ff8e7e7ba6"></script>
+  <!-- 天地图 API -->
+  <script src="http://api.tianditu.gov.cn/api?v=4.0&tk=69f309a12fd1846d772c35a6d250e1d6"></script>
 
   <script>
     // 初始化地图
-    const map = new AMap.Map('container', {
-      zoom: 13,
-      center: [114.312151, 30.564019] // 北京中心点坐标
+    // 初始化天地图
+    const map = new T.Map('container', {
+      projection: "EPSG:4326" // 使用WGS84坐标系
     });
+    map.centerAndZoom(new T.LngLat(114.312151, 30.564019), 13);
 
     // 加载面数据（cycle1）
     async function loadPolygonData() {
@@ -42,13 +43,12 @@
           );
 
           // 使用 Polyline 替代 Polygon
-          new AMap.Polyline({
-            path: path,
-            strokeColor: "#1890FF",  // 更改为适合线条的颜色
-            strokeWeight: 3,         // 线宽
-            strokeOpacity: 0.8,      // 线透明度
-            lineJoin: 'round'        // 线条连接样式
-          }).setMap(map);
+          // Polyline 改为 T.Polyline
+          new T.Polyline(coordinates, {
+            strokeColor: "#1890FF",
+            strokeWeight: 3,
+            strokeOpacity: 0.8
+          }).addTo(map);
         });
       } catch (error) {
         console.error('加载线数据失败:', error);
@@ -56,29 +56,26 @@
     }
 
     async function loadPointsData() {
-    try {
+      try {
         const response = await fetch('http://47.110.54.187:3000/cycle1_points');
         const geojson = await response.json();
 
         geojson.features.forEach(feature => {
-            const [lng, lat] = feature.geometry.coordinates;
-            
-            // 创建圆形点标记
-            new AMap.Marker({
-                position: new AMap.LngLat(lng, lat),
-                title: feature.properties.name || '未命名点',
-                icon: new AMap.Icon({
-                    image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSI4Ij48Y2lyY2xlIGN4PSI0IiBjeT0iNCIgcj0iNCIgZmlsbD0iI0ZGMzMzMyIvPjwvc3ZnPg==', // 红色圆点
-                    size: [2, 2],     // 图标尺寸
-                    anchor: [1, 1]    // 图标锚点（居中）
-                }),
-                map: map
-            });
+          const [lng, lat] = feature.geometry.coordinates;
+
+          // 创建圆形点标记
+          new T.Marker(new T.LngLat(lng, lat), {
+            title: feature.properties.name || '未命名点',
+            icon: new T.Icon({
+              iconUrl: 'data:image/svg...', // 保持原有base64
+              iconSize: [8, 8]
+            })
+          }).addTo(map);
         });
-    } catch (error) {
+      } catch (error) {
         console.error('加载点数据失败:', error);
+      }
     }
-}
 
     // 页面加载完成后执行
     window.onload = () => {
