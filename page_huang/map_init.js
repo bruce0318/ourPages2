@@ -26,8 +26,8 @@ var map = L.map('map', {
 L.control.scale().addTo(map);
 
 // 添加 GeoServer 图层
-var wmsLayer = L.tileLayer.wms('http://localhost:8080/geoserver/maritimeday/wms', {
-    layers: 'maritimeday:footprints2',
+var wmsLayer = L.tileLayer.wms('http://47.110.54.187:8888//geoserver/maritimeday/wms', {
+    layers: 'maritimeday:huang_footprints',
     format: 'image/png',
     transparent: true,
     attribution: "成员足迹图层"

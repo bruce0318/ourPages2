@@ -29,9 +29,9 @@ app.post('/api/contact', async (req, res) => {
     secure: true,       // 465 要 true
     auth: {
       user: 'connor_rk800@163.com',
-      pass: 'YKg7vuK8hLWpMXw3'  // 你在 163 开启 SMTP 时拿到的授权码
+      pass: 'YKg7vuK8hLWpMXw3'  // 在 163 开启 SMTP 时拿到的授权码
     }
-    // 如果你跑 587，可以这样：
+    // 如果跑 587，可以这样：
     // port: 587,
     // secure: false,
     // tls: { rejectUnauthorized: false }
@@ -55,4 +55,4 @@ app.post('/api/contact', async (req, res) => {
 
 // 3. 启动
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on http://47.110.54.187:${PORT}`));

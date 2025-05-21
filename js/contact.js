@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      const resp = await fetch('http://localhost:3000/api/contact', {
+      const resp = await fetch('http://47.110.54.187:3000/api/contact', {
         method:  'POST',
         headers: {
-          'Content-Type': 'application/json'    // ← 一定要加上
+          'Content-Type': 'application/json'    
         },
         body: JSON.stringify(payload)
       });
