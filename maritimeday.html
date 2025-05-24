@@ -21,11 +21,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Site CSS -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="Huang_Style.css">
     <!-- Responsive CSS -->
     <link rel="stylesheet" href="css/responsive.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/custom.css">
+
 	<script src="js/modernizr.js"></script> <!-- Modernizr -->
     <!--Home CSS-->
     <link rel="stylesheet" href="css/maritimeday.css">
@@ -39,11 +38,28 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+    <!-- Leaflet Fullscreen 控件 -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
+    <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
+
+    <!-- Leaflet MiniMap（小地图） -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.css" />
+    <script src="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
+
+    <!-- Leaflet Zoomslider -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-zoomslider/dist/L.Control.Zoomslider.css" />
+    <script src="https://unpkg.com/leaflet-control-zoomslider/dist/L.Control.Zoomslider.js"></script>
+
+    <!-- Leaflet.markercluster -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
 </head>
+
 <body id="page-top" class="politics_version">
     <!--引入常量-->
     <script src="config/config_huang.js"></script>
-
     <!-- LOADER -->
     <div id="preloader">
         <div id="main-ld">
@@ -81,6 +97,9 @@
             </li>
 			<li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#hobby">Hobby</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#friendlink">Links</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#Contact">Contact</a>
@@ -153,19 +172,16 @@
         </div><!-- end container -->
     </div><!-- end section -->
 	
-
     <div id="map-section" class="section wb">
       <div class="container">
         <div class="section-title text-left">
           <h3>我的足迹地图</h3>
           <p>在这里你可以看到我去过的城市。</p>
         </div><!-- end title -->
+            <div id="map" style="width: 100%; height: 600px;"></div>
+        <script src="page_huang/map_init.js"></script>
       </div><!-- end container -->
     </div><!-- end section -->
-
-    <div id="map" style="width: 100%; height: 600px;"></div>
-
-    <script src="page_huang/map_init.js"></script>
 
 
 
@@ -257,13 +273,13 @@
 
         <!-- 分类按钮 -->
         <div class="gallery-menu row">
-        <div class="col-md-12">
-            <div class="button-group filter-button-group text-left">
-            <button class="active" data-filter="*">全部</button>
-            <button data-filter=".gal_gis">GIS 可视化</button>
-            <button data-filter=".gal_web">桌面游戏开发</button>
-            <button data-filter=".gal_app">Android 应用</button>
-            <button data-filter=".gal_art">数字插画</button>
+        <div class="col-12">
+            <div class="filter-button-group">
+            <button type="button" class="btn active" data-filter="*">全部</button>
+            <button type="button" class="btn" data-filter=".gal_gis">GIS 可视化</button>
+            <button type="button" class="btn" data-filter=".gal_web">桌面游戏开发</button>
+            <button type="button" class="btn" data-filter=".gal_app">Android 应用</button>
+            <button type="button" class="btn" data-filter=".gal_art">数字插画</button>
             </div>
         </div>
         </div>
@@ -452,22 +468,81 @@
                     </div>
                 </div>
 
-
             </div>
 
 		</div>
 	</div>
 
 
+    <div id="friendlink" class="section lb">
+        <div class="container">
+            <div class="section-title text-left">
+                <h3>友情链接</h3>
+                <p>一键跳转其他小组成员。
+                </p>
+            </div><!-- end title -->
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="testi-carousel owl-carousel owl-theme">
+                        <div class="testimonial clearfix">
+                            <div class="desc">
+                                <h3><i class="fa fa-quote-left"></i> M78神秘使者</h3>
+                                <p class="lead">M78外星人混入该小组，没什么想说的，可点进我的主页详细观摩。</p>
+                            </div>
+                            <div class="testi-meta">
+                                <img src="images/gao/gao.jpg" alt="" class="img-fluid alignleft">
+                                <h4>高家垚 <small>- 组员</small></h4>
+                            </div>
+                            <div class="text" style="margin-top: 20px;height: 40px;">
+                                <a href="gao.html" class="perIntro">个人主页</a>
+                            </div>
+                            <!-- end testi-meta -->
+                        </div>
+                        <!-- end testimonial -->
+
+                        <div class="testimonial clearfix">
+                            <div class="desc">
+                                <h3><i class="fa fa-quote-left"></i> 我是奶龙</h3>
+                                <p class="lead">今夜星光闪闪，我爱你的心满满。欢迎点进奶龙的主页欣赏。</p>
+                            </div>
+                            <div class="testi-meta">
+                                <img src="images/he/Nailong.png" alt="" class="img-fluid alignleft">
+                                <h4>何灿非 <small>- 组员</small></h4>
+                            </div>
+                            <div class="text" style="margin-top: 20px;height: 40px;">
+                                <a href="he.html" class="perIntro">个人主页</a>
+                            </div>
+                            <!-- end testi-meta -->
+                        </div>
+
+                        <div class="testimonial clearfix">
+                            <div class="desc">
+                                <h3><i class="fa fa-quote-left"></i>欢迎~</h3>
+                                <p class="lead">热爱生活 </p>
+                            </div>
+                            <div class="testi-meta">
+                                <img src="images/cui/tsumugi.jpg" alt="" class="img-fluid alignleft" style="border-radius: 50%;">
+                                <h4>崔泽铭 <small>- 组员</small></h4>
+                            </div>
+                            <div class="text" style="margin-top: 20px;height: 40px;">
+                                <a href="cui.html" class="perIntro">个人主页</a>
+                            </div>
+                            <!-- end testi-meta -->
+                        </div><!-- end testimonial -->
+                    </div><!-- end carousel -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </div><!-- end section -->
 
 
      <div id="contact" class="section db">
         <div class="container">
             <div class="section-title text-left">
                 <h3>留言</h3>
-                <p>有什么想说的可以发给我！我在后台会收到你的留言信息！
+                <p>有什么想说的可以发给我！我在后台会收到你的留言信息！(真的能收到)
                     我的邮箱是connor_rk800@163.com。
-                </p>
                 </p>
             </div><!-- end title -->
 
@@ -479,29 +554,29 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input class="form-control" id="name" type="text" placeholder="Your Name"
+                                        <input class="form-control" id="name" type="text" placeholder="称呼"
                                             required="required"
-                                            data-validation-required-message="Please enter your name.">
+                                            data-validation-required-message="请输入你的称呼。">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div class="form-group">
-                                        <input class="form-control" id="email" type="email" placeholder="Your Email"
+                                        <input class="form-control" id="email" type="email" placeholder="邮箱"
                                             required="required"
-                                            data-validation-required-message="Please enter your email address.">
+                                            data-validation-required-message="请输入你的邮箱地址。">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                     <div class="form-group">
-                                        <input class="form-control" id="phone" type="tel" placeholder="Your Phone"
+                                        <input class="form-control" id="phone" type="tel" placeholder="电话号码"
                                             required="required"
-                                            data-validation-required-message="Please enter your phone number.">
+                                            data-validation-required-message="请输入电话号码。">
                                         <p class="help-block text-danger"></p>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <textarea class="form-control" id="userMessage" placeholder="Your Message"
+                                        <textarea class="form-control" id="userMessage" placeholder="留言内容"
                                             required="required"
-                                            data-validation-required-message="Please enter a message."></textarea>
+                                            data-validation-required-message="请输入信息。"></textarea>
                                         <p class="help-block text-danger"></p>
                                     </div>
                                 </div>
@@ -519,12 +594,21 @@
         </div><!-- end container -->
     </div><!-- end section -->
 
+
+
+
     <div class="copyrights">
         <div class="container">
             <div class="footer-distributed">
                 <div class="footer-left">
                     <p class="footer-links">
                         <a href="#">Home</a>
+                        <a href="#about">About Me</a>
+                        <a href="#map-section">Map</a>
+                        <a href="#skills">Skills</a>
+                        <a href="#portfolio">Portfolio</a>
+                        <a href="#hobby">Hobby</a>
+                        <a href="#friendlink">Links</a>
                         <a href="#contact">Contact</a>
                     </p>
                     <p class="footer-company-name">Copyright &copy; 2025.MaritimeDay All rights reserved.</p>
@@ -546,7 +630,6 @@
     <!-- ALL PLUGINS -->
     <script src="js/custom.js"></script>
     <script src="js/jquery.vide.js"></script>
-
-    <script src="js/contact.js"></script>
+    <script src="page_huang/contact_huang.js"></script>
 </body>
 </html>

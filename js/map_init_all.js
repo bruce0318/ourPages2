@@ -1,4 +1,4 @@
-
+var TDT_KEY = 'c696a63eb65a93f18f23a897c28f20b6';
 // 天地图矢量底图
 var tdtVec = L.tileLayer('http://t{s}.tianditu.gov.cn/vec_w/wmts?' +
     'service=WMTS&request=GetTile&version=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&' +
@@ -10,7 +10,7 @@ var tdtVec = L.tileLayer('http://t{s}.tianditu.gov.cn/vec_w/wmts?' +
 // 天地图注记图层（cva）
 var tdtCva = L.tileLayer('http://t{s}.tianditu.gov.cn/cva_w/wmts?' +
     'service=WMTS&request=GetTile&version=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&' +
-    'TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&format=tiles&tk=' + TDT_KEY, {
+    'TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&format=tiles&format=tiles&tk=' + TDT_KEY, {
     subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
     attribution: "天地图注记"
 });
@@ -26,15 +26,6 @@ var map = L.map('map', {
 L.control.scale().addTo(map);
 
 
-// 添加 GeoServer 图层
-var wmsLayer = L.tileLayer.wms('http://'+ Web_IP +':8888//geoserver/maritimeday/wms', {
-    layers: 'maritimeday:huang_footprints',
-    format: 'image/png',
-    transparent: true,
-    attribution: "成员足迹图层"
-});
-wmsLayer.addTo(map);
-
 // 图层控制器
 var baseMaps = {
     "天地图矢量": tdtVec
@@ -42,7 +33,6 @@ var baseMaps = {
 
 var overlayMaps = {
     "注记图层": tdtCva,
-    "我的足迹": wmsLayer
 };
 
 L.control.layers(baseMaps, overlayMaps, {

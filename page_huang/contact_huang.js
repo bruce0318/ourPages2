@@ -1,17 +1,17 @@
+// js/contact.js
 document.addEventListener('DOMContentLoaded', () => {
   const form       = document.getElementById('contactForm');
   const nameInput  = document.getElementById('name');
   const emailInput = document.getElementById('email');
   const phoneInput = document.getElementById('phone');
-  // 改成和 textarea 对应
   const msgInput   = document.getElementById('userMessage');
   const successEl  = document.getElementById('success');
-  // 对应上面改好的 div
   const errorEl    = document.getElementById('formMessage');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // 收集表单
     const payload = {
       name:    nameInput.value.trim(),
       email:   emailInput.value.trim(),
@@ -20,23 +20,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      const resp = await fetch('http://47.110.54.187:3002/api/contact', {
+      const resp = await fetch('http://' + Web_IP + ':3001/api/maritimeday/contact', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload)
+        headers: {
+          'Content-Type': 'application/json'    
+        },
+        body: JSON.stringify(payload)
       });
 
+      // 如果后端返回的不是 2xx，先拿到文本，防止直接调用 resp.json 出错
       if (!resp.ok) {
         const errText = await resp.text();
         let errMsg;
         try {
-          errMsg = JSON.parse(errText).error || errText;
+          // 尝试把它当 JSON 解析一下（如果后端返回了 { error: '...' }）
+          const errJson = JSON.parse(errText);
+          errMsg = errJson.error || errText;
         } catch {
-          errMsg = errText;
+          errMsg = errText;  // 真的是 HTML 或者其它，就直接输出
         }
         throw new Error(errMsg);
       }
 
+      // 到这里一定是 OK, 且 Content-Type: application/json
       const result = await resp.json();
       successEl.innerText = result.msg;
       errorEl.innerText   = '';

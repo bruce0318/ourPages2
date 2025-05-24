@@ -84,3 +84,26 @@ html, body {
 #hobby {
   min-height: calc(100vh - 80px);
 }
+
+.filter-button-group {
+  display: flex;
+  flex-wrap: wrap;             
+  gap: 0.75rem;                 /* 增大间距 */    
+  justify-content: flex-start;  
+  margin: 1rem 0;
+}
+.filter-button-group .btn {
+  background-color: #fff;    
+  color: #1f1f1f;;                  
+  border: none;                 
+  border-radius: 0.25rem;
+  padding: 0.75rem 1.5rem;      /* 增大内边距 */
+  font-size: 1.1rem;            /* 增大字体 */
+  transition: background-color 0.2s;
+}
+.filter-button-group .btn:hover {
+  background-color: #fff;       
+}
+.filter-button-group .btn.active {
+  background-color: #1f1f1f;;       /* 选中态变纯黑 */
+}
