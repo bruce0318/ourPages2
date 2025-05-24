@@ -91,6 +91,13 @@ section:not(.home){
     font-size: 4rem;
 }
 
+.heading h3{
+    text-align: center;
+    padding-bottom: 2rem;
+    color:var(--black);
+    font-size: 2rem;
+}
+
 .heading h2 span{
     position: relative;
     z-index: 0;
@@ -106,6 +113,13 @@ section:not(.home){
     height: 0.2rem;
     width: 80%;
     margin-left: 10%;
+}
+
+.heading h4{
+    font-size: 2.5rem;
+    color: var(--green);
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 /*--------------------- Heading (End) ---------------------*/
@@ -699,6 +713,167 @@ header #menu-btn:hover{
 /*--------------------- Portfolio Area (End) ---------------------*/
 
 
+/*------------------ Footprint Area (Start)------------------*/
+.footprint {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    padding: 4rem 5%;
+    background-color: #e7f3ea;
+}
+
+.section-title {
+    font-size: 4rem;
+    color: var(--green);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.city-group {
+    margin-bottom: 4rem;
+}
+
+.group-title {
+    font-size: 3rem;
+    color: var(--black);
+    margin-bottom: 2rem;
+}
+
+.city-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 0.5fr);
+    gap: 2rem;
+}
+
+.city-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem rgba(0,0,0,0.2);
+    height: 25rem;
+}
+
+.city-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(15, 83, 30, 0.9);
+    width: 100%;
+    height: 100%;
+    color: white;
+    opacity: 0;
+    transition: 0.3s;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.city-card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-overlay h4 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.card-overlay p {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.card-overlay button {
+    padding: 1rem 2rem;
+    background-color: var(--white);
+    color: var(--green);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.weather-info {
+    font-size: 1.6rem;
+    margin-top: 1rem;
+    color: var(--white);
+}
+
+.section-title{
+    font-size: 2.5rem;
+}
+
+.section-tips{
+    text-align: center;
+    padding-bottom: 2rem;
+    color:var(--black);
+    font-size: 1.5rem;
+}
+
+.chartSection{
+    height: 100%;
+    scroll-snap-align: start;
+    padding: 4rem;
+    background-color: #dcecd5;
+}
+
+.mapSection {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    padding: 4rem 0;
+    margin-bottom: 4rem;
+}
+
+
+#map-container {
+    position: relative;
+    height: 80vh;
+    width: 100%;
+    margin: 20px auto;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.map-btn-group {
+    position: absolute;
+    top: 2vh;
+    right: 2vw;
+    z-index: 1000;
+    display: flex;
+    gap: 1vw;
+}
+
+.map-btn {
+    padding: 1vh 2vw;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--green);
+    color: var(--green);
+    border-radius: 2vw;
+    font-size: clamp(1.4rem, 1.5vw, 1.8rem);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map-btn:hover {
+    background-color: var(--green);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.map-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/*--------------------- Footprint (End) ---------------------*/
+
+
 
 /*--------------------- Contact Area (Start) ---------------------*/
 .contact .alert{
@@ -969,3 +1144,5 @@ footer .content p span{
 }
 
 /*--------------------- Responsive (End) ---------------------*/
+
+
