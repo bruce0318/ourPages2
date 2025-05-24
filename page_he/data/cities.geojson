@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "properties": { "name": "南宁", "province": "广西", "time": "家乡", "image": "./images/he/nanning.jpg" }, "geometry": { "type": "Point", "coordinates": [108.366, 22.817] } },
+    { "type": "Feature", "properties": { "name": "武汉", "province": "湖北", "time": "求学", "image": "./images/he/wuhan.jpg" }, "geometry": { "type": "Point", "coordinates": [114.283, 30.583] } },
+    { "type": "Feature", "properties": { "name": "桂林", "province": "广西", "time": "2012-07于此地留下足迹", "image": "./images/he/guilin.jpg" }, "geometry": { "type": "Point", "coordinates": [110.290, 25.273] } },
+    { "type": "Feature", "properties": { "name": "北海", "province": "广西", "time": "2013-08、2015-08、2023-08于此地留下足迹", "image": "./images/he/beihai.jpg" }, "geometry": { "type": "Point", "coordinates": [109.120, 21.480] } },
+    { "type": "Feature", "properties": { "name": "柳州", "province": "广西", "time": "2020-09于此地留下足迹", "image": "./images/he/liuzhou.jpg" }, "geometry": { "type": "Point", "coordinates": [109.420, 24.330] } },
+    { "type": "Feature", "properties": { "name": "梧州", "province": "广西", "time": "2019-07、2024-01于此地留下足迹", "image": "./images/he/wuzhou.jpg" }, "geometry": { "type": "Point", "coordinates": [111.320, 23.480] } },
+    { "type": "Feature", "properties": { "name": "广州", "province": "广东", "time": "2016-07、2023-01、2024-07于此地留下足迹", "image": "./images/he/guangzhou.jpg" }, "geometry": { "type": "Point", "coordinates": [113.264, 23.129] } },
+    { "type": "Feature", "properties": { "name": "深圳", "province": "广东", "time": "2019-07于此地留下足迹", "image": "./images/he/shenzhen.jpg" }, "geometry": { "type": "Point", "coordinates": [114.057, 22.543] } },
+    { "type": "Feature", "properties": { "name": "珠海", "province": "广东", "time": "2016-07于此地留下足迹", "image": "./images/he/zhuhai.jpg" }, "geometry": { "type": "Point", "coordinates": [113.570, 22.270] } },
+    { "type": "Feature", "properties": { "name": "香港", "province": "", "time": "2017-07于此地留下足迹", "image": "./images/he/hongkong.jpg" }, "geometry": { "type": "Point", "coordinates": [114.173, 22.320] } },
+    { "type": "Feature", "properties": { "name": "澳门", "province": "", "time": "2016-07于此地留下足迹", "image": "./images/he/macau.jpg" }, "geometry": { "type": "Point", "coordinates": [113.549, 22.199] } },
+    { "type": "Feature", "properties": { "name": "上海", "province": "", "time": "2021-07于此地留下足迹", "image": "./images/he/shanghai.jpg" }, "geometry": { "type": "Point", "coordinates": [121.469, 31.224] } },
+    { "type": "Feature", "properties": { "name": "杭州", "province": "浙江", "time": "2024-10于此地留下足迹", "image": "./images/he/hangzhou.jpg" }, "geometry": { "type": "Point", "coordinates": [120.200, 30.300] } },
+    { "type": "Feature", "properties": { "name": "宁波", "province": "浙江", "time": "2024-10于此地留下足迹", "image": "./images/he/ningbo.jpg" }, "geometry": { "type": "Point", "coordinates": [121.550, 29.880] } },
+    { "type": "Feature", "properties": { "name": "厦门", "province": "福建", "time": "2019-07于此地留下足迹", "image": "./images/he/xiamen.jpg" }, "geometry": { "type": "Point", "coordinates": [118.089, 24.479] } },
+    { "type": "Feature", "properties": { "name": "青岛", "province": "山东", "time": "2023-10于此地留下足迹", "image": "./images/he/qingdao.jpg" }, "geometry": { "type": "Point", "coordinates": [120.382, 36.067] } },
+    { "type": "Feature", "properties": { "name": "烟台", "province": "山东", "time": "2023-10于此地留下足迹", "image": "./images/he/yantai.jpg" }, "geometry": { "type": "Point", "coordinates": [121.447, 37.463] } },
+    { "type": "Feature", "properties": { "name": "重庆", "province": "", "time": "2025-01于此地留下足迹", "image": "./images/he/chongqing.jpg" }, "geometry": { "type": "Point", "coordinates": [106.550, 29.563] } },
+    { "type": "Feature", "properties": { "name": "大理", "province": "云南", "time": "2019-07于此地留下足迹", "image": "./images/he/dali.jpg" }, "geometry": { "type": "Point", "coordinates": [100.267, 25.600] } },
+    { "type": "Feature", "properties": { "name": "丽江", "province": "云南", "time": "2019-07于此地留下足迹", "image": "./images/he/lijiang.jpg" }, "geometry": { "type": "Point", "coordinates": [100.233, 26.867] } },
+    { "type": "Feature", "properties": { "name": "长沙", "province": "湖南", "time": "2023-06于此地留下足迹", "image": "./images/he/changsha.jpg" }, "geometry": { "type": "Point", "coordinates": [112.938, 28.228] } },
+    { "type": "Feature", "properties": { "name": "九江", "province": "江西", "time": "2024-09于此地留下足迹", "image": "./images/he/jiujiang.jpg" }, "geometry": { "type": "Point", "coordinates": [115.983, 29.717] } },
+    { "type": "Feature", "properties": { "name": "随州", "province": "湖北", "time": "2025-04于此地留下足迹", "image": "./images/he/suizhou.jpg" }, "geometry": { "type": "Point", "coordinates": [113.367, 31.717] } },
+    { "type": "Feature", "properties": { "name": "北京", "province": "", "time": "2025-03于此地留下足迹", "image": "./images/he/beijing.jpg" }, "geometry": { "type": "Point", "coordinates": [116.407, 39.904] } }
+  ]
+}
