@@ -49,3 +49,49 @@ L.control.layers(baseMaps, overlayMaps, {
     collapsed: false,
     position: 'topright'
 }).addTo(map);
+
+var measureCtl = new L.Control.Measure({
+  primaryLengthUnit: 'meters',
+  primaryAreaUnit:   'sqmeters',
+  position:          'topright'
+});
+map.addControl(measureCtl);
+
+
+// 2. 坐标显示（需引入 leaflet-mouseposition 插件）
+L.control.mousePosition({
+  position:'bottomleft',
+  separator:' , ',
+  numDigits:5
+}).addTo(map);
+
+// 6. WMS GetFeatureInfo 弹窗
+function getFeatureInfoUrl(latlng) {
+  var size = map.getSize(),
+      bounds = map.getBounds().toBBoxString(),
+      point = map.latLngToContainerPoint(latlng, map.getZoom());
+  var params = {
+    request:'GetFeatureInfo', service:'WMS', srs:'EPSG:4326',
+    styles:'', version:'1.1.1', format:'image/png', transparent:true,
+    bbox:bounds, width:size.x, height:size.y,
+    layers:'maritimeday:huang_footprints',
+    query_layers:'maritimeday:huang_footprints',
+    info_format:'application/json',
+    x:Math.round(point.x), y:Math.round(point.y)
+  };
+  return 'http://'+Web_IP+':8888/geoserver/maritimeday/wms?' +
+         new URLSearchParams(params).toString();
+}
+map.on('click', e=>{
+  fetch(getFeatureInfoUrl(e.latlng))
+    .then(r=>r.json())
+    .then(json=>{
+      if(json.features.length){
+        var props = json.features[0].properties;
+        L.popup()
+         .setLatLng(e.latlng)
+         .setContent(`<b>${props.name}</b><br>访问：${props.visited_at}`)
+         .openOn(map);
+      }
+    });
+});
