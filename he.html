@@ -543,9 +543,24 @@
             </div>  
         </div> 
         
+        <div class="city-group">
+            <h3 class="group-title">西北</h3>
+            <div class="city-cards">
+                <div class="city-card">
+                    <img src="images/he/xian.jpg" alt="西安">
+                    <div class="card-overlay">
+                        <h4>西安</h4>
+                        <p>千年长安展新颜，丝路起点连世界</p>
+                        <button class="btn weather-btn" data-city="西安">获取城市实时天气</button>
+                        <div class="weather-info"></div>
+                    </div>
+                </div>
+            </div>  
+        </div> 
+
         <div class="chartSection">
             <h2 class="section-title">各省走过的城市数量统计</h2>
-            <div id="chart-container" style="width: 100%; height: 100%;"></div>
+            <div id="chart-container" style="width: 100%; height: 500%;"></div>
         </div>
 
     </section>
@@ -614,11 +629,14 @@
 
 
 
-    <!--js引用-->
+    <!---------------- js引用 ---------------->
     <script src="page_he/city.js"></script>
     <script src="page_he/getWeather.js"></script>
     <script src="page_he/chart.js"></script>
     <script src="page_he/mapShow.js"></script>
+
+    <!---------------- echarts图表引用 ---------------->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
 
     <!---------------- Custom Script ---------------->
 

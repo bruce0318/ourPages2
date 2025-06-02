@@ -24,6 +24,7 @@
     { "type": "Feature", "properties": { "name": "长沙", "province": "湖南", "time": "2023-06于此地留下足迹", "image": "./images/he/changsha.jpg" }, "geometry": { "type": "Point", "coordinates": [112.938, 28.228] } },
     { "type": "Feature", "properties": { "name": "九江", "province": "江西", "time": "2024-09于此地留下足迹", "image": "./images/he/jiujiang.jpg" }, "geometry": { "type": "Point", "coordinates": [115.983, 29.717] } },
     { "type": "Feature", "properties": { "name": "随州", "province": "湖北", "time": "2025-04于此地留下足迹", "image": "./images/he/suizhou.jpg" }, "geometry": { "type": "Point", "coordinates": [113.367, 31.717] } },
-    { "type": "Feature", "properties": { "name": "北京", "province": "", "time": "2025-03于此地留下足迹", "image": "./images/he/beijing.jpg" }, "geometry": { "type": "Point", "coordinates": [116.407, 39.904] } }
+    { "type": "Feature", "properties": { "name": "北京", "province": "", "time": "2025-03于此地留下足迹", "image": "./images/he/beijing.jpg" }, "geometry": { "type": "Point", "coordinates": [116.407, 39.904] } },
+    { "type": "Feature", "properties": { "name": "西安", "province": "陕西", "time": "2024-05于此地留下足迹", "image": "./images/he/xian.jpg" }, "geometry": { "type": "Point", "coordinates": [108.94, 34.261] } }
   ]
 }

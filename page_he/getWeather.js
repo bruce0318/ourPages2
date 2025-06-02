@@ -4,15 +4,19 @@ const axios = require('axios');
 async function getWeatherByCity(city) {
     const key = '21f79ff3afb9d7449f0e2e45ef7a878a';
     const url = `https://restapi.amap.com/v3/weather/weatherInfo?city=${encodeURIComponent(city)}&key=${key}`;
-    const response = await axios.get(url);
-    const result = response.data.lives?.[0];
-    return {
-        weather: result.weather,
-        temperature: result.temperature,
-        windDIrection: result.winddirection,
-        windPower:result.windPower,
-        humidity: result.humidity
-    };
+    try{
+        const response = await axios.get(url);
+        const result = response.data.lives?.[0];
+        return {
+            weather: result.weather,
+            temperature: result.temperature,
+            windDirection: result.winddirection,
+            windPower:result.windpower,
+            humidity: result.humidity
+        }
+    }catch (error) {
+        console.log('请求天气失败：'+error);
+    }
 }
 
 module.exports = getWeatherByCity;
