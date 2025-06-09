@@ -18,3 +18,13 @@
     cva.addTo(map);
 
     L.control.scale().addTo(map);
+
+    fetch("http://localhost:8081/geoserver/cui/wms?service=WMS&version=1.1.0&request=GetMap&layers=cui:POINT")
+  .then(res => res.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: {
+        color: 'blue'
+      }
+    }).addTo(map);
+  });
