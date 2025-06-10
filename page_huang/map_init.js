@@ -1,4 +1,6 @@
 
+
+
 // 天地图矢量底图
 var tdtVec = L.tileLayer('http://t{s}.tianditu.gov.cn/vec_w/wmts?' +
     'service=WMTS&request=GetTile&version=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&' +
@@ -19,6 +21,7 @@ var tdtCva = L.tileLayer('http://t{s}.tianditu.gov.cn/cva_w/wmts?' +
 var map = L.map('map', {
     center: [30.6, 114.3],  // 武汉大学
     zoom: 8,
+    crs: L.CRS.EPSG3857,
     layers: [tdtVec, tdtCva]
 });
 
@@ -28,10 +31,10 @@ L.control.scale().addTo(map);
 
 // 添加 GeoServer 图层
 var wmsLayer = L.tileLayer.wms('http://'+ Web_IP +':8888//geoserver/maritimeday/wms', {
-    layers: 'maritimeday:huang_footprints',
+    layers: 'maritimeday:lena_footprints',
     format: 'image/png',
     transparent: true,
-    attribution: "成员足迹图层"
+    attribution: "足迹图层"
 });
 wmsLayer.addTo(map);
 
@@ -65,28 +68,43 @@ L.control.mousePosition({
   numDigits:5
 }).addTo(map);
 
-// 6. WMS GetFeatureInfo 弹窗
 function getFeatureInfoUrl(latlng) {
-  var size = map.getSize(),
-      bounds = map.getBounds().toBBoxString(),
-      point = map.latLngToContainerPoint(latlng, map.getZoom());
+  var size = map.getSize();
+  // 获取地图边界的经纬度（4326）
+  var bounds = map.getBounds();
+  var sw = bounds.getSouthWest();
+  var ne = bounds.getNorthEast();
+  var bbox = [sw.lng, sw.lat, ne.lng, ne.lat].join(',');
+
+  // 计算点击点在地图容器中的像素位置
+  var point = map.latLngToContainerPoint(latlng);
+
   var params = {
-    request:'GetFeatureInfo', service:'WMS', srs:'EPSG:4326',
-    styles:'', version:'1.1.1', format:'image/png', transparent:true,
-    bbox:bounds, width:size.x, height:size.y,
-    layers:'maritimeday:huang_footprints',
-    query_layers:'maritimeday:huang_footprints',
-    info_format:'application/json',
-    x:Math.round(point.x), y:Math.round(point.y)
+    request: 'GetFeatureInfo',
+    service: 'WMS',
+    srs: 'EPSG:4326',
+    styles: '',
+    version: '1.1.1',
+    format: 'image/png',
+    transparent: true,
+    bbox: bbox,
+    width: size.x,
+    height: size.y,
+    layers: 'maritimeday:lena_footprints',
+    query_layers: 'maritimeday:lena_footprints',
+    info_format: 'application/json',
+    x: Math.round(point.x),
+    y: Math.round(point.y)
   };
-  return 'http://'+Web_IP+':8888/geoserver/maritimeday/wms?' +
+  return 'http://' + Web_IP + ':8888/geoserver/maritimeday/wms?' +
          new URLSearchParams(params).toString();
 }
-map.on('click', e=>{
+map.on('click', e => {
+  console.log(getFeatureInfoUrl(e.latlng));
   fetch(getFeatureInfoUrl(e.latlng))
-    .then(r=>r.json())
-    .then(json=>{
-      if(json.features.length){
+    .then(r => r.json())
+    .then(json => {
+      if (json.features && json.features.length) {
         var props = json.features[0].properties;
         L.popup()
          .setLatLng(e.latlng)
