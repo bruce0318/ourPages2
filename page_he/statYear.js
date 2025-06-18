@@ -29,9 +29,9 @@ export async function statYear(start, end) {
                 createPointMarker(feature);
             });
         }
-        alert("加载成功。");
     }catch (error) {
         console.error("加载失败：", err);
         alert("加载失败，请稍后重试。");
     }
+    alert("加载成功");
 }

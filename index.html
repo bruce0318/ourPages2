@@ -39,6 +39,9 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+    <!-- 高德api接入 -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=6690aa0df3fd29673c58c9b248817548"></script>
+
 </head>
 
 <body id="page-top" class="politics_version">
@@ -130,7 +133,7 @@
         <div class="container">
             <div class="section-title text-left">
                 <h3>小组简介</h3>
-                <p>我们是WebGIS课程第？小组，小组成员共有四位，个个身怀绝技，分别是：黄卉然、高家垚、何灿非、崔泽铭。</p>
+                <p>我们是WebGIS课程第3小组，小组成员共有四位，个个身怀绝技，分别是：黄卉然、高家垚、何灿非、崔泽铭。</p>
             </div><!-- end title -->
 
             <div class="row">
@@ -208,13 +211,102 @@
     <div id="footmap" class="section lb">
         <div class="container">
             <div class="section-title text-left">
-                <h3>足迹地图</h3>
-                <p>该部分有待完善，敬请期待！
-                </p>
-            </div><!-- end title -->
+                <h3>小组足迹地图</h3>
+                <p>该地图展示了四位小组成员的所有足迹地图，并可以通过右侧的按钮进行增删查改统计等各种操作。</p>
+            </div>
 
-            <div id="map" style="width: 100%; height: 600px;"></div>
-            <script src="js/map_init_all.js"></script>
+            <!-- 地图容器 - 添加相对定位容器 -->
+            <div id="map-container" style="position: relative; width: 100%; height: 600px;">
+                <!-- 地图主体 -->
+                <div id="map" style="width: 100%; height: 100%;"></div>
+                
+                <!-- 图层管理面板 -->
+                <div id="layer-manager" class="layer-panel">
+                    <div class="layer-item">
+                        <input type="checkbox" id="layer-he" checked>
+                        <label for="layer-he">何灿非的足迹</label>
+                        <span id="layer-he-text" class="layer-text">显示何灿非的足迹</span>
+                    </div>
+                    <div class="layer-item">
+                        <input type="checkbox" id="layer-huang" checked>
+                        <label for="layer-huang">黄卉然的足迹</label>
+                        <span id="layer-huang-text" class="layer-text">显示黄卉然的足迹</span>
+                    </div>
+                    <div class="layer-item">
+                        <input type="checkbox" id="layer-gao" checked>
+                        <label for="layer-gao">高家垚的足迹</label>
+                        <span id="layer-gao-text" class="layer-text">显示高家垚的足迹</span>
+                    </div>
+                        <div class="layer-item">
+                        <input type="checkbox" id="layer-cui" checked>
+                        <label for="layer-cui">崔泽铭的足迹</label>
+                        <span id="layer-cui-text" class="layer-text">显示崔泽铭的足迹</span>
+                    </div>
+                </div>
+
+                <!-- 地图控件容器 - 固定在右上角 -->
+                <div class="map-controls">
+                    <!-- 足迹操作组 -->
+                    <div class="map-control-group">
+                        <button id="load-point-btn" class="map-btn">加载所有足迹点</button>
+                        <button id="add-point-btn" class="map-btn">新增足迹点</button>
+                        <button id="delete-point-btn" class="map-btn">删除足迹点</button>
+                        <button id="update-point-btn" class="map-btn">修改足迹点年份</button>
+                    </div>
+                    
+                    <!-- 搜索组 -->
+                    <div class="map-control-group">
+                        <input id="query-input" type="text" placeholder="输入城市" class="compact-input">
+                        <button id="query-point-btn" class="map-btn">查询城市足迹</button>
+                    </div>
+                    
+                    <!-- 省份统计组 -->
+                    <div class="map-control-group">
+                        <select id="province-select" class="compact-select">
+                            <!-- 省份选项... -->
+                            <option value="">选择省份</option>
+                            <option value="北京市">北京市</option>
+                            <option value="天津市">天津市</option>
+                            <option value="河北省">河北省</option>
+                            <option value="山西省">山西省</option>
+                            <option value="内蒙古自治区">内蒙古自治区</option>
+                            <option value="辽宁省">辽宁省</option>
+                            <option value="吉林省">吉林省</option>
+                            <option value="黑龙江省">黑龙江省</option>
+                            <option value="上海市">上海市</option>
+                            <option value="江苏省">江苏省</option>
+                            <option value="浙江省">浙江省</option>
+                            <option value="安徽省">安徽省</option>
+                            <option value="福建省">福建省</option>
+                            <option value="江西省">江西省</option>
+                            <option value="山东省">山东省</option>
+                            <option value="河南省">河南省</option>
+                            <option value="湖北省">湖北省</option>
+                            <option value="湖南省">湖南省</option>
+                            <option value="广东省">广东省</option>
+                            <option value="广西壮族自治区">广西壮族自治区</option>
+                            <option value="海南省">海南省</option>
+                            <option value="重庆市">重庆市</option>
+                            <option value="四川省">四川省</option>
+                            <option value="贵州省">贵州省</option>
+                            <option value="云南省">云南省</option>
+                            <option value="西藏自治区">西藏自治区</option>
+                            <option value="陕西省">陕西省</option>
+                            <option value="甘肃省">甘肃省</option>
+                            <option value="青海省">青海省</option>
+                            <option value="宁夏回族自治区">宁夏回族自治区</option>
+                            <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
+                            <option value="台湾省">台湾省</option>
+                            <option value="香港特别行政区">香港特别行政区</option>
+                            <option value="澳门特别行政区">澳门特别行政区</option>
+
+                        </select>
+                        <button id="stat-province-btn" class="map-btn">统计省份足迹</button>
+                    </div>
+                </div>
+            </div>
+            
+            <script src="footprintMap/map_init_all.js"></script>
         </div>
     </div>
 
