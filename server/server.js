@@ -15,11 +15,12 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// 连接数据库
 const pool = new Pool({
-    user: 'ChanfHo',
-    host: 'localhost',
-    database: 'dbForWebGIS',
-    password: 'ChanfHo',
+    user: 'postgres',
+    host: '47.110.54.187',
+    database: 'all_footprints',
+    password: 'webGIS2025',
     port: 5432,
 });
 
