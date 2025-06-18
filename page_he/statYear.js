@@ -10,7 +10,7 @@ export async function statYear(start, end) {
     
     try{
         const body = { startYear, endYear };
-        const response = await fetch('http://localhost:5500/api/statYear', {
+        const response = await fetch('http://localhost:5500/api/statYearForHe', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)

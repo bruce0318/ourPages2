@@ -49,12 +49,12 @@ app.use('/api/addPoint',(req, res, next) => {
     // 转换参数类型
     req.body.lng = parseFloat(lng);
     req.body.lat = parseFloat(lat);
-    req.body.code = parseFloat(code);
+    req.body.code = parseInt(code);
     req.body.year = parseInt(year);
     next();
 });
 
-// 从数据库中获取足迹数据
+// 从数据库中获取足迹数据（单人）
 app.get('/api/getDatabasePoints', async (req, res) => {
     try {
         const query = `
@@ -71,7 +71,8 @@ app.get('/api/getDatabasePoints', async (req, res) => {
                         )
                     )
                 ) AS geojson
-            FROM he;`;
+            FROM all_footprints
+            WHERE name = '何灿非';`;
         
         const result = await pool.query(query);
         
@@ -89,13 +90,52 @@ app.get('/api/getDatabasePoints', async (req, res) => {
     }
 });
 
+// 从数据库中获取足迹数据（多人）
+app.post('/api/getPointsFromGroupDB', async (req, res) => {
+    const { userName } = req.body;
+    console.log("收到获取点数据请求：", userName)
+
+    try {
+        const query = `
+            SELECT json_build_object('type', 'FeatureCollection','features', 
+                        json_agg(
+                            json_build_object(
+                                'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
+                                'properties', json_build_object(
+                                'name', name,
+                                'time', time,
+                                'province', province,
+                                'city', city
+                            )
+                        )
+                    )
+                ) AS geojson
+            FROM all_footprints
+            WHERE name = $1;`;
+        
+        const result = await pool.query(query, [userName]);
+        
+        if (result.rows.length === 0 || !result.rows[0].geojson) {
+            return res.status(404).send("未找到数据");
+        }
+        
+        const geojson = result.rows[0].geojson;
+        console.log("已生成GeoJSON并回传");
+        res.json(geojson);
+
+    } catch (err) {
+        console.error("获取点数据错误：", err);
+        res.status(500).send("数据库查询失败");
+    }
+});
+
 // 添加足迹点路由
 app.post('/api/addPoint', async (req, res) => {
     try {
         const { lng, lat, code, province, city, year, user } = req.body;
         console.log('收到添加点请求:', { lng, lat, code, province, city, year, user });
 
-        await pool.query(`INSERT INTO he (geom, code, province, city, x, y, time, name)
+        await pool.query(`INSERT INTO all_footprints (geom, code, province, city, x, y, time, name)
              VALUES (ST_SetSRID(ST_MakePoint($1, $2), 4326), $3, $4, $5, $1, $2, $6, $7)`, 
              [ lng, lat, code, province, city, year, user ]);
 
@@ -125,7 +165,7 @@ app.post('/api/deletePoint', async (req, res) => {
     try {
         // 使用城市名称与用户名删除
         const result = await pool.query(
-            `DELETE FROM he WHERE city = $1 AND name = $2`,[cityName, user]
+            `DELETE FROM all_footprints WHERE city = $1 AND name = $2`,[cityName, user]
         );
         
         console.log(`删除足迹点 ${cityName} 成功，影响行数: ${result.rowCount}`);
@@ -152,7 +192,7 @@ app.post('/api/updatePoint', async (req, res) => {
     }
 
     try {
-        await pool.query(`UPDATE he SET time=$3 WHERE city=$1 AND name=$2`, [cityName, user, newYear]);
+        await pool.query(`UPDATE all_footprints SET time=$3 WHERE city=$1 AND name=$2`, [cityName, user, newYear]);
         res.send("ok");
         console.log(`修改${user}的足迹点 ${cityName} 成功`);
     }
@@ -186,7 +226,7 @@ app.post('/api/queryPoint', async (req, res) => {
                     )
                 )
             ) AS geojson
-        FROM he WHERE city = $1 ;`; 
+        FROM all_footprints WHERE city = $1 ;`; 
     
     try {
         const result = await pool.query(query, [cityName]); // 传递参数
@@ -229,7 +269,7 @@ app.post('/api/statProvince', async (req, res) => {
                     )
                 )
             ) AS geojson
-        FROM he WHERE province = $1`; 
+        FROM all_footprints WHERE province = $1`; 
     
     try {
         const result = await pool.query(query, [provinceName]); // 传递参数
@@ -288,7 +328,46 @@ app.post('/api/drawProvince', async (req, res) => {
 
 });
 
-// 按照时间获取足迹点
+// 按照时间获取足迹点（单人）
+app.post('/api/statYearForHe', async (req, res) => {
+    const { startYear, endYear } = req.body;
+    console.log("收到时间筛选请求： 开始时间：", startYear, "结束时间：", endYear);
+
+    try {
+        const query = `
+            SELECT json_build_object('type', 'FeatureCollection','features', 
+                        json_agg(
+                            json_build_object(
+                                'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
+                                'properties', json_build_object(
+                                'name', name,
+                                'time', time,
+                                'province', province,
+                                'city', city
+                            )
+                        )
+                    )
+                ) AS geojson
+            FROM all_footprints
+            WHERE time >= $1 AND time <= $2 AND name = '何灿非';`;
+        
+        const result = await pool.query(query, [startYear, endYear]);
+        
+        if (result.rows.length === 0 || !result.rows[0].geojson) {
+            return res.status(404).send("未找到数据");
+        }
+        
+        const geojson = result.rows[0].geojson;
+        console.log("生成的GeoJSON:", JSON.stringify(geojson, null, 2));
+        res.json(geojson);
+
+    } catch (err) {
+        console.error("获取点数据错误：", err);
+        res.status(500).send("数据库查询失败");
+    }
+});
+
+// 按照时间获取足迹点（多人）
 app.post('/api/statYear', async (req, res) => {
     const { startYear, endYear } = req.body;
     console.log("收到时间筛选请求： 开始时间：", startYear, "结束时间：", endYear);
@@ -308,7 +387,7 @@ app.post('/api/statYear', async (req, res) => {
                         )
                     )
                 ) AS geojson
-            FROM he
+            FROM all_footprints
             WHERE time >= $1 AND time <= $2;`;
         
         const result = await pool.query(query, [startYear, endYear]);
