@@ -4,7 +4,7 @@ export async function statYear(start, end) {
     let startYear = start;
     let endYear = end;
 
-    if(start === 2015){
+    if(start === 2014){
         startYear = 2004;
     }
     

@@ -339,7 +339,11 @@ document.getElementById('reset-time-filter').addEventListener('click', () => {
 
 // 添加滑块值显示更新
 document.getElementById('year-start').addEventListener('input', function() {
+    if(this.value === 2014){
+        document.getElementById('start-year-display').textContent = '2015年以前';
+    }else{
     document.getElementById('start-year-display').textContent = this.value  + '年';
+    }
 });
 
 document.getElementById('year-end').addEventListener('input', function() {
