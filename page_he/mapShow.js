@@ -329,7 +329,7 @@ document.getElementById('stat-year-btn').addEventListener('click', () => {
 });
 document.getElementById('reset-time-filter').addEventListener('click', () => {
     // 重置滑块位置
-    document.getElementById('year-start').value = 2015;
+    document.getElementById('year-start').value = 2014;
     document.getElementById('year-end').value = 2025;
     document.getElementById('start-year-display').textContent = 2015 + '年以前';
     document.getElementById('end-year-display').textContent = 2025 + '年';
@@ -339,7 +339,7 @@ document.getElementById('reset-time-filter').addEventListener('click', () => {
 
 // 添加滑块值显示更新
 document.getElementById('year-start').addEventListener('input', function() {
-    if(this.value === 2014){
+    if(this.value < 2015){
         document.getElementById('start-year-display').textContent = '2015年以前';
     }else{
     document.getElementById('start-year-display').textContent = this.value  + '年';
