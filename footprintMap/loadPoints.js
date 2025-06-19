@@ -67,15 +67,15 @@ export function createPointMarker(feature, overlayGroup, userName){
     // 创建各个用户的自定义图标
     const icon = new AMap.Icon({
         image: getIconForUser(userName), // 根据用户获取不同图标
-        size: new AMap.Size(32, 32),
+        size: new AMap.Size(16, 16),
         imageOffset: new AMap.Pixel(0, 0),
-        imageSize: new AMap.Size(32, 32)
+        imageSize: new AMap.Size(16, 16)
     });
 
     const marker = new AMap.Marker({
         position: new AMap.LngLat(lng, lat),
         icon: icon,
-        offset: new AMap.Pixel(-16, -16)
+        offset: new AMap.Pixel(-8, -8)
     });
 
     // 信息窗口内容
@@ -101,9 +101,9 @@ export function createPointMarker(feature, overlayGroup, userName){
 function getIconForUser(userName) {
     const icons = {
         '何灿非': 'images/footprint/mark_1.png',
-        '黄卉然': 'images/footprint/mark_1.png',
-        '高家垚': 'images/footprint/mark_1.png',
-        '崔泽铭': 'images/footprint/mark_1.png'
+        '黄卉然': 'images/footprint/mark_2.png',
+        '高家垚': 'images/footprint/mark_3.png',
+        '崔泽铭': 'images/footprint/mark_4.png'
     };
     return icons[userName] || 'images/icons/default.png';
 }
