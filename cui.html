@@ -31,20 +31,14 @@
 
     <!-- 天地图 API（需替换为你自己的 key） -->
     <script src="https://api.tianditu.gov.cn/api?v=4.0&tk=527522fcd90b3700d477f942a2ee2bf9"></script>
-
-    <!-- 引入 Leaflet.js（天地图底层用的 Leaflet） -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!-- Leaflet 基础库 -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 </head>
 
 <body id="page-top" class="politics_version">
-
+    <script src="config/config_huang.js"></script>
     <!-- LOADER -->
     <div id="preloader">
         <div id="main-ld">
@@ -149,11 +143,16 @@
             </div><!-- end row -->
         </div><!-- end container -->
     </div><!-- end section -->
-
-<div id="map" style="width: 100%; height: 600px;"></div>
-
-  <script src="page_cui/map.js">  </script>
-
+    <div>
+    <div id="map" style="width: 100%; height: 600px;">
+        <!-- <div style="position: absolute; z-index: 1001">
+    <button onclick="updateFeature()">更新要素</button>
+    </div> -->
+    </div>
+    <script src="page_cui/map.js"></script>
+    </div>
+    <div>123</div>
+    
     <div id="hobby" class="section lb">
         <div class="container">
             <div class="section-title text-left">
@@ -326,7 +325,7 @@
     <!-- ALL JS FILES -->
     <script src="js/all.js"></script>
     <!-- Camera Slider -->
-    <script src="js/jquery.mobile.customized.min.js"></script>
+    <!-- <script src="js/jquery.mobile.customized.min.js"></script> -->
     <script src="js/jquery.easing.1.3.js"></script>
     <script src="js/parallaxie.js"></script>
     <script src="js/headline.js"></script>
