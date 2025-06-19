@@ -312,6 +312,20 @@
                         </select>
                         <button id="stat-province-btn" class="map-btn">统计省份足迹</button>
                     </div>
+
+                    <div class="time-filter">
+                        <label>年份范围：</label>
+                        <div class="slider-container">
+                            <span id="start-year-display">2015年以前</span>
+                            <input type="range" id="year-start" min="2014" max="2025" value="2014" step="1">
+                            <input type="range" id="year-end" min="2015" max="2025" value="2025" step="1">
+                            <span id="end-year-display">2025年</span>
+                        </div>
+                        <div class="time-filter-buttons">
+                            <button id="stat-year-btn" class="map-btn">按时间筛选</button>
+                            <button id="reset-time-filter" class="map-btn">重置筛选</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             

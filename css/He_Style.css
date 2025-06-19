@@ -830,114 +830,116 @@ header #menu-btn:hover{
     margin-bottom: 4rem;
 }
 
-/* 修改地图容器样式 */
+/* 新增地图控件样式 */
 #map-container {
     position: relative;
-    height: 80vh;
     width: 100%;
-    margin: 20px auto;
-    border-radius: 5px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
+    height: 600px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
-/* 按钮组样式优化 */
-.map-btn-group {
+.map-controls {
     position: absolute;
     top: 10px;
     right: 10px;
+    width: 22%; /* 相对宽度 */
+    max-width: 250px; /* 最大宽度 */
     z-index: 1000;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    max-width: 300px; /* 限制最大宽度 */
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
+.map-control-group {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+}
+
+.map-control-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* 小尺寸按钮 */
 .map-btn {
-    padding: 6px 12px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 1px solid var(--green);
-    color: var(--green);
-    border-radius: 20px;
-    font-size: 12px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    white-space: nowrap; /* 防止文字换行 */
-    max-width: 120px; /* 限制按钮宽度 */
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 6px 8px;
+    font-size: 13px;
+    background-color: #189e07;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
 }
 
 .map-btn:hover {
     background-color: var(--green);
-    color: white;
     transform: translateY(-2px);
 }
 
-.map-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+/* 添加禁用按钮样式 */
+.map-btn[disabled] {
+    background-color: rgba(15, 83, 30, 0.1) !important;
+    color: #aaa !important;
+    border-color: #ccc !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
-/* 时间筛选器样式优化 */
-.time-filter {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    width: calc(100% - 40px); /* 自适应宽度 */
-    max-width: 500px; /* 最大宽度限制 */
+.map-btn[disabled]:hover {
+    background-color: rgba(15, 83, 30, 0.1) !important;
+    color: #aaa !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
-.slider-container {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
+/* 紧凑输入框 */
+.compact-input {
+    width: 100%;
+    padding: 6px;
+    font-size: 13px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    grid-column: span 2;
 }
 
-.slider-container input[type="range"] {
-    flex-grow: 1;
-    margin: 0 10px;
-    height: 6px;
+/* 紧凑选择框 */
+.compact-select {
+    width: 100%;
+    padding: 6px;
+    font-size: 13px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    grid-column: span 2;
 }
 
-.slider-container span {
-    min-width: 50px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.time-filter-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-/* 查询输入框样式 */
-#query-input {
-    padding: 6px 12px;
-    border: 1px solid var(--green);
-    border-radius: 20px;
-    font-size: 12px;
-    max-width: 120px;
-}
-
-/* 省份选择器样式 */
-#province-select {
-    padding: 6px 12px;
-    border: 1px solid var(--green);
-    border-radius: 20px;
-    font-size: 12px;
-    max-width: 120px;
-    background-color: rgba(255, 255, 255, 0.9);
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .map-controls {
+        width: 30%;
+    }
+    
+    .map-btn {
+        padding: 5px;
+        font-size: 12px;
+    }
+    
+    .compact-input,
+    .compact-select {
+        font-size: 12px;
+    }
 }
 
 /*--------------------- Footprint (End) ---------------------*/

@@ -63,7 +63,7 @@ export async function queryPoint(map) {
         const cityName = json.geocodes[0].city;
         const body = {cityName};
 
-        const res = await fetch('http://localhost:5500/api/queryPoint', {
+        const res = await fetch('http://localhost:5500/api/queryPointForHe', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
@@ -124,20 +124,13 @@ function highlightQueryPoint(map,geoData) {
         content += `<p>${props.name}在${props.time}年来过这里</p>`;
     });
 
-    // 添加关闭按钮
-    content += `<button id="close-btn">关闭</button>`;
-
     // 创建并打开信息窗口
     queryInfoWindow = new AMap.InfoWindow({
         content: content,
-        offset: new AMap.Pixel(0, -10),
+        offset: new AMap.Pixel(0, -30),
         closeWhenClickMap: false
     }).open(map, queryMarker.getPosition());
 
-    //添加关闭按钮事件
-    document.getElementById('close-btn').addEventListener('click',() => {
-        clearQueryMarkers();
-    })
 
     map.add(queryMarker);
 

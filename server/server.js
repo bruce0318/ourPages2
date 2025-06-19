@@ -54,8 +54,8 @@ app.use('/api/addPoint',(req, res, next) => {
     next();
 });
 
-// 从数据库中获取足迹数据（单人）
-app.get('/api/getDatabasePoints', async (req, res) => {
+// 从数据库中获取足迹数据（个人）
+app.get('/api/getDatabasePointsForHe', async (req, res) => {
     try {
         const query = `
             SELECT json_build_object('type', 'FeatureCollection','features', 
@@ -90,8 +90,8 @@ app.get('/api/getDatabasePoints', async (req, res) => {
     }
 });
 
-// 从数据库中获取足迹数据（多人）
-app.post('/api/getPointsFromGroupDB', async (req, res) => {
+// 从数据库中获取足迹数据（小组）
+app.post('/api/getDatabasePoints', async (req, res) => {
     const { userName } = req.body;
     console.log("收到获取点数据请求：", userName)
 
@@ -129,7 +129,7 @@ app.post('/api/getPointsFromGroupDB', async (req, res) => {
     }
 });
 
-// 添加足迹点路由
+// 添加足迹点（个人和小组共用一个）
 app.post('/api/addPoint', async (req, res) => {
     try {
         const { lng, lat, code, province, city, year, user } = req.body;
@@ -149,7 +149,7 @@ app.post('/api/addPoint', async (req, res) => {
 
 });
 
-//删除足迹点路由
+// 删除足迹点（个人和小组共用一个）
 app.post('/api/deletePoint', async (req, res) => {
     const { cityName, user } = req.body;
     console.log('收到删除点请求:', { cityName, user });
@@ -176,7 +176,7 @@ app.post('/api/deletePoint', async (req, res) => {
     }
 });
 
-// 修改足迹点路由
+// 修改足迹点（个人和小组共用一个）
 app.post('/api/updatePoint', async (req, res) => {
     const { cityName, user, newYear } = req.body;
     console.log('收到修改点请求:', { cityName, user, newYear });
@@ -203,7 +203,51 @@ app.post('/api/updatePoint', async (req, res) => {
 
 });
 
-// 查询足迹点路由
+// 查询足迹点（个人）
+app.post('/api/queryPointForHe', async (req, res) => {
+    const { cityName } = req.body;
+    console.log('收到查询点请求:', { cityName });
+
+    if (!cityName) {
+        return res.status(400).json({ error: '缺少城市名称参数' });
+    }
+
+    const query = `
+        SELECT json_build_object('type', 'FeatureCollection','features', 
+                    json_agg(
+                        json_build_object(
+                            'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
+                            'properties', json_build_object(
+                            'name', name,
+                            'time', time,
+                            'province', province,
+                            'city', city
+                        )
+                    )
+                )
+            ) AS geojson
+        FROM all_footprints 
+        WHERE city = $1 AND name = '何灿非';`; 
+    
+    try {
+        const result = await pool.query(query, [cityName]); // 传递参数
+
+        if (result.rows.length === 0 || !result.rows[0].geojson) {
+            return res.status(404).json({ error: "未找到该城市的足迹记录" });
+        }
+        
+        const geojson = result.rows[0].geojson;
+        console.log("生成的GeoJSON:", JSON.stringify(geojson, null, 2));
+        return res.json(geojson);
+        
+    } catch (err) {
+        console.error("查询错误：", err);
+        return res.status(500).json({ error: "数据库查询失败" });
+    }
+
+});
+
+// 查询足迹点（小组）
 app.post('/api/queryPoint', async (req, res) => {
     const { cityName } = req.body;
     console.log('收到查询点请求:', { cityName });
@@ -246,7 +290,50 @@ app.post('/api/queryPoint', async (req, res) => {
 
 });
 
-// 按省份统计足迹点路由
+// 按省份统计足迹点路由（个人）
+app.post('/api/statProvinceForHe', async (req, res) => { 
+    const { provinceName } = req.body;
+    console.log('收到省份查询请求:', { provinceName });
+
+    if (!provinceName) {
+        return res.status(400).json({ error: '缺少省份名称参数' });
+    }
+
+    const query = `
+        SELECT json_build_object('type', 'FeatureCollection','features', 
+                    json_agg(
+                        json_build_object(
+                            'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
+                            'properties', json_build_object(
+                            'name', name,
+                            'time', time,
+                            'province', province,
+                            'city', city
+                        )
+                    )
+                )
+            ) AS geojson
+        FROM all_footprints 
+        WHERE province = $1 AND name = '何灿非'`; 
+    
+    try {
+        const result = await pool.query(query, [provinceName]); // 传递参数
+
+        if (result.rows.length === 0 || !result.rows[0].geojson) {
+            return res.status(404).json({ error: "未找到该省份" });
+        }
+        
+        const geojson = result.rows[0].geojson;
+        return res.json(geojson);
+        
+    } catch (err) {
+        console.error("查询错误：", err);
+        return res.status(500).json({ error: "数据库查询失败" });
+    }
+
+});
+
+// 按省份统计足迹点路由（小组）
 app.post('/api/statProvince', async (req, res) => { 
     const { provinceName } = req.body;
     console.log('收到省份查询请求:', { provinceName });
@@ -288,7 +375,7 @@ app.post('/api/statProvince', async (req, res) => {
 
 });
 
-// 获取省份空间数据并绘制路由
+// 获取省份空间数据
 app.post('/api/drawProvince', async (req, res) => { 
     const { provinceName } = req.body;
     console.log('收到省份绘制请求:', { provinceName });
@@ -328,7 +415,7 @@ app.post('/api/drawProvince', async (req, res) => {
 
 });
 
-// 按照时间获取足迹点（单人）
+// 按照时间获取足迹点（个人）
 app.post('/api/statYearForHe', async (req, res) => {
     const { startYear, endYear } = req.body;
     console.log("收到时间筛选请求： 开始时间：", startYear, "结束时间：", endYear);
@@ -367,7 +454,7 @@ app.post('/api/statYearForHe', async (req, res) => {
     }
 });
 
-// 按照时间获取足迹点（多人）
+// 按照时间获取足迹点（小组）
 app.post('/api/statYear', async (req, res) => {
     const { startYear, endYear } = req.body;
     console.log("收到时间筛选请求： 开始时间：", startYear, "结束时间：", endYear);

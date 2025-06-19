@@ -4,8 +4,8 @@ const MAP_Server_KEY = 'd8a7b93f3cd67c42cac944d72765ca9c';
 export async function addPoint(map, overlayGroup) {
     const name = prompt("请输入城市名称（如：南宁市）：");
     const year = prompt("请输入年份（如：2023）：");
-    const user = prompt("请输入用户名称：");
-    //const user = '何灿非';   //仅做测试
+    //const user = prompt("请输入用户名称：");
+    const user = '何灿非';   //个人网页使用
 
     if (!name || !year || isNaN(year)) {
         alert("输入无效，请重新输入有效的城市和年份。");

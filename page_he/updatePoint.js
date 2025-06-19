@@ -59,7 +59,8 @@ export function updatePoint(overlayGroup) {
                     return;
                 }
 
-                const user = prompt(`请输入要修改 ${cityName} 足迹点的用户名称：`);
+                // const user = prompt(`请输入要修改 ${cityName} 足迹点年份的用户名称：`);
+                const user = '何灿非'; //个人足迹地图使用
                 if (!user) return;
 
                 const newYear = prompt(`请输入修改后的年份：`);

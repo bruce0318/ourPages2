@@ -58,7 +58,9 @@ export function deletePoint(overlayGroup) {
                     return;
                 }
 
-                const user = prompt(`请输入要删除 ${cityName} 足迹点的用户名称：`);
+                // const user = prompt(`请输入要删除 ${cityName} 足迹点的用户名称：`); 
+                const user = '何灿非' //个人足迹地图使用
+                
                 if (!user) return;
                 
                 const confirmDel = confirm(`确定要删除 ${user} 在 ${cityName} 的足迹点吗？`);

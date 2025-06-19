@@ -32,7 +32,7 @@ export async function loadUserPoints(userId, map, userLayers){
         if (geoData.features && Array.isArray(geoData.features)) {
             geoData.features.forEach(feature => {
                 if (feature.geometry.type === 'Point') {
-                    createPointMarker(feature, overlayGroup, userMap[userId]);
+                    createPointMarker(feature, overlayGroup, userMap[userId], map);
                 }
             });
         }
@@ -59,7 +59,7 @@ export function removeUserPoints(userId, userLayers) {
 }
 
 //创建点图层标记
-export function createPointMarker(feature, overlayGroup, userName){
+export function createPointMarker(feature, overlayGroup, userName, map){
 
     const [lng, lat] = feature.geometry.coordinates;
     const props = feature.properties;
@@ -81,7 +81,7 @@ export function createPointMarker(feature, overlayGroup, userName){
     // 信息窗口内容
     marker.content = `
         <div class="info-window">
-            <h3>${props.province ? `${props.province}·` : ''}${props.city}</h3>
+            <h3>${getLocationDisplay(props)}</h3>
             <p>${userName}在${props.time}年来过这里</p>
         </div>
     `;
@@ -90,7 +90,7 @@ export function createPointMarker(feature, overlayGroup, userName){
     marker.on('click', () => {
         new AMap.InfoWindow({
             content: marker.content,
-            offset: new AMap.Pixel(0, -30)
+            offset: new AMap.Pixel(0, -5)
         }).open(map, marker.getPosition());
     });
     
@@ -106,4 +106,19 @@ function getIconForUser(userName) {
         '崔泽铭': 'images/footprint/mark_4.png'
     };
     return icons[userName] || 'images/icons/default.png';
+}
+
+// 判断直辖市和特别行政区
+function getLocationDisplay(props) {
+    const municipalities = ['北京市', '天津市', '上海市', '重庆市'];
+    const specialRegions = ['香港特别行政区', '澳门特别行政区'];
+    
+    // 如果是直辖市或特别行政区，直接显示城市名
+    if (municipalities.includes(props.province) || 
+        specialRegions.includes(props.province)) {
+        return props.province;
+    }
+    
+    // 其他情况
+    return props.province ? `${props.province}·${props.city}` : props.city;
 }

@@ -88,7 +88,7 @@ export async function reloadLayerFromDB(){
     }
     
     try {
-        const response = await fetch('http://localhost:5500/api/getDatabasePoints');
+        const response = await fetch('http://localhost:5500/api/getDatabasePointsForHe');
         const geoData = await response.json();
 
         console.log("接收到的 GeoJSON:", geoData);
@@ -172,7 +172,7 @@ export function createPointMarker(feature) {
     //信息窗口代码
     marker.content = `
     <div class="info-window">
-        <h3>${props.province ? `${props.province}·` : ''}${props.city}</h3>
+        <h3>${getLocationDisplay(props)}</h3>
         <p>${props.name}在${props.time}年来过这里</p>
     </div>
 `;
@@ -284,6 +284,22 @@ function removeGeoServerWMSLayer() {
         console.log('未加载 GeoServer WMS 图层');
     }
 }
+
+// 判断直辖市和特别行政区
+function getLocationDisplay(props) {
+    const municipalities = ['北京市', '天津市', '上海市', '重庆市'];
+    const specialRegions = ['香港特别行政区', '澳门特别行政区'];
+    
+    // 如果是直辖市或特别行政区，直接显示城市名
+    if (municipalities.includes(props.province) || 
+        specialRegions.includes(props.province)) {
+        return props.province;
+    }
+    
+    // 其他情况
+    return props.province ? `${props.province}·${props.city}` : props.city;
+}
+
 
 // 全区按钮ID列表
 const controlButtonIds = [

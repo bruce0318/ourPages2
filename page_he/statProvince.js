@@ -50,7 +50,7 @@ export async function statProvince(map) {
     const provinceName = input
     const body = {provinceName};
 
-    const res_points = await fetch('http://localhost:5500/api/statProvince', {
+    const res_points = await fetch('http://localhost:5500/api/statProvinceForHe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -88,12 +88,14 @@ export async function statProvince(map) {
                 }
             });
             
-            content += `<div><h3>共有${uniqueUser.size}人来过${input}，走过${uniqueCity.size}个城市：</h3></div>`;
-            
+            // content += `<div><h3>共有${uniqueUser.size}人来过${input}，走过${uniqueCity.size}个城市：</h3></div>`;  // 小组足迹地图
+            content += `<div><h3>何灿非走过${input}的${uniqueCity.size}个城市：</h3></div>`;  // 个人足迹地图
+
             // 添加每条足迹记录
             pointsData.features.forEach(record => {
                 const props = record.properties;
-                content += `<p>${props.name}在${props.time}年去过${props.city}</p>`; 
+                // content += `<p>${props.name}在${props.time}年去过${props.city}</p>`; // 小组足迹地图
+                content += `<p>在${props.time}年去过${props.city}</p>`; // 个人足迹地图
             });
         }
 
