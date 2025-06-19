@@ -262,8 +262,67 @@
             <h3 class="section-tips">点击地图右上方按钮可加载或移除足迹,点击地图中的足迹点可查看详细信息</h3>
             <div id="map-container">                
                 <div class="map-btn-group">
-                    <button id="load-layer-btn" class="map-btn">加载足迹</button>
-                    <button id="remove-layer-btn" class="map-btn" disabled>移除足迹</button>
+                    <button id="load-layer-btn" class="map-btn">加载足迹城市</button>
+                    <button id="remove-layer-btn" class="map-btn" disabled>移除足迹城市</button>
+                    <button id="load-layer-fromDB-btn" class="map-btn">刷新足迹城市</button>
+                    <button id="load-geoserver_layer-btn" class="map-btn" >加载足迹省份</button>
+                    <button id="remove-geoserver_layer-btn" class="map-btn">移除足迹省份</button>
+                    <button id="add-point-btn" class="map-btn">新增足迹点</button>
+                    <button id="delete-point-btn" class="map-btn">删除足迹点</button>
+                    <button id="update-point-btn" class="map-btn">修改足迹点年份</button>
+                    <input id="query-input" type="text" placeholder="输入城市名称">
+                    <button id="query-point-btn" class="map-btn">查询城市</button>
+                    <select id="province-select">
+                        <option value="">选择省份</option>
+                        <option value="北京市">北京市</option>
+                        <option value="天津市">天津市</option>
+                        <option value="河北省">河北省</option>
+                        <option value="山西省">山西省</option>
+                        <option value="内蒙古自治区">内蒙古自治区</option>
+                        <option value="辽宁省">辽宁省</option>
+                        <option value="吉林省">吉林省</option>
+                        <option value="黑龙江省">黑龙江省</option>
+                        <option value="上海市">上海市</option>
+                        <option value="江苏省">江苏省</option>
+                        <option value="浙江省">浙江省</option>
+                        <option value="安徽省">安徽省</option>
+                        <option value="福建省">福建省</option>
+                        <option value="江西省">江西省</option>
+                        <option value="山东省">山东省</option>
+                        <option value="河南省">河南省</option>
+                        <option value="湖北省">湖北省</option>
+                        <option value="湖南省">湖南省</option>
+                        <option value="广东省">广东省</option>
+                        <option value="广西壮族自治区">广西壮族自治区</option>
+                        <option value="海南省">海南省</option>
+                        <option value="重庆市">重庆市</option>
+                        <option value="四川省">四川省</option>
+                        <option value="贵州省">贵州省</option>
+                        <option value="云南省">云南省</option>
+                        <option value="西藏自治区">西藏自治区</option>
+                        <option value="陕西省">陕西省</option>
+                        <option value="甘肃省">甘肃省</option>
+                        <option value="青海省">青海省</option>
+                        <option value="宁夏回族自治区">宁夏回族自治区</option>
+                        <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
+                        <option value="台湾省">台湾省</option>
+                        <option value="香港特别行政区">香港特别行政区</option>
+                        <option value="澳门特别行政区">澳门特别行政区</option>
+                    </select>
+                    <button id="stat-province-btn" class="map-btn">按省份统计足迹点</button>
+                </div>
+                <div class="time-filter">
+                    <label>年份范围：</label>
+                    <div class="slider-container">
+                        <span id="start-year-display">2015年以前</span>
+                        <input type="range" id="year-start" min="2014" max="2025" value="2014" step="1">
+                        <input type="range" id="year-end" min="2015" max="2025" value="2025" step="1">
+                        <span id="end-year-display">2025年</span>
+                    </div>
+                    <div class="time-filter-buttons">
+                        <button id="stat-year-btn">按时间筛选</button>
+                        <button id="reset-time-filter">重置筛选</button>
+                    </div>
                 </div>
             </div>                
         </div>
@@ -543,9 +602,24 @@
             </div>  
         </div> 
         
+        <div class="city-group">
+            <h3 class="group-title">西北</h3>
+            <div class="city-cards">
+                <div class="city-card">
+                    <img src="images/he/xian.jpg" alt="西安">
+                    <div class="card-overlay">
+                        <h4>西安</h4>
+                        <p>千年长安展新颜，丝路起点连世界</p>
+                        <button class="btn weather-btn" data-city="西安">获取城市实时天气</button>
+                        <div class="weather-info"></div>
+                    </div>
+                </div>
+            </div>  
+        </div> 
+
         <div class="chartSection">
             <h2 class="section-title">各省走过的城市数量统计</h2>
-            <div id="chart-container" style="width: 100%; height: 100%;"></div>
+            <div id="chart-container" style="width: 100%; height: 500%;"></div>
         </div>
 
     </section>
@@ -614,44 +688,16 @@
 
 
 
-    <!--js引用-->
+    <!---------------- js引用 ---------------->
     <script src="page_he/city.js"></script>
     <script src="page_he/getWeather.js"></script>
     <script src="page_he/chart.js"></script>
-    <script src="page_he/mapShow.js"></script>
+    <script type="module" src="page_he/mapShow.js"></script>
 
-    <!---------------- Custom Script ---------------->
+    <!---------------- echarts图表引用 ---------------->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
 
-    <!-- Typed Script -->
-    <script>
-        var typed = new Typed('.typing-text', {
 
-            strings: ['Web developer', 'web designer', 'photographer', 'graphic designer'],
-            typeSpeed: 120,
-            loop: true
-        });
-    </script>
-
-    <!-- Contact-Form Script -->
-    <script>
-        jQuery('#contactUs-Form').on('submit',function(e){
-          jQuery('#msg').html('');
-          jQuery('#submit').html('Please wait');
-          jQuery('#submit').attr('disabled',true);
-          jQuery.ajax({
-              url:'assets/php/submit.php',
-              type:'post',
-              data:jQuery('#contactUs-Form').serialize(),
-              success:function(result){
-                  jQuery('#msg').html(result);
-                  jQuery('#submit').html('Submit');
-                  jQuery('#submit').attr('disabled',false);
-                  jQuery('#contactUs-Form')[0].reset();
-              }
-          });
-          e.preventDefault();
-        });
-    </script>
 
 </body>
 </html>

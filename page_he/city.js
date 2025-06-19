@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const weatherInfoDiv = button.nextElementSibling;
 
             try {
-                const response = await fetch('/getWeather', {
+                const response = await fetch('./getWeather', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
