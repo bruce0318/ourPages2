@@ -15,7 +15,7 @@ export async function loadUserPoints(userId, map, userLayers){
     
     try {
         const body = {userName: userMap[userId]};
-        const response = await fetch('http://localhost:5500/api/getPointsFromGroupDB', {
+        const response = await fetch('http://localhost:5500/api/getDatabasePoints', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
