@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 // 修改CORS设置
 app.use(cors({
-    origin:  ['http://localhost:5500', 'http://127.0.0.1:5500'],
+    origin:  '*',
     methods: ['POST', 'GET', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -56,6 +56,7 @@ app.use('/api/addPoint',(req, res, next) => {
 
 // 从数据库中获取足迹数据（个人）
 app.get('/api/getDatabasePointsForHe', async (req, res) => {
+    console.log("收到获取个人点数据请求")
     try {
         const query = `
             SELECT json_build_object('type', 'FeatureCollection','features', 
