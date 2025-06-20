@@ -129,6 +129,45 @@ app.post('/api/getDatabasePoints', async (req, res) => {
     }
 });
 
+// 从数据库中获取所有足迹数据
+app.get('/api/getAllDatabasePoints', async (req, res) => {
+    console.log("收到获取所有点数据请求")
+
+    try {
+        const query = `
+            SELECT json_build_object('type', 'FeatureCollection','features', 
+                        json_agg(
+                            json_build_object(
+                                'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
+                                'properties', json_build_object(
+                                'name', name,
+                                'time', time,
+                                'province', province,
+                                'city', city
+                            )
+                        )
+                    )
+                ) AS geojson
+            FROM all_footprints`;
+        
+        const result = await pool.query(query);
+        
+        if (result.rows.length === 0 || !result.rows[0].geojson) {
+            return res.status(404).send("未找到数据");
+        }
+        
+        const geojson = result.rows[0].geojson;
+        console.log("已生成GeoJSON并回传");
+        console.log("生成的GeoJSON:", JSON.stringify(geojson, null, 2));
+        return res.json(geojson);
+
+    } catch (err) {
+        console.error("获取点数据错误：", err);
+        return res.status(500).send("数据库查询失败");
+    }
+});
+
+
 // 添加足迹点（个人和小组共用一个）
 app.post('/api/addPoint', async (req, res) => {
     try {
@@ -163,6 +202,20 @@ app.post('/api/deletePoint', async (req, res) => {
     }
     
     try {
+        // 先查询是否存在匹配的记录
+        const queryResult = await pool.query(
+            `SELECT * FROM all_footprints WHERE city = $1 AND name = $2`,
+            [cityName, user]
+        );
+
+        if (queryResult.rows.length === 0) {
+            // 没有找到匹配的记录
+            return res.status(404).json({ 
+                error: "not_found",
+                message: `未找到 ${user} 在 ${cityName} 的足迹点`
+            });
+        }
+
         // 使用城市名称与用户名删除
         const result = await pool.query(
             `DELETE FROM all_footprints WHERE city = $1 AND name = $2`,[cityName, user]
@@ -192,6 +245,20 @@ app.post('/api/updatePoint', async (req, res) => {
     }
 
     try {
+        // 先查询是否存在匹配的记录
+        const queryResult = await pool.query(
+            `SELECT * FROM all_footprints WHERE city = $1 AND name = $2`,
+            [cityName, user]
+        );
+
+        if (queryResult.rows.length === 0) {
+            // 没有找到匹配的记录
+            return res.status(404).json({ 
+                error: "not_found",
+                message: `未找到 ${user} 在 ${cityName} 的足迹点`
+            });
+        }
+
         await pool.query(`UPDATE all_footprints SET time=$3 WHERE city=$1 AND name=$2`, [cityName, user, newYear]);
         res.send("ok");
         console.log(`修改${user}的足迹点 ${cityName} 成功`);
@@ -213,21 +280,27 @@ app.post('/api/queryPointForHe', async (req, res) => {
     }
 
     const query = `
-        SELECT json_build_object('type', 'FeatureCollection','features', 
-                    json_agg(
-                        json_build_object(
-                            'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
-                            'properties', json_build_object(
-                            'name', name,
-                            'time', time,
-                            'province', province,
-                            'city', city
-                        )
+        SELECT json_build_object(
+            'type', 'FeatureCollection',
+            'features', json_agg(
+                json_build_object(
+                    'type', 'Feature',
+                    'geometry', ST_AsGeoJSON(geom)::json,
+                    'properties', json_build_object(
+                        'name', name,
+                        'time', time,
+                        'province', province,
+                        'city', city
                     )
                 )
-            ) AS geojson
-        FROM all_footprints 
-        WHERE city = $1 AND name = '何灿非';`; 
+            )
+        ) AS geojson
+        FROM (
+            SELECT name, time, province, city, geom 
+            FROM all_footprints 
+            WHERE city = $1 AND name = '何灿非'
+            ORDER BY name DESC, time DESC
+        ) AS sorted_data;`; 
     
     try {
         const result = await pool.query(query, [cityName]); // 传递参数
@@ -257,20 +330,27 @@ app.post('/api/queryPoint', async (req, res) => {
     }
 
     const query = `
-        SELECT json_build_object('type', 'FeatureCollection','features', 
-                    json_agg(
-                        json_build_object(
-                            'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
-                            'properties', json_build_object(
-                            'name', name,
-                            'time', time,
-                            'province', province,
-                            'city', city
-                        )
+        SELECT json_build_object(
+            'type', 'FeatureCollection',
+            'features', json_agg(
+                json_build_object(
+                    'type', 'Feature',
+                    'geometry', ST_AsGeoJSON(geom)::json,
+                    'properties', json_build_object(
+                        'name', name,
+                        'time', time,
+                        'province', province,
+                        'city', city
                     )
                 )
-            ) AS geojson
-        FROM all_footprints WHERE city = $1 ;`; 
+            )
+        ) AS geojson
+        FROM (
+            SELECT name, time, province, city, geom 
+            FROM all_footprints 
+            WHERE city = $1 
+            ORDER BY name DESC, time DESC
+        ) AS sorted_data;`; 
     
     try {
         const result = await pool.query(query, [cityName]); // 传递参数
@@ -290,7 +370,7 @@ app.post('/api/queryPoint', async (req, res) => {
 
 });
 
-// 按省份统计足迹点路由（个人）
+// 按省份统计足迹点（个人）
 app.post('/api/statProvinceForHe', async (req, res) => { 
     const { provinceName } = req.body;
     console.log('收到省份查询请求:', { provinceName });
@@ -313,8 +393,12 @@ app.post('/api/statProvinceForHe', async (req, res) => {
                     )
                 )
             ) AS geojson
-        FROM all_footprints 
-        WHERE province = $1 AND name = '何灿非'`; 
+        FROM (
+            SELECT name, time, province, city, geom 
+            FROM all_footprints 
+            WHERE province = $1 AND name = '何灿非' 
+            ORDER BY name DESC, time DESC
+        ) AS sorted_data;`; 
     
     try {
         const result = await pool.query(query, [provinceName]); // 传递参数
@@ -333,7 +417,7 @@ app.post('/api/statProvinceForHe', async (req, res) => {
 
 });
 
-// 按省份统计足迹点路由（小组）
+// 按省份统计足迹点（小组）
 app.post('/api/statProvince', async (req, res) => { 
     const { provinceName } = req.body;
     console.log('收到省份查询请求:', { provinceName });
@@ -356,7 +440,12 @@ app.post('/api/statProvince', async (req, res) => {
                     )
                 )
             ) AS geojson
-        FROM all_footprints WHERE province = $1`; 
+        FROM (
+            SELECT name, time, province, city, geom 
+            FROM all_footprints 
+            WHERE province = $1 
+            ORDER BY name DESC, time DESC
+        ) AS sorted_data;`; 
     
     try {
         const result = await pool.query(query, [provinceName]); // 传递参数
@@ -456,8 +545,8 @@ app.post('/api/statYearForHe', async (req, res) => {
 
 // 按照时间获取足迹点（小组）
 app.post('/api/statYear', async (req, res) => {
-    const { startYear, endYear } = req.body;
-    console.log("收到时间筛选请求： 开始时间：", startYear, "结束时间：", endYear);
+    const { userName, startYear, endYear } = req.body;
+    console.log("收到按用户时间筛选请求：", { userName, startYear, endYear });
 
     try {
         const query = `
@@ -475,9 +564,9 @@ app.post('/api/statYear', async (req, res) => {
                     )
                 ) AS geojson
             FROM all_footprints
-            WHERE time >= $1 AND time <= $2;`;
+            WHERE name = $1 AND time >= $2 AND time <= $3;`;
         
-        const result = await pool.query(query, [startYear, endYear]);
+        const result = await pool.query(query, [userName, startYear, endYear]);
         
         if (result.rows.length === 0 || !result.rows[0].geojson) {
             return res.status(404).send("未找到数据");

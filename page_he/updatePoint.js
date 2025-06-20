@@ -64,7 +64,7 @@ export function updatePoint(overlayGroup) {
                 if (!user) return;
 
                 const newYear = prompt(`请输入修改后的年份：`);
-                if (!user) return;
+                if (!newYear) return;
                 
                 const confirmDel = confirm(`确定要修改 ${user} 在 ${cityName} 的足迹点年份为 ${newYear} 年吗？`);
                 if (!confirmDel) return;

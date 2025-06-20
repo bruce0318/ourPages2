@@ -1,6 +1,14 @@
 import { loadUserPoints, removeUserPoints } from './loadPoints.js';
+import { addPoint } from './addPoint.js'; 
+import { deletePoint } from './deletePoint.js';
+import { updatePoint } from './updatePoint.js';
+import { queryPoint } from './queryPoint.js';
+import { statProvince } from './statProvince.js';
+import { statYear, resetTimeFilter} from './statYear.js';
 
-const userLayers = {};
+export let map = null;
+export const userLayers = {};
+const userIds = ['huang', 'gao', 'he', 'cui']; // 所有用户ID
 
 // 确保高德地图API已加载
 function loadAMapScript() {
@@ -22,7 +30,7 @@ async function initMap() {
     await loadAMapScript();
 
     // 初始化地图
-    var map = new AMap.Map('map', {
+    map = new AMap.Map('map', {
         zoom: 4,
         center: [108.94, 34.34],
         resizeEnable: true,
@@ -52,14 +60,106 @@ async function initMap() {
             }
         });
     });
-    
-    // 按钮事件占位函数
-    document.getElementById('add-point-btn').addEventListener('click', function() {
-        console.log('新增足迹点');
-    });
-    
-    // 其他按钮事件...
+
 }
 
 // 确保在页面加载完成后初始化地图
 window.addEventListener('DOMContentLoaded', initMap);
+
+
+// 按钮事件绑定
+document.getElementById('load-point-btn').addEventListener('click', function() {
+    userIds.forEach(userId => {
+        const checkbox = document.getElementById(`layer-${userId}`);
+        if (checkbox) {
+            // 勾选复选框并触发change事件
+            checkbox.checked = true;
+            const event = new Event('change');
+            checkbox.dispatchEvent(event);
+        }
+    });
+});
+
+document.getElementById('remove-point-btn').addEventListener('click', function() {
+    userIds.forEach(userId => {
+        const checkbox = document.getElementById(`layer-${userId}`);
+        if (checkbox) {
+            // 取消勾选复选框并触发change事件
+            checkbox.checked = false;
+            const event = new Event('change');
+            checkbox.dispatchEvent(event);
+        }
+    });
+});
+
+document.getElementById('add-point-btn').addEventListener('click', () => {addPoint(map, userLayers);});
+document.getElementById('delete-point-btn').addEventListener('click', () => {deletePoint(map, userLayers);});
+document.getElementById('update-point-btn').addEventListener('click', () => {updatePoint(map, userLayers);});
+document.getElementById('query-point-btn').addEventListener('click', () => {queryPoint(map);});
+document.getElementById('stat-province-btn').addEventListener('click', () => {statProvince(map);});
+
+// 时间滑块事件处理
+const yearStart = document.getElementById('year-start');
+const yearEnd = document.getElementById('year-end');
+const startYearDisplay = document.getElementById('start-year-display');
+const endYearDisplay = document.getElementById('end-year-display');
+
+// 更新年份显示
+function updateYearDisplay() {
+    startYearDisplay.textContent = yearStart.value < 2015 ? 
+        '2015年以前' : `${yearStart.value}年`;
+    endYearDisplay.textContent = `${yearEnd.value}年`;
+}
+
+yearStart.addEventListener('input', updateYearDisplay);
+yearEnd.addEventListener('input', updateYearDisplay);
+
+// 初始显示
+updateYearDisplay();
+
+// 按时间筛选按钮事件
+document.getElementById('stat-year-btn').addEventListener('click', () => {
+    const start = parseInt(yearStart.value);
+    const end = parseInt(yearEnd.value);
+    
+    if (start > end) {
+        alert("起始年份不能大于结束年份");
+        return;
+    }
+    
+    statYear(map, userLayers, start, end);
+});
+
+// 重置时间筛选按钮事件
+document.getElementById('reset-time-filter').addEventListener('click', () => {
+    resetTimeFilter(map, userLayers);
+    
+    // 重置滑块位置
+    yearStart.value = 2014;
+    yearEnd.value = 2025;
+    updateYearDisplay();
+});
+
+
+// 全区按钮ID列表
+const controlButtonIds = [
+    'load-point-btn',
+    'remove-point-btn',
+    'add-point-btn',
+    'delete-point-btn',
+    'update-point-btn',
+    'query-point-btn',
+    'stat-province-btn',
+    'stat-year-btn',
+    'reset-time-filter'
+];
+
+// 添加按钮禁用/启用函数
+export function setButtonsDisabled(disabled) {
+    controlButtonIds.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.disabled = disabled;
+        }
+    });
+} 

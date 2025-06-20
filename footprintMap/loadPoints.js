@@ -51,6 +51,100 @@ export async function loadUserPoints(userId, map, userLayers){
     }
 }
 
+// 加载所有用户的足迹点
+export async function loadAllUserPoints(map, user) {
+    try {
+        const response = await fetch('http://localhost:5500/api/getAllDatabasePoints')
+        const geoData = await response.json();
+        const props = geoData.features.properties;
+
+        // 创建覆盖物组
+        const overlayGroup = new AMap.OverlayGroup();
+        map.add(overlayGroup);
+
+        // 处理足迹点数据
+        if (geoData.features && Array.isArray(geoData.features)) {
+            geoData.features.forEach(feature => {
+                if (feature.geometry.type === 'Point') {
+                    createPointMarker(feature, overlayGroup, props.name, map);
+                }
+            });
+        }
+        
+        // 存储图层组
+        userLayers[userId] = {
+            group: overlayGroup,
+            show: () => overlayGroup.show(),
+            hide: () => overlayGroup.hide()
+        };
+
+        console.log(`所有的足迹点已加载`);
+    } catch (error) {
+        console.error(`加载所有足迹点失败：`, error);
+        throw error;
+    }
+}
+
+// 重新加载当前已显示的用户足迹点
+export async function reloadPoints(map, userLayers) {
+    if(map){
+        map.clearInfoWindow();
+    }
+    
+    // 获取当前所有已勾选的用户ID
+    const activeUserIds = Object.keys(userLayers).filter(userId => {
+        const checkbox = document.getElementById(`layer-${userId}`);
+        return checkbox?.checked;
+    });
+
+    // 移除当前所有已显示的足迹点
+    activeUserIds.forEach(userId => {
+        if (userLayers[userId]) {
+            // 从地图上移除图层组
+            map.remove(userLayers[userId].group);
+            // 删除图层记录
+            delete userLayers[userId];
+        }
+    });
+
+    // 重新加载当前已勾选的用户足迹点
+    for (const userId of activeUserIds) {
+        try {
+            const body = { userName: userMap[userId] };
+            const response = await fetch('http://localhost:5500/api/getDatabasePoints', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const geoData = await response.json();
+
+            // 创建新的覆盖物组
+            const overlayGroup = new AMap.OverlayGroup();
+            map.add(overlayGroup);
+
+            // 处理足迹点数据
+            if (geoData.features?.length > 0) {
+                geoData.features.forEach(feature => {
+                    if (feature.geometry.type === 'Point') {
+                        createPointMarker(feature, overlayGroup, userMap[userId], map);
+                    }
+                });
+            }
+
+            // 更新图层组
+            userLayers[userId] = {
+                group: overlayGroup,
+                show: () => overlayGroup.show(),
+                hide: () => overlayGroup.hide()
+            };
+
+            console.log(`${userMap[userId]}的足迹点已重新加载`);
+        } catch (error) {
+            console.error(`重新加载用户${userId}足迹点失败：`, error);
+        }
+    }
+}
+
 // 移除指定用户的足迹点
 export function removeUserPoints(userId, userLayers) {
     if (userLayers[userId]) {
@@ -77,6 +171,8 @@ export function createPointMarker(feature, overlayGroup, userName, map){
         icon: icon,
         offset: new AMap.Pixel(-8, -8)
     });
+
+    marker.cityName = props.city;
 
     // 信息窗口内容
     marker.content = `
@@ -122,3 +218,4 @@ function getLocationDisplay(props) {
     // 其他情况
     return props.province ? `${props.province}·${props.city}` : props.city;
 }
+

@@ -2587,6 +2587,24 @@ select.mobile-device {
     transform: translateY(-2px);
 }
 
+/* 添加禁用按钮样式 */
+.map-btn[disabled] {
+    background-color: rgba(15, 83, 30, 0.1) !important;
+    color: #aaa !important;
+    border-color: #ccc !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.map-btn[disabled]:hover {
+    background-color: rgba(15, 83, 30, 0.1) !important;
+    color: #aaa !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 /* 紧凑输入框 */
 .compact-input {
     width: 100%;
