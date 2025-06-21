@@ -817,7 +817,7 @@ header #menu-btn:hover{
 }
 
 .chartSection{
-    height: 100%;
+    height: 500%;
     scroll-snap-align: start;
     padding: 4rem;
     background-color: #dcecd5;
@@ -830,45 +830,116 @@ header #menu-btn:hover{
     margin-bottom: 4rem;
 }
 
-
+/* 新增地图控件样式 */
 #map-container {
     position: relative;
-    height: 80vh;
     width: 100%;
-    margin: 20px auto;
-    border-radius: 5px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    height: 600px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
-.map-btn-group {
+.map-controls {
     position: absolute;
-    top: 2vh;
-    right: 2vw;
+    top: 10px;
+    right: 10px;
+    width: 22%; /* 相对宽度 */
+    max-width: 250px; /* 最大宽度 */
     z-index: 1000;
-    display: flex;
-    gap: 1vw;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
+.map-control-group {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+}
+
+.map-control-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* 小尺寸按钮 */
 .map-btn {
-    padding: 1vh 2vw;
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 1px solid var(--green);
-    color: var(--green);
-    border-radius: 2vw;
-    font-size: clamp(1.4rem, 1.5vw, 1.8rem);
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 6px 8px;
+    font-size: 13px;
+    background-color: #189e07;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
 }
 
 .map-btn:hover {
     background-color: var(--green);
-    color: white;
     transform: translateY(-2px);
 }
 
-.map-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+/* 添加禁用按钮样式 */
+.map-btn[disabled] {
+    background-color: rgba(15, 83, 30, 0.1) !important;
+    color: #aaa !important;
+    border-color: #ccc !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.map-btn[disabled]:hover {
+    background-color: rgba(15, 83, 30, 0.1) !important;
+    color: #aaa !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* 紧凑输入框 */
+.compact-input {
+    width: 100%;
+    padding: 6px;
+    font-size: 13px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    grid-column: span 2;
+}
+
+/* 紧凑选择框 */
+.compact-select {
+    width: 100%;
+    padding: 6px;
+    font-size: 13px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    grid-column: span 2;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .map-controls {
+        width: 30%;
+    }
+    
+    .map-btn {
+        padding: 5px;
+        font-size: 12px;
+    }
+    
+    .compact-input,
+    .compact-select {
+        font-size: 12px;
+    }
 }
 
 /*--------------------- Footprint (End) ---------------------*/

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>运输方式对比折线图</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    #main {
+      width: 100%;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 图表容器 -->
+  <div id="main"></div>
+
+  <!-- 引入 ECharts -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+
+  <!-- 图表配置 -->
+  <script>
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+
+    var option = {
+        title: {
+            text: '广西各主要内河港口在平陆运河修建前后出海所经各级航道里程对比\n(上面为修建前，下面为修建后)',
+            left: 'center',
+            top:0
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+            type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['一级航道', '二级航道', '三级航道'],
+            top:40
+        },
+        grid: {
+            left: '3%',
+            right: '12%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'value',
+            name: '千米',
+            nameLocation: 'end',
+            axisLabel: {
+            color: 'black'
+            }
+        },
+        yAxis: {
+            type: 'category',
+            data: ['崇左港', '百色港', '来宾港', '梧州港', '贵港港', '柳州港', '南宁港'],
+            axisLabel: {
+            color: 'black'
+            }
+        },
+        series: [
+            {
+            name: '一级航道',
+            type: 'bar',
+            stack: 'before',
+            label: {
+                show: true,
+                formatter: function(params) {
+                return params.value === 0 ? '' : params.value.toFixed(2);
+                }
+            },
+            emphasis: {
+                focus: 'series'
+            },
+            data: [594.61, 594.61, 515.01, 338.47, 594.61, 515.01, 594.61]
+            },
+            {
+            name: '二级航道',
+            type: 'bar',
+            stack: 'before',
+            label: {
+                show: true,
+                formatter: function(params) {
+                return params.value === 0 ? '' : params.value.toFixed(2);
+                }
+            },
+            emphasis: {
+                focus: 'series'
+            },
+            data: [315.95, 315.95, 196.25, 0, 30.54, 123.83, 266.28]
+            },
+            {
+            name: '三级航道',
+            type: 'bar',
+            stack: 'before',
+            label: {
+                show: true,
+                formatter: function(params) {
+                return params.value === 0 ? '' : params.value.toFixed(2);
+                }
+            },
+            emphasis: {
+                focus: 'series'
+            },
+            data: [33.78, 220.9, 0, 0, 0, 325.13, 0]
+            },
+            {
+            name: '一级航道',
+            type: 'bar',
+            stack: 'after',
+            label: {
+                show: true,
+                formatter: function(params) {
+                return params.value === 0 ? '' : params.value.toFixed(2);
+                }
+            },
+            emphasis: {
+                focus: 'series'
+            },
+            data: [141.87, 141.87, 218.03, 338.47, 141.87, 218.03, 141.87]
+            },
+            {
+            name: '二级航道',
+            type: 'bar',
+            stack: 'after',
+            label: {
+                show: true,
+                formatter: function(params) {
+                return params.value === 0 ? '' : params.value.toFixed(2);
+                }
+            },
+            emphasis: {
+                focus: 'series'
+            },
+            data: [183.21, 183.21, 364.99, 0, 138.2, 292.57, 266.28]
+            },
+            {
+            name: '三级航道',
+            type: 'bar',
+            stack: 'after',
+            label: {
+                show: true,
+                formatter: function(params) {
+                return params.value === 0 ? '' : params.value.toFixed(2);
+                }
+            },
+            emphasis: {
+                focus: 'series'
+            },
+            data: [33.78, 220.9, 0, 0, 0, 114.47, 0]
+            }    
+        ]
+
+    };
+
+    myChart.setOption(option);
+  </script>
+</body>
+</html>
