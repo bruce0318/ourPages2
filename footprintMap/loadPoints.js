@@ -15,7 +15,7 @@ export async function loadUserPoints(userId, map, userLayers){
     
     try {
         const body = {userName: userMap[userId]};
-        const response = await fetch('http://localhost:5500/api/getDatabasePoints', {
+        const response = await fetch('http://47.111.136.83:5500/api/getDatabasePoints', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ export async function loadUserPoints(userId, map, userLayers){
 // 加载所有用户的足迹点
 export async function loadAllUserPoints(map, user) {
     try {
-        const response = await fetch('http://localhost:5500/api/getAllDatabasePoints')
+        const response = await fetch('http://47.111.136.83:5500/api/getAllDatabasePoints')
         const geoData = await response.json();
         const props = geoData.features.properties;
 
@@ -111,7 +111,7 @@ export async function reloadPoints(map, userLayers) {
     for (const userId of activeUserIds) {
         try {
             const body = { userName: userMap[userId] };
-            const response = await fetch('http://localhost:5500/api/getDatabasePoints', {
+            const response = await fetch('http://47.111.136.83:5500/api/getDatabasePoints', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)

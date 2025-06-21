@@ -88,7 +88,7 @@ export async function reloadLayerFromDB(){
     }
     
     try {
-        const response = await fetch('http://localhost:5500/api/getDatabasePointsForHe');
+        const response = await fetch('http://47.111.136.83:5500/api/getDatabasePointsForHe');
         const geoData = await response.json();
 
         console.log("接收到的 GeoJSON:", geoData);

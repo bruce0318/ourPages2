@@ -50,14 +50,14 @@ export async function statProvince(map) {
     const provinceName = input
     const body = {provinceName};
 
-    const res_points = await fetch('http://localhost:5500/api/statProvinceForHe', {
+    const res_points = await fetch('http://47.111.136.83:5500/api/statProvinceForHe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     });
     const pointsData = await res_points.json();
 
-    const res_province = await fetch('http://localhost:5500/api/drawProvince', {
+    const res_province = await fetch('http://47.111.136.83:5500/api/drawProvince', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
