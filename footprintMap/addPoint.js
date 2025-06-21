@@ -38,7 +38,7 @@ export async function addPoint(map, userLayers) {
         const body = { lng, lat, code, province, city, year, user };
 
         // 发送数据到服务器写入数据库
-        await fetch('http://localhost:5500/api/addPoint', {
+        await fetch('http://47.111.136.83:5500/api/addPoint', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)

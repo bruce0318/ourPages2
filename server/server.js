@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 // 修改CORS设置
 app.use(cors({
-    origin:  ['http://localhost:5500', 'http://127.0.0.1:5500'],
+    origin: '*',
     methods: ['POST', 'GET', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -582,4 +582,4 @@ app.post('/api/statYear', async (req, res) => {
     }
 });
 
-app.listen(5500, () => console.log('Server running on http://localhost:5500'));
+app.listen(5500, '0.0.0.0',() => console.log('Server running on http://0.0.0.0:5500'));

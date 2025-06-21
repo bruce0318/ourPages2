@@ -42,7 +42,7 @@ export async function statYear(map, userLayers, start, end) {
                 endYear
             };
             
-            const response = await fetch('http://localhost:5500/api/statYear', {
+            const response = await fetch('http://47.111.136.83:5500/api/statYear', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)

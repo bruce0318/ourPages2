@@ -80,7 +80,7 @@ export function updatePoint(map, userLayers) {
                     const body = { cityName, user, newYear };
 
                     try {
-                        const response = await fetch('http://localhost:5500/api/updatePoint', {
+                        const response = await fetch('http://47.111.136.83:5500/api/updatePoint', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(body)
