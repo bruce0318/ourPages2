@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图功能测试</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        .test-panel {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>地图功能测试页面</h2>
+        
+        <div class="test-panel">
+            <h5>测试说明：</h5>
+            <ul>
+                <li>点击"编辑模式"按钮，然后点击地图上的点位，会显示编辑按钮</li>
+                <li>点击"删除模式"按钮，然后点击地图上的点位，会显示删除按钮</li>
+                <li>点击"时间轴"按钮，会显示足迹的时间轴统计图</li>
+                <li>重合的点位会自动分离显示</li>
+            </ul>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="test-panel mt-3">
+            <button id="btnEditMode" class="btn btn-warning">✏️ 编辑模式</button>
+            <button id="btnDeleteMode" class="btn btn-danger">🗑️ 删除模式</button>
+            <button id="btnTimeline" class="btn btn-info">📊 时间轴</button>
+            <button id="btnViewMode" class="btn btn-primary">👁️ 查看模式</button>
+        </div>
+    </div>
+
+    <script>
+        // 模拟数据
+        const testData = [
+            { id: 1, name: "黄卉然", year: 2023, province: "湖北省", city: "武汉", geom: { coordinates: [114.3, 30.6] } },
+            { id: 2, name: "黄卉然", year: 2024, province: "湖北省", city: "武汉", geom: { coordinates: [114.3, 30.6] } },
+            { id: 3, name: "黄卉然", year: 2023, province: "北京市", city: "北京", geom: { coordinates: [116.4, 39.9] } },
+            { id: 4, name: "黄卉然", year: 2024, province: "上海市", city: "上海", geom: { coordinates: [121.5, 31.2] } },
+            { id: 5, name: "黄卉然", year: 2025, province: "广东省", city: "广州", geom: { coordinates: [113.3, 23.1] } }
+        ];
+
+        let currentMode = 'view';
+        let map, footprintLayer;
+
+        // 初始化地图
+        function initMap() {
+            map = L.map('map', {
+                center: [30.6, 114.3],
+                zoom: 8
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            footprintLayer = L.markerClusterGroup({
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true,
+                maxClusterRadius: 50
+            }).addTo(map);
+
+            loadTestData();
+        }
+
+        // 加载测试数据
+        function loadTestData() {
+            footprintLayer.clearLayers();
+
+            const groups = testData.reduce((acc, fp) => {
+                const key = fp.geom.coordinates.join(',');
+                (acc[key] = acc[key] || []).push(fp);
+                return acc;
+            }, {});
+
+            Object.values(groups).forEach(group => {
+                const [lng, lat] = group[0].geom.coordinates;
+                
+                if (group.length === 1) {
+                    const marker = L.marker([lat, lng], { 
+                        draggable: false,
+                        title: `${group[0].city} (${group[0].year})`
+                    }).bindPopup(`<div style="max-height: 200px; overflow: auto;">${makePopupHtml(group)}</div>`, {
+                        maxWidth: 500,
+                        minWidth: 300
+                    });
+                    footprintLayer.addLayer(marker);
+                } else {
+                    group.forEach((fp, index) => {
+                        const offset = 0.001;
+                        const angle = (index / group.length) * 2 * Math.PI;
+                        const offsetLat = lat + offset * Math.cos(angle);
+                        const offsetLng = lng + offset * Math.sin(angle);
+                        
+                        const marker = L.marker([offsetLat, offsetLng], {
+                            draggable: false,
+                            title: `${fp.city} (${fp.year})`
+                        }).bindPopup(`<div style="max-height: 200px; overflow: auto;">${makePopupHtml([fp])}</div>`, {
+                            maxWidth: 500,
+                            minWidth: 300
+                        });
+                        footprintLayer.addLayer(marker);
+                    });
+                }
+            });
+        }
+
+        // 生成弹窗HTML
+        function makePopupHtml(group) {
+            if (currentMode === 'view') {
+                return group.map(fp => `
+                    <div style="margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
+                        <strong>ID：</strong>${fp.id}<br>
+                        <strong>名称：</strong>${fp.name}<br>
+                        <strong>年份：</strong>${fp.year}<br>
+                        <strong>省份：</strong>${fp.province}<br>
+                        <strong>城市：</strong>${fp.city}
+                    </div>
+                `).join('');
+            } else if (currentMode === 'edit') {
+                return group.map(fp => `
+                    <div style="margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
+                        <strong>ID：</strong>${fp.id}<br>
+                        <strong>名称：</strong>${fp.name}<br>
+                        <strong>年份：</strong>${fp.year}<br>
+                        <strong>省份：</strong>${fp.province}<br>
+                        <strong>城市：</strong>${fp.city}<br>
+                        <button class="btn btn-warning btn-sm edit-btn" data-id="${fp.id}" style="margin-top: 5px;">
+                            ✏️ 编辑此记录
+                        </button>
+                    </div>
+                `).join('');
+            } else if (currentMode === 'delete') {
+                return group.map(fp => `
+                    <div style="margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
+                        <strong>ID：</strong>${fp.id}<br>
+                        <strong>名称：</strong>${fp.name}<br>
+                        <strong>年份：</strong>${fp.year}<br>
+                        <strong>省份：</strong>${fp.province}<br>
+                        <strong>城市：</strong>${fp.city}<br>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="${fp.id}" style="margin-top: 5px;">
+                            🗑️ 删除此记录
+                        </button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 显示时间轴
+        function showTimeline() {
+            const yearStats = {};
+            testData.forEach(item => {
+                const year = item.year;
+                if (!yearStats[year]) {
+                    yearStats[year] = { count: 0, cities: new Set() };
+                }
+                yearStats[year].count++;
+                yearStats[year].cities.add(item.city);
+            });
+
+            const chartData = Object.keys(yearStats).sort().map(year => ({
+                year: parseInt(year),
+                count: yearStats[year].count,
+                cities: Array.from(yearStats[year].cities).join(', ')
+            }));
+
+            const timelineHtml = `
+                <div style="display: flex; align-items: center; height: 100px; overflow-x: auto; padding: 10px;">
+                    ${chartData.map((item, index) => `
+                        <div style="display: flex; flex-direction: column; align-items: center; margin: 0 15px; min-width: 80px;">
+                            <div style="
+                                width: ${Math.max(20, item.count * 8)}px; 
+                                height: ${Math.max(20, item.count * 8)}px; 
+                                background: linear-gradient(45deg, #4CAF50, #2196F3);
+                                border-radius: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: white;
+                                font-weight: bold;
+                                font-size: 12px;
+                                margin-bottom: 8px;
+                                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                            " title="${item.year}年: ${item.count}个足迹点">
+                                ${item.count}
+                            </div>
+                            <div style="text-align: center; font-size: 12px; color: #666;">
+                                <div style="font-weight: bold;">${item.year}</div>
+                                <div style="font-size: 10px; max-width: 80px; overflow: hidden; text-overflow: ellipsis;" title="${item.cities}">
+                                    ${item.cities}
+                                </div>
+                            </div>
+                            ${index < chartData.length - 1 ? '<div style="width: 30px; height: 2px; background: #ddd; margin: 0 5px;"></div>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            alert('时间轴功能演示：\n' + chartData.map(item => `${item.year}年: ${item.count}个足迹点 (${item.cities})`).join('\n'));
+        }
+
+        // 切换模式
+        function switchMode(mode) {
+            currentMode = mode;
+            loadTestData();
+        }
+
+        // 事件监听
+        map.on('popupopen', e => {
+            const container = e.popup._contentNode;
+
+            container.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    alert(`编辑记录 ID: ${id}`);
+                });
+            });
+
+            container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    if (confirm(`确定删除记录 ID: ${id}？`)) {
+                        alert('删除成功！');
+                        map.closePopup();
+                    }
+                });
+            });
+        });
+
+        // 按钮事件
+        document.getElementById('btnEditMode').addEventListener('click', () => switchMode('edit'));
+        document.getElementById('btnDeleteMode').addEventListener('click', () => switchMode('delete'));
+        document.getElementById('btnViewMode').addEventListener('click', () => switchMode('view'));
+        document.getElementById('btnTimeline').addEventListener('click', showTimeline);
+
+        // 初始化
+        initMap();
+    </script>
+</body>
+</html> 
