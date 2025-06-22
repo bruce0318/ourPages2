@@ -331,7 +331,7 @@ app.post('/driver/work', async (req, res) => {
 // 查询司机所有任务接口
 app.post('/driver/all_work', async (req, res) => { 
     const { uid } = req.body;
-    console.log("收到查询司机所有任务请求" , uid, date)
+    console.log("收到查询司机所有任务请求" , uid)
     try { 
         const query = `
             SELECT start_id, end_id, driver_order 
