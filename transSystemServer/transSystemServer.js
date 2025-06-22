@@ -58,7 +58,7 @@ app.post('/user/login', async (req, res) => {
             `;
             const uidResult = await pool.query(queryForUid, [phoneNumber, password]); 
             const uid = uidResult.rows[0].uid;
-            res,json({ rank, uid })
+            res.json({ rank, uid });
         }
         else{
             const uid = -1;
@@ -278,6 +278,29 @@ app.post('/point', async (req, res) => {
     }
 
 })
+
+// 查询所有点的接口
+app.get('/all_points', async (req, res) => { 
+    console.log("收到查询所有点的请求");
+    try { 
+        const query = `
+            SELECT pid, name, type, x, y 
+            FROM points;
+        `;
+        const result = await pool.query(query);
+        
+        res.json({
+            status_code: 200,
+            points: result.rows
+        }); 
+    } catch (error) { 
+        console.error("Error in all_points endpoint:", error);
+        res.status(500).json({ 
+            status_code: 500, 
+            message: 'Internal server error' 
+        });        
+    }
+});
 
 // 司机接口
 app.post('/driver/work', async (req, res) => { 
