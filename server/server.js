@@ -91,6 +91,43 @@ app.get('/api/getDatabasePointsForHe', async (req, res) => {
     }
 });
 
+// 从数据库中获取足迹数据（崔泽铭）
+app.get('/api/getDatabasePointsForCui', async (req, res) => {
+    console.log("收到获取崔泽铭点数据请求")
+    try {
+        const query = `
+            SELECT json_build_object('type', 'FeatureCollection','features', 
+                        json_agg(
+                            json_build_object(
+                                'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
+                                'properties', json_build_object(
+                                'name', name,
+                                'time', time,
+                                'province', province,
+                                'city', city
+                            )
+                        )
+                    )
+                ) AS geojson
+            FROM all_footprints
+            WHERE name = '崔泽铭';`;
+        
+        const result = await pool.query(query);
+        
+        if (result.rows.length === 0 || !result.rows[0].geojson) {
+            return res.status(404).send("未找到数据");
+        }
+        
+        const geojson = result.rows[0].geojson;
+        console.log("生成的GeoJSON:", JSON.stringify(geojson, null, 2));
+        res.json(geojson);
+
+    } catch (err) {
+        console.error("获取点数据错误：", err);
+        res.status(500).send("数据库查询失败");
+    }
+});
+
 // 从数据库中获取足迹数据（小组）
 app.post('/api/getDatabasePoints', async (req, res) => {
     const { userName } = req.body;
@@ -321,6 +358,56 @@ app.post('/api/queryPointForHe', async (req, res) => {
 
 });
 
+// 查询足迹点（崔泽铭）
+app.post('/api/queryPointForCui', async (req, res) => {
+    const { cityName } = req.body;
+    console.log('收到查询点请求:', { cityName });
+
+    if (!cityName) {
+        return res.status(400).json({ error: '缺少城市名称参数' });
+    }
+
+    const query = `
+        SELECT json_build_object(
+            'type', 'FeatureCollection',
+            'features', json_agg(
+                json_build_object(
+                    'type', 'Feature',
+                    'geometry', ST_AsGeoJSON(geom)::json,
+                    'properties', json_build_object(
+                        'name', name,
+                        'time', time,
+                        'province', province,
+                        'city', city
+                    )
+                )
+            )
+        ) AS geojson
+        FROM (
+            SELECT name, time, province, city, geom 
+            FROM all_footprints 
+            WHERE city = $1 AND name = '崔泽铭'
+            ORDER BY name DESC, time DESC
+        ) AS sorted_data;`; 
+    
+    try {
+        const result = await pool.query(query, [cityName]); // 传递参数
+
+        if (result.rows.length === 0 || !result.rows[0].geojson) {
+            return res.status(404).json({ error: "未找到该城市的足迹记录" });
+        }
+        
+        const geojson = result.rows[0].geojson;
+        console.log("生成的GeoJSON:", JSON.stringify(geojson, null, 2));
+        return res.json(geojson);
+        
+    } catch (err) {
+        console.error("查询错误：", err);
+        return res.status(500).json({ error: "数据库查询失败" });
+    }
+
+});
+
 // 查询足迹点（小组）
 app.post('/api/queryPoint', async (req, res) => {
     const { cityName } = req.body;
@@ -398,6 +485,53 @@ app.post('/api/statProvinceForHe', async (req, res) => {
             SELECT name, time, province, city, geom 
             FROM all_footprints 
             WHERE province = $1 AND name = '何灿非' 
+            ORDER BY name DESC, time DESC
+        ) AS sorted_data;`; 
+    
+    try {
+        const result = await pool.query(query, [provinceName]); // 传递参数
+
+        if (result.rows.length === 0 || !result.rows[0].geojson) {
+            return res.status(404).json({ error: "未找到该省份" });
+        }
+        
+        const geojson = result.rows[0].geojson;
+        return res.json(geojson);
+        
+    } catch (err) {
+        console.error("查询错误：", err);
+        return res.status(500).json({ error: "数据库查询失败" });
+    }
+
+});
+
+// 按省份统计足迹点（个人）
+app.post('/api/statProvinceForCui', async (req, res) => { 
+    const { provinceName } = req.body;
+    console.log('收到省份查询请求:', { provinceName });
+
+    if (!provinceName) {
+        return res.status(400).json({ error: '缺少省份名称参数' });
+    }
+
+    const query = `
+        SELECT json_build_object('type', 'FeatureCollection','features', 
+                    json_agg(
+                        json_build_object(
+                            'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
+                            'properties', json_build_object(
+                            'name', name,
+                            'time', time,
+                            'province', province,
+                            'city', city
+                        )
+                    )
+                )
+            ) AS geojson
+        FROM (
+            SELECT name, time, province, city, geom 
+            FROM all_footprints 
+            WHERE province = $1 AND name = '崔泽铭' 
             ORDER BY name DESC, time DESC
         ) AS sorted_data;`; 
     
@@ -527,6 +661,45 @@ app.post('/api/statYearForHe', async (req, res) => {
                 ) AS geojson
             FROM all_footprints
             WHERE time >= $1 AND time <= $2 AND name = '何灿非';`;
+        
+        const result = await pool.query(query, [startYear, endYear]);
+        
+        if (result.rows.length === 0 || !result.rows[0].geojson) {
+            return res.status(404).send("未找到数据");
+        }
+        
+        const geojson = result.rows[0].geojson;
+        console.log("生成的GeoJSON:", JSON.stringify(geojson, null, 2));
+        res.json(geojson);
+
+    } catch (err) {
+        console.error("获取点数据错误：", err);
+        res.status(500).send("数据库查询失败");
+    }
+});
+
+// 按照时间获取足迹点（崔）
+app.post('/api/statYearForCui', async (req, res) => {
+    const { startYear, endYear } = req.body;
+    console.log("收到时间筛选请求： 开始时间：", startYear, "结束时间：", endYear);
+
+    try {
+        const query = `
+            SELECT json_build_object('type', 'FeatureCollection','features', 
+                        json_agg(
+                            json_build_object(
+                                'type', 'Feature', 'geometry', ST_AsGeoJSON(geom)::json,
+                                'properties', json_build_object(
+                                'name', name,
+                                'time', time,
+                                'province', province,
+                                'city', city
+                            )
+                        )
+                    )
+                ) AS geojson
+            FROM all_footprints
+            WHERE time >= $1 AND time <= $2 AND name = '崔泽铭';`;
         
         const result = await pool.query(query, [startYear, endYear]);
         
