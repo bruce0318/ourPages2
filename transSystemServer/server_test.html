@@ -57,6 +57,10 @@
     </div>
     <button onclick="testPoint()">测试点查询接口</button>
     <div id="pointResult"></div>
+
+    <h2>查询所有点接口测试</h2>
+    <button onclick="testAllPoints()">测试查询所有点</button>
+    <div id="allPointsResult"></div>
     
     <h2>司机接口测试</h2>
     <div>
@@ -70,9 +74,13 @@
     <button onclick="testDriverWork()">测试司机接口</button>
     <div id="driverWorkResult"></div>
 
-    <h2>查询所有点接口测试</h2>
-    <button onclick="testAllPoints()">测试查询所有点</button>
-    <div id="allPointsResult"></div>
+    <h2>查询司机所有任务接口测试</h2>
+    <div>
+        <label>uid: </label>
+        <input type="text" id="driverUid" placeholder="输入UID">
+    </div>
+    <button onclick="testDriverAllWork()">测试查询司机所有任务接口司机接口</button>
+    <div id="driverWorkResult"></div>
 
     <script>
         // 测试登录接口函数
@@ -260,26 +268,42 @@
             }
         }
     
-        // 测试查询所有点接口的函数
-        async function testAllPoints() {
-            const resultDiv = document.getElementById('allPointsResult');
-            resultDiv.textContent = '请求中...';
-            
+        // 测试查询司机所有任务接口函数
+        async function testDriverAllWork() {
+            const uid = document.getElementById('driverUid').value;
+            const resultDiv = document.getElementById('driverWorkResult');
+
+            if (!uid) {
+                resultDiv.textContent = '请输入UID';
+                return;
+            }
+
             try {
-                const response = await fetch('http://47.111.136.83:8888/all_points', {
-                    method: 'GET'
+                const response = await fetch('http://47.111.136.83:8888/driver/all_work', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ uid })
                 });
-                
+
                 const data = await response.json();
-                
                 if (data.status_code === 200) {
-                    // 直接显示所有点数据
-                    resultDiv.innerHTML = `
-                        <h3>共找到 ${data.points.length} 个点：</h3>
-                        <pre>${JSON.stringify(data.points, null, 2)}</pre>
-                    `;
+                    let htmlContent = `<h3>共找到 ${data.tasks.length} 个任务：</h3>`;
+                    
+                    data.tasks.forEach(task => {
+                        htmlContent += `
+                            <div style="margin-bottom: 15px; border: 1px solid #ddd; padding: 10px;">
+                                <p>start_id: ${task.start_id}</p>
+                                <p>end_id: ${task.end_id}</p>
+                                <p>driver_order: ${task.driver_order}</p>
+                            </div>
+                        `;
+                    });
+                    
+                    resultDiv.innerHTML = htmlContent;
                 } else {
-                    resultDiv.textContent = `查询失败: ${data.message || '未知错误'}`;
+                    resultDiv.textContent = '查询失败';
                 }
             } catch (error) {
                 resultDiv.textContent = `请求失败: ${error.message}`;
