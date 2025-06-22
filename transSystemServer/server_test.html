@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>接口测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, button { padding: 8px; margin: 5px; }
+        #result { margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>登录接口测试</h2>  
+    <div>
+        <label>phoneNumber: </label>
+        <input type="text" id="phoneNumber" placeholder="输入电话号码">
+    </div>
+    <div>
+        <label>password: </label>
+        <input type="password" id="password" placeholder="输入密码">
+    </div>
+    <button onclick="testLogin()">测试登录</button>
+    <div id="result"></div>
+    
+    <h2>经理接口测试</h2>
+    <div>
+        <label>start_id: </label>
+        <input type="text" id="start_id" placeholder="输入起点ID">
+    </div>
+    <div>
+        <label>end_id: </label>
+        <input type="text" id="end_id" placeholder="输入终点ID">
+    </div>
+    <div>
+        <label>date: </label>
+        <input type="text" id="date" placeholder="输入日期（格式：YYYY-MM-DD）">
+    </div>
+    <button onclick="testManagerWork()">测试经理接口</button>
+    <div id="managerWorkResult"></div>
+
+    <h2>管理员接口测试</h2>
+    <div>
+        <label>uid: </label>
+        <input type="text" id="adminUid" placeholder="输入UID">
+    </div>
+    <div>
+        <label>date: </label>
+        <input type="text" id="adminDate" placeholder="输入日期（格式：YYYY-MM-DD）">
+    </div>
+    <button onclick="testAdmin()">测试管理员接口</button>
+    <div id="adminResult"></div>
+
+    <h2>点查询接口测试</h2>
+    <div>
+        <label>pid: </label>
+        <input type="text" id="pointId" placeholder="输入点ID">
+    </div>
+    <button onclick="testPoint()">测试点查询接口</button>
+    <div id="pointResult"></div>
+    
+    <h2>司机接口测试</h2>
+    <div>
+        <label>uid: </label>
+        <input type="text" id="driverUid" placeholder="输入UID">
+    </div>
+    <div>
+        <label>date: </label>
+        <input type="text" id="driverDate" placeholder="输入日期（格式：YYYY-MM-DD）">
+    </div>
+    <button onclick="testDriverWork()">测试司机接口</button>
+    <div id="driverWorkResult"></div>
+
+    <script>
+        // 测试登录接口函数
+        async function testLogin() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!phoneNumber || !password) {
+                resultDiv.textContent = '请输入电话号码和密码';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://47.111.136.83:8888/user/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phoneNumber, password })
+                });
+                
+                const data = await response.json();
+                resultDiv.textContent = `rank = ${data.rank}`;
+                
+            } catch (error) {
+                resultDiv.textContent = `请求失败: ${error.message}`;
+            }
+        }
+
+        // 测试经理接口函数
+        async function testManagerWork() {
+            const start_id = document.getElementById('start_id').value;
+            const end_id = document.getElementById('end_id').value;
+            const date = document.getElementById('date').value;
+            const resultDiv = document.getElementById('managerWorkResult');
+            
+            if (!start_id || !end_id || !date) {
+                resultDiv.textContent = '请输入起点ID、终点ID和日期';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://47.111.136.83:8888/manager/work', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ start_id, end_id, date })
+                });
+                
+                const data = await response.json();
+                if (data.status_code === 200) {
+                    resultDiv.textContent = '操作成功, status_code: ' + data.status_code;
+                } else {
+                    resultDiv.textContent = '操作失败';
+                }
+                
+            } catch (error) {
+                resultDiv.textContent = `请求失败: ${error.message}`;
+            }
+        }
+        
+        // 测试管理员接口函数
+        async function testAdmin() {
+            const uid = document.getElementById('adminUid').value;
+            const date = document.getElementById('adminDate').value;
+            const resultDiv = document.getElementById('adminResult');
+
+            if (!uid || !date) {
+                resultDiv.textContent = '请输入UID和日期';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://47.111.136.83:8888/admin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ uid, date })
+                });
+
+                const data = await response.json();
+                if (data.status_code === 200) {
+                    resultDiv.innerHTML = `
+                        <h3>Transporting GeoJSON:</h3>
+                        <pre>${JSON.stringify(data.transporting_geojson, null, 2)}</pre>
+                        <h3>Transferring GeoJSON:</h3>
+                        <pre>${JSON.stringify(data.transferring_geojson, null, 2)}</pre>
+                        <h3>total_length = ${data.total_length}</h3>
+                    `;
+
+                } else {
+                    resultDiv.textContent = '操作失败';
+                }
+            } catch (error) {
+                resultDiv.textContent = `请求失败: ${error.message}`;
+            }
+        }
+    
+        // 测试点查询接口函数
+        async function testPoint() {
+            const pid = document.getElementById('pointId').value;
+            const resultDiv = document.getElementById('pointResult');
+
+            if (!pid) {
+                resultDiv.textContent = '请输入点ID';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://47.111.136.83:8888/point', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ pid })
+                });
+
+                const data = await response.json();
+                if (data.status_code === 200) {
+                    resultDiv.innerHTML = `
+                        <p>name = ${data.name}</p>
+                        <p>type = ${data.type}</p>
+                        <p>x = ${data.x}</p>
+                        <p>y = ${data.y}</p>
+                    `;
+                } else {
+                    resultDiv.textContent = '查询失败';
+                }
+            } catch (error) {
+                resultDiv.textContent = `请求失败: ${error.message}`;
+            }
+        }
+        
+        // 测试司机接口函数
+        async function testDriverWork() {
+            const uid = document.getElementById('driverUid').value;
+            const date = document.getElementById('driverDate').value;
+            const resultDiv = document.getElementById('driverWorkResult');
+
+            if (!uid || !date) {
+                resultDiv.textContent = '请输入UID和日期';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://47.111.136.83:8888/driver/work', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ uid, date })
+                });
+
+                const data = await response.json();
+                if (data.status_code === 200) {
+                    resultDiv.innerHTML = `
+                        <p>start_id = ${data.start_id}</p>
+                        <p>end_id = ${data.end_id}</p>
+                        <p>driver_order = ${data.driver_order}</p>
+                    `;
+                } else {
+                    resultDiv.textContent = '查询失败';
+                }
+            } catch (error) {
+                resultDiv.textContent = `请求失败: ${error.message}`;
+            }
+        }
+    
+    </script>
+</body>
+</html>
