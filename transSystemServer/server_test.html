@@ -92,7 +92,15 @@
                 });
                 
                 const data = await response.json();
-                resultDiv.textContent = `rank = ${data.rank}`;
+                
+                if(data.uid === null){
+                    resultDiv.textContent = '用户名或密码错误';
+                } else {
+                    resultDiv.innerHTML = `
+                        <p>uid = ${data.uid}</p>
+                        <p>rank = ${data.rank}</p>
+                    `;
+                }
                 
             } catch (error) {
                 resultDiv.textContent = `请求失败: ${error.message}`;

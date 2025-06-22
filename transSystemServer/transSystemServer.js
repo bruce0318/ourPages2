@@ -51,7 +51,19 @@ app.post('/user/login', async (req, res) => {
     try {
         const result = await pool.query(query, [phoneNumber, password]);
         const rank = result.rows[0].rank;
-        res.json({ rank });
+        if (rank != -1){
+            const queryForUid = `
+                SELECT uid FROM users 
+                WHERE "phone_number" = $1 AND "password" = $2;
+            `;
+            const uidResult = await pool.query(queryForUid, [phoneNumber, password]); 
+            const uid = uidResult.rows[0].uid;
+            res,json({ rank, uid })
+        }
+        else{
+            const uid = -1;
+            res.json({ rank, uid });
+        }
     } catch (error) {
         console.error("数据库查询错误：", error);
         res.status(500).json({ error: "服务器内部错误" });
