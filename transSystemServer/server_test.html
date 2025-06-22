@@ -77,10 +77,10 @@
     <h2>查询司机所有任务接口测试</h2>
     <div>
         <label>uid: </label>
-        <input type="text" id="driverUid" placeholder="输入UID">
+        <input type="text" id="driverUid2" placeholder="输入UID">
     </div>
     <button onclick="testDriverAllWork()">测试查询司机所有任务接口司机接口</button>
-    <div id="driverWorkResult"></div>
+    <div id="driverWorkResult2"></div>
 
     <script>
         // 测试登录接口函数
@@ -229,7 +229,7 @@
         async function testDriverWork() {
             const uid = document.getElementById('driverUid').value;
             const date = document.getElementById('driverDate').value;
-            const resultDiv = document.getElementById('driverWorkResult');
+            const resultDiv = document.getElementById('driverWorkResult2');
 
             if (!uid || !date) {
                 resultDiv.textContent = '请输入UID和日期';
@@ -270,7 +270,7 @@
     
         // 测试查询司机所有任务接口函数
         async function testDriverAllWork() {
-            const uid = document.getElementById('driverUid').value;
+            const uid = document.getElementById('driverUid2').value;
             const resultDiv = document.getElementById('driverWorkResult');
 
             if (!uid) {
@@ -297,6 +297,7 @@
                                 <p>start_id: ${task.start_id}</p>
                                 <p>end_id: ${task.end_id}</p>
                                 <p>driver_order: ${task.driver_order}</p>
+                                <p>date: ${task.date}</p>
                             </div>
                         `;
                     });

@@ -334,7 +334,7 @@ app.post('/driver/all_work', async (req, res) => {
     console.log("收到查询司机所有任务请求" , uid)
     try { 
         const query = `
-            SELECT start_id, end_id, driver_order 
+            SELECT start_id, end_id, driver_order, to_char(date, 'YYYY-MM-DD') AS date 
             FROM task_pairs 
             WHERE driver_id = $1;`; 
         const result = await pool.query(query, [uid]);
@@ -342,6 +342,11 @@ app.post('/driver/all_work', async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ status_code: 404, message: 'Task not found' });
         }
+
+        console.log("返回的所有任务日期:");
+        result.rows.forEach((task, index) => {
+            console.log(`任务 ${index + 1}: ${task.date}`);
+        });
 
         res.json({
             status_code: 200,
