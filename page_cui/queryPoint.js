@@ -64,7 +64,7 @@ export async function queryPoint(map) {
         const cityName = json.geocodes[0].city;
         const body = {cityName};
 
-        const res = await fetch('http://localhost:5501/api/queryPointForCui', {
+        const res = await fetch('http://localhost:5500/api/queryPointForCui', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)

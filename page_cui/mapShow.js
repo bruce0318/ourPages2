@@ -83,7 +83,7 @@ export async function reloadLayerFromDB(){
     }
     
     try {
-        const response = await fetch('http://localhost:5501/api/getDatabasePointsForCui');
+        const response = await fetch('http://localhost:5500/api/getDatabasePointsForCui');
         const geoData = await response.json();
 
         console.log("接收到的 GeoJSON:", geoData);

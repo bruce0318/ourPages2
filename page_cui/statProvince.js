@@ -12,7 +12,7 @@ export async function statProvince() {
     
     try{
         const body = { provinceName };
-        const response = await fetch('http://localhost:5501/api/statProvinceForCui', {
+        const response = await fetch('http://localhost:5500/api/statProvinceForCui', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)

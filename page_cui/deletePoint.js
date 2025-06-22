@@ -69,7 +69,7 @@ export function deletePoint(overlayGroup) {
                 const body = { cityName, user };
 
                 try {
-                    const response = await fetch('http://localhost:5501/api/deletePoint', {
+                    const response = await fetch('http://localhost:5500/api/deletePoint', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(body)
