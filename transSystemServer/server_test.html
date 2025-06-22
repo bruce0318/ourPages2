@@ -239,11 +239,19 @@
 
                 const data = await response.json();
                 if (data.status_code === 200) {
-                    resultDiv.innerHTML = `
-                        <p>start_id = ${data.start_id}</p>
-                        <p>end_id = ${data.end_id}</p>
-                        <p>driver_order = ${data.driver_order}</p>
-                    `;
+                    let htmlContent = `<h3>共找到 ${data.tasks.length} 个任务：</h3>`;
+                    
+                    data.tasks.forEach(task => {
+                        htmlContent += `
+                            <div style="margin-bottom: 15px; border: 1px solid #ddd; padding: 10px;">
+                                <p>起点ID: ${task.start_id}</p>
+                                <p>终点ID: ${task.end_id}</p>
+                                <p>司机顺序: ${task.driver_order}</p>
+                            </div>
+                        `;
+                    });
+                    
+                    resultDiv.innerHTML = htmlContent;
                 } else {
                     resultDiv.textContent = '查询失败';
                 }

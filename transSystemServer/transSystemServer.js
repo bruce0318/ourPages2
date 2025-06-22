@@ -317,15 +317,11 @@ app.post('/driver/work', async (req, res) => {
             return res.status(404).json({ status_code: 404, message: 'Task not found' });
         }
 
-        const task = result.rows[0];
-
-        // 返回结果
         res.json({
             status_code: 200,
-            start_id: task.start_id,
-            end_id: task.end_id,
-            driver_order: task.driver_order
-        }); 
+            tasks: result.rows  // 返回所有行数据
+        });
+        
     } catch (error) { 
         console.error("Error in point endpoint:", error);
         res.status(500).json({ status_code: 500, message: 'Internal server error' });        
