@@ -51,7 +51,19 @@ app.post('/user/login', async (req, res) => {
     try {
         const result = await pool.query(query, [phoneNumber, password]);
         const rank = result.rows[0].rank;
-        res.json({ rank });
+        if (rank != -1){
+            const queryForUid = `
+                SELECT uid FROM users 
+                WHERE "phone_number" = $1 AND "password" = $2;
+            `;
+            const uidResult = await pool.query(queryForUid, [phoneNumber, password]); 
+            const uid = uidResult.rows[0].uid;
+            res.json({ rank, uid });
+        }
+        else{
+            const uid = -1;
+            res.json({ rank, uid });
+        }
     } catch (error) {
         console.error("数据库查询错误：", error);
         res.status(500).json({ error: "服务器内部错误" });
@@ -267,7 +279,30 @@ app.post('/point', async (req, res) => {
 
 })
 
-// 司机接口
+// 查询所有点的接口
+app.get('/all_points', async (req, res) => { 
+    console.log("收到查询所有点的请求");
+    try { 
+        const query = `
+            SELECT pid, name, type, x, y 
+            FROM points;
+        `;
+        const result = await pool.query(query);
+        
+        res.json({
+            status_code: 200,
+            points: result.rows
+        }); 
+    } catch (error) { 
+        console.error("Error in all_points endpoint:", error);
+        res.status(500).json({ 
+            status_code: 500, 
+            message: 'Internal server error' 
+        });        
+    }
+});
+
+// 查询司机单日任务接口
 app.post('/driver/work', async (req, res) => { 
     const { uid, date } = req.body;
     console.log("收到司机接口请求" , uid, date)
@@ -282,15 +317,37 @@ app.post('/driver/work', async (req, res) => {
             return res.status(404).json({ status_code: 404, message: 'Task not found' });
         }
 
-        const task = result.rows[0];
-
-        // 返回结果
         res.json({
             status_code: 200,
-            start_id: task.start_id,
-            end_id: task.end_id,
-            driver_order: task.driver_order
-        }); 
+            tasks: result.rows  // 返回所有行数据
+        });
+
+    } catch (error) { 
+        console.error("Error in point endpoint:", error);
+        res.status(500).json({ status_code: 500, message: 'Internal server error' });        
+    }
+})
+
+// 查询司机所有任务接口
+app.post('/driver/all_work', async (req, res) => { 
+    const { uid } = req.body;
+    console.log("收到查询司机所有任务请求" , uid, date)
+    try { 
+        const query = `
+            SELECT start_id, end_id, driver_order 
+            FROM task_pairs 
+            WHERE driver_id = $1;`; 
+        const result = await pool.query(query, [uid]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ status_code: 404, message: 'Task not found' });
+        }
+
+        res.json({
+            status_code: 200,
+            tasks: result.rows  // 返回所有行数据
+        });
+
     } catch (error) { 
         console.error("Error in point endpoint:", error);
         res.status(500).json({ status_code: 500, message: 'Internal server error' });        

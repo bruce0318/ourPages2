@@ -57,6 +57,10 @@
     </div>
     <button onclick="testPoint()">测试点查询接口</button>
     <div id="pointResult"></div>
+
+    <h2>查询所有点接口测试</h2>
+    <button onclick="testAllPoints()">测试查询所有点</button>
+    <div id="allPointsResult"></div>
     
     <h2>司机接口测试</h2>
     <div>
@@ -68,6 +72,14 @@
         <input type="text" id="driverDate" placeholder="输入日期（格式：YYYY-MM-DD）">
     </div>
     <button onclick="testDriverWork()">测试司机接口</button>
+    <div id="driverWorkResult"></div>
+
+    <h2>查询司机所有任务接口测试</h2>
+    <div>
+        <label>uid: </label>
+        <input type="text" id="driverUid" placeholder="输入UID">
+    </div>
+    <button onclick="testDriverAllWork()">测试查询司机所有任务接口司机接口</button>
     <div id="driverWorkResult"></div>
 
     <script>
@@ -92,7 +104,15 @@
                 });
                 
                 const data = await response.json();
-                resultDiv.textContent = `rank = ${data.rank}`;
+                
+                if(data.uid === null){
+                    resultDiv.textContent = '用户名或密码错误';
+                } else {
+                    resultDiv.innerHTML = `
+                        <p>uid = ${data.uid}</p>
+                        <p>rank = ${data.rank}</p>
+                    `;
+                }
                 
             } catch (error) {
                 resultDiv.textContent = `请求失败: ${error.message}`;
@@ -227,11 +247,19 @@
 
                 const data = await response.json();
                 if (data.status_code === 200) {
-                    resultDiv.innerHTML = `
-                        <p>start_id = ${data.start_id}</p>
-                        <p>end_id = ${data.end_id}</p>
-                        <p>driver_order = ${data.driver_order}</p>
-                    `;
+                    let htmlContent = `<h3>共找到 ${data.tasks.length} 个任务：</h3>`;
+                    
+                    data.tasks.forEach(task => {
+                        htmlContent += `
+                            <div style="margin-bottom: 15px; border: 1px solid #ddd; padding: 10px;">
+                                <p>start_id: ${task.start_id}</p>
+                                <p>end_id: ${task.end_id}</p>
+                                <p>driver_order: ${task.driver_order}</p>
+                            </div>
+                        `;
+                    });
+                    
+                    resultDiv.innerHTML = htmlContent;
                 } else {
                     resultDiv.textContent = '查询失败';
                 }
@@ -240,6 +268,47 @@
             }
         }
     
+        // 测试查询司机所有任务接口函数
+        async function testDriverAllWork() {
+            const uid = document.getElementById('driverUid').value;
+            const resultDiv = document.getElementById('driverWorkResult');
+
+            if (!uid) {
+                resultDiv.textContent = '请输入UID';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://47.111.136.83:8888/driver/all_work', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ uid })
+                });
+
+                const data = await response.json();
+                if (data.status_code === 200) {
+                    let htmlContent = `<h3>共找到 ${data.tasks.length} 个任务：</h3>`;
+                    
+                    data.tasks.forEach(task => {
+                        htmlContent += `
+                            <div style="margin-bottom: 15px; border: 1px solid #ddd; padding: 10px;">
+                                <p>start_id: ${task.start_id}</p>
+                                <p>end_id: ${task.end_id}</p>
+                                <p>driver_order: ${task.driver_order}</p>
+                            </div>
+                        `;
+                    });
+                    
+                    resultDiv.innerHTML = htmlContent;
+                } else {
+                    resultDiv.textContent = '查询失败';
+                }
+            } catch (error) {
+                resultDiv.textContent = `请求失败: ${error.message}`;
+            }
+        }
     </script>
 </body>
 </html>
