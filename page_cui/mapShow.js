@@ -41,7 +41,7 @@ function initMap() {
 // 加载GeoJSON数据
 async function loadGeoJSONLayer() {
     try {
-        const response = await fetch('./page_he/data/cities.geojson');
+        const response = await fetch('./page_cui/data/cities.geojson');
         const geoData = await response.json();
 
         // 清除旧数据
@@ -129,12 +129,12 @@ export function createPointFromGeojson(feature) {
 
     const marker = L.marker([lat, lng]);
 
-    marker.cityName = props.name; //添加城市名称属性，方便后续删除点的操作
+    marker.cityName = props.City; //添加城市名称属性，方便后续删除点的操作
 
     //信息窗口代码
     marker.content = `
     <div class="info-window">
-        <h3>${props.province ? `${props.province}·` : ''}${props.name}</h3>
+        <h3>${props.Province ? `${props.Province}·` : ''}${props.City}</h3>
         <p>${props.text || '暂无时间信息'}</p>
         ${props.image ? `<img src="${props.image}" alt="城市图片" style="width: 200px; height: 150px; object-fit: cover;">` : ''}
     </div>
@@ -157,7 +157,7 @@ export function createPointMarker(feature) {
 
     marker.cityName = props.city; //添加城市名称属性，方便后续删除点的操作
 
-    //信息窗口代码
+    //信息窗口代码（暂时不管）
     marker.content = `
     <div class="info-window">
         <h3>${getLocationDisplay(props)}</h3>
@@ -216,13 +216,13 @@ function getLocationDisplay(props) {
     const specialRegions = ['香港特别行政区', '澳门特别行政区'];
     
     // 如果是直辖市或特别行政区，直接显示城市名
-    if (municipalities.includes(props.province) || 
-        specialRegions.includes(props.province)) {
-        return props.province;
+    if (municipalities.includes(props.Province) || 
+        specialRegions.includes(props.Province)) {
+        return props.Province;
     }
     
     // 其他情况
-    return props.province ? `${props.province}·${props.city}` : props.city;
+    return props.Province ? `${props.Province}·${props.city}` : props.city;
 }
 
 // 全区按钮ID列表
