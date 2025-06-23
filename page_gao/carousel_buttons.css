@@ -1,0 +1,63 @@
+/*
+ * Custom Carousel Navigation Styles
+ * Designed to match the gao.html theme.
+ */
+
+/* Container for the navigation buttons */
+.owl-nav {
+  width: 100%;
+  text-align: center;
+  /* Add some space above the buttons */
+  margin-top: 30px; 
+}
+
+/* Base style for both previous and next navigation elements */
+.owl-carousel .owl-nav .owl-prev,
+.owl-carousel .owl-nav .owl-next {
+  width: 50px;
+  height: 50px;
+  margin: 0 10px; /* Space between buttons */
+  
+  /* Make them circular */
+  border-radius: 50%;
+  
+  /* Use the theme's gradient for the background */
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  
+  /* Add a subtle shadow matching the theme */
+  box-shadow: 0 8px 15px rgba(6, 182, 212, 0.2);
+
+  /* Use flexbox to perfectly center the icon inside */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Smooth transitions for hover effects */
+  transition: all 0.3s ease-out;
+
+  /* Remove any default borders */
+  border: none;
+}
+
+/* Hover effect */
+.owl-carousel .owl-nav .owl-prev:hover,
+.owl-carousel .owl-nav .owl-next:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(6, 182, 212, 0.3);
+  cursor: pointer;
+}
+
+/* Icon styling (assuming <i> tag is used, as seen in original CSS) */
+.owl-carousel .owl-nav .owl-prev i,
+.owl-carousel .owl-nav .owl-next i {
+  /* Reset styles from the original owl.carousel.css */
+  background-color: transparent;
+  width: auto;
+  height: auto;
+
+  /* Set the icon color and size */
+  color: #ffffff;
+  font-size: 1.3rem; /* 20px */
+  line-height: 1; /* Ensure vertical centering */
+  text-align: center;
+} 

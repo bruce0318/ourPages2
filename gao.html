@@ -27,7 +27,726 @@
     <link rel="stylesheet" href="css/responsive.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="page_gao/carousel_buttons.css">
     <script src="js/modernizr.js"></script> <!-- Modernizr -->
+
+    <!-- 新增的明亮主题样式 -->
+    <style>
+        /* 导入Google Fonts艺术字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
+        
+        /* 明亮主题配色 - 青色系（与map.html一致） */
+        :root {
+            --primary-color: #06b6d4;
+            --secondary-color: #0891b2;
+            --accent-color: #0e7490;
+            --light-bg: #f0f9ff;
+            --white: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-light: #64748b;
+            --shadow-light: 0 4px 6px -1px rgba(6, 182, 212, 0.1);
+            --shadow-medium: 0 10px 15px -3px rgba(6, 182, 212, 0.15);
+            --gradient-primary: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            --gradient-secondary: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            --gradient-accent: linear-gradient(135deg, #0e7490 0%, #155e75 100%);
+        }
+
+        /* 全局样式优化 */
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+            color: var(--text-primary);
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* 导航栏美化 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand img {
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover img {
+            transform: scale(1.05);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--text-primary) !important;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* 主横幅区域美化 */
+        .main-banner {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(8, 145, 178, 0.1) 100%);
+            z-index: 1;
+        }
+
+        .heading {
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .heading h1 {
+            font-family: 'Playfair Display', serif;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            animation: glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 3.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .heading p {
+            font-family: 'Dancing Script', cursive;
+            color: var(--text-primary);
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            font-size: 1.4rem;
+            margin-top: 10px;
+        }
+
+        /* 动态文字效果 */
+        .cd-headline {
+            position: relative;
+        }
+
+        .cd-words-wrapper {
+            display: inline-block;
+            position: relative;
+            text-align: left;
+        }
+
+        .cd-words-wrapper b {
+            display: inline-block;
+            position: absolute;
+            white-space: nowrap;
+            left: 0;
+            top: 0;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .cd-words-wrapper b.is-visible {
+            position: relative;
+        }
+
+        /* 内容区域美化 */
+        .section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .section:hover::before {
+            left: 100%;
+        }
+
+        .section.wb {
+            background: var(--white);
+            box-shadow: var(--shadow-light);
+        }
+
+        .section.lb {
+            background: var(--light-bg);
+            box-shadow: var(--shadow-light);
+        }
+
+        /* 消息框美化 */
+        .message-box {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .message-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.15);
+        }
+
+        .message-box:hover::before {
+            width: 8px;
+        }
+
+        .message-box h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+            font-size: 2.2rem;
+        }
+
+        .message-box h3 {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .message-box h3:hover {
+            color: var(--primary-color);
+        }
+
+        /* 服务卡片美化 */
+        .services-inner-box {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .services-inner-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .services-inner-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.15);
+        }
+
+        .services-inner-box:hover::before {
+            transform: scaleX(1);
+        }
+
+        .services-inner-box .img img {
+            transition: transform 0.3s ease;
+        }
+
+        .services-inner-box:hover .img img {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .services-inner-box h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 20px 0 15px 0;
+            font-size: 1.5rem;
+        }
+
+        .services-inner-box p {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* 博客卡片美化 */
+        .post-box {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .post-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.15);
+        }
+
+        .post-thumb {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-thumb img {
+            transition: transform 0.3s ease;
+        }
+
+        .post-box:hover .post-thumb img {
+            transform: scale(1.1);
+        }
+
+        .post-thumb .date {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: 15px;
+            padding: 10px 15px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        .post-info {
+            padding: 25px;
+        }
+
+        .post-info h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .post-info ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+        .post-info ul li {
+            display: inline-block;
+            margin-right: 15px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .post-info p {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* 友情链接美化 */
+        .testimonial {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-secondary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(6, 182, 212, 0.15);
+        }
+
+        .testimonial:hover::before {
+            transform: scaleX(1);
+        }
+
+        .testimonial .desc {
+            padding: 30px;
+            position: relative;
+            background: var(--white);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            height: 200px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial .desc:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(6, 182, 212, 0.2);
+        }
+
+        .testimonial .desc h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .testimonial .desc .lead {
+            font-family: 'Dancing Script', cursive;
+            color: var(--text-secondary);
+            font-style: italic;
+            line-height: 1.6;
+            font-size: 1.2rem;
+        }
+
+        .testi-meta {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .testi-meta img {
+            border-radius: 50%;
+            border: 3px solid var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial:hover .testi-meta img {
+            transform: scale(1.1);
+        }
+
+        .testi-meta h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .testi-meta small {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+        }
+
+        .perIntro {
+            display: inline-block;
+            background: var(--gradient-accent);
+            color: var(--white);
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .perIntro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(14, 116, 144, 0.3);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        /* 页脚美化 */
+        .copyrights {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 30px 0;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            margin: 0 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--white);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        /* 滚动到顶部按钮美化 */
+        #scroll-to-top {
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+        }
+
+        #scroll-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(6, 182, 212, 0.5);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(6, 182, 212, 0.8);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* 图片优化 */
+        img {
+            max-width: 100%;
+            height: auto;
+            transition: all 0.3s ease;
+        }
+
+        .img-fluid {
+            width: 100%;
+            height: auto;
+        }
+
+        .img-rounded {
+            border-radius: 10px;
+        }
+
+        /* 改善文字对比度 */
+        .section-title h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+
+        .section-title p {
+            font-family: 'Dancing Script', cursive;
+            color: var(--text-secondary);
+            font-weight: 500;
+            line-height: 1.6;
+            font-size: 1.3rem;
+        }
+
+        /* 改善导航栏文字对比度 */
+        .navbar-dark .navbar-nav .nav-link {
+            color: var(--text-primary) !important;
+            font-weight: 500;
+        }
+
+        .navbar-dark .navbar-nav .nav-link:hover,
+        .navbar-dark .navbar-nav .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
+        /* 改善页脚文字 */
+        .footer-company-name {
+            color: var(--white);
+            font-weight: 500;
+            margin-top: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* 改善卡片文字 */
+        .services-inner-box h2 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 20px 0 15px 0;
+        }
+
+        .services-inner-box p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* 改善博客卡片文字 */
+        .post-info h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .post-info p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* 改善友情链接文字 */
+        .testimonial .desc h3 {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .testimonial .desc .lead {
+            color: var(--text-secondary);
+            font-style: italic;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .testi-meta h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .testi-meta small {
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            .heading h1 {
+                font-size: 2.5rem;
+            }
+            
+            .heading p {
+                font-size: 1.2rem;
+            }
+            
+            .message-box {
+                padding: 25px;
+            }
+            
+            .message-box h2 {
+                font-size: 1.8rem;
+            }
+            
+            .services-inner-box {
+                padding: 20px;
+            }
+            
+            .post-info {
+                padding: 20px;
+            }
+            
+            .testimonial {
+                padding: 20px;
+            }
+            
+            .section-title h3 {
+                font-size: 1.6rem;
+            }
+            
+            .section-title p {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* 加载动画优化 */
+        #preloader {
+            background: var(--gradient-primary);
+        }
+
+        #loader {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid var(--white);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -50,7 +769,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
         <div class="container">
             <a class="navbar-brand js-scroll-trigger" href="index.html">
-                <img class="img-fluid" src="images/logo.png" alt="" /></img>
+                <img class="img-fluid" src="page_gao/logo_light.png" alt="" /></img>
             </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
@@ -73,10 +792,10 @@
                         <a class="nav-link js-scroll-trigger" href="#blog">最近动态</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#map">足迹地图</a>
+                        <a class="nav-link js-scroll-trigger" href="#friendlink">友情链接</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#friendlink">友情链接</a>
+                        <a class="nav-link js-scroll-trigger" href="page_gao/map.html">足迹地图</a>
                     </li>
                 </ul>
             </div>
@@ -251,7 +970,7 @@
                                 <li>Mar 04, 2025</li>
                                 <li><a href="#"><b> Comments</b></a></li>
                             </ul>
-                            <p>与校友跨越22年的接触。这本书像他的作者和主人公一样，经万千读者翻阅，历久弥新。
+                            <p>与校友跨越22年的接触。这本书像他的作者和主人公一样，经万千读者翻阅，历久弥新.
                                 <br>——《钢铁是怎样炼成的》</p>
                         </div>
                     </div>
@@ -272,7 +991,7 @@
                                 <li>Feb 19, 2025</li>
                                 <li><a href="#"><b> Comments</b></a></li>
                             </ul>
-                            <p>...也是满足了我的好奇心，建议有兴趣的专门抽时间来尝试，赶时间的就算了，中途不能下人的。
+                            <p>...也是满足了我的好奇心，建议有兴趣的专门抽时间来尝试，赶时间的就算了，中途不能下人的.
                                 <br>—— 自动驾驶汽车体验
                             </p>
                         </div>
@@ -301,23 +1020,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="map" class="section lb">  <!-- 新增地图模块 -->
-        <div class="container">
-            <div class="section-title text-left">
-                <h3>足迹地图</h3>
-                
-            </div>
-            
-            <!-- 这里插入你的地图HTML内容 -->
-            <div class="map-container">
-                <iframe src="page_gao/map.html" width="100%" height="600px" frameborder="0"></iframe>
-            </div>
-            <div style="margin-top: 20px;">  
-                <iframe src="page_gao/steps.html" width="100%" height="500px" frameborder="0"></iframe>
             </div>
         </div>
     </div>
@@ -391,8 +1093,8 @@
                         <a href="#about">基本信息</a>
                         <a href="#hobby">兴趣爱好</a>
                         <a href="#blog">最近动态</a>
-                        <a href="#map">足迹地图</a>
                         <a href="#friendlink">友情链接</a>
+                        <a href="page_gao/map.html">足迹地图</a>
                     </p>
                     <p class="footer-company-name">作者：高家垚 &copy; 学号：2022302051016</p>
                 </div>
@@ -415,6 +1117,233 @@
     <!-- ALL PLUGINS -->
     <script src="js/custom.js"></script>
     <script src="js/jquery.vide.js"></script>
+
+    <!-- 新增的动态效果JavaScript -->
+    <script>
+        // 页面加载完成后的动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加滚动动画
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // 为所有section添加观察
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'all 0.6s ease';
+                observer.observe(section);
+            });
+
+            // 为服务卡片添加交错动画
+            const serviceCards = document.querySelectorAll('.services-inner-box');
+            serviceCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'fadeInUp 0.6s ease forwards';
+            });
+
+            // 为博客卡片添加交错动画
+            const blogCards = document.querySelectorAll('.post-box');
+            blogCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.15}s`;
+                card.style.animation = 'fadeInUp 0.6s ease forwards';
+            });
+
+            // 为友情链接卡片添加动画
+            const testimonialCards = document.querySelectorAll('.testimonial');
+            testimonialCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.2}s`;
+                card.style.animation = 'fadeInUp 0.6s ease forwards';
+            });
+
+            // 添加鼠标跟随效果
+            document.addEventListener('mousemove', function(e) {
+                const cursor = document.createElement('div');
+                cursor.style.position = 'fixed';
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                cursor.style.width = '10px';
+                cursor.style.height = '10px';
+                cursor.style.background = 'linear-gradient(135deg, #06b6d4, #0891b2)';
+                cursor.style.borderRadius = '50%';
+                cursor.style.pointerEvents = 'none';
+                cursor.style.zIndex = '9999';
+                cursor.style.opacity = '0.6';
+                cursor.style.transform = 'translate(-50%, -50%)';
+                cursor.style.transition = 'all 0.1s ease';
+                
+                document.body.appendChild(cursor);
+                
+                setTimeout(() => {
+                    cursor.style.opacity = '0';
+                    setTimeout(() => {
+                        if (cursor.parentNode) {
+                            cursor.parentNode.removeChild(cursor);
+                        }
+                    }, 100);
+                }, 100);
+            });
+
+            // 添加导航栏滚动效果
+            let lastScrollTop = 0;
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // 向下滚动
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    // 向上滚动
+                    navbar.style.transform = 'translateY(0)';
+                }
+                
+                lastScrollTop = scrollTop;
+            });
+
+            // 添加图片悬停效果
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                img.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // 添加文字打字机效果
+            function typeWriter(element, text, speed = 100) {
+                let i = 0;
+                element.innerHTML = '';
+                
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    }
+                }
+                
+                type();
+            }
+
+            // 为标题添加打字机效果
+            const heading = document.querySelector('.heading h1');
+            if (heading) {
+                const originalText = heading.textContent;
+                setTimeout(() => {
+                    typeWriter(heading, originalText, 150);
+                }, 1000);
+            }
+
+            // 添加粒子背景效果
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.style.position = 'fixed';
+                particle.style.width = '4px';
+                particle.style.height = '4px';
+                particle.style.background = 'linear-gradient(135deg, #06b6d4, #0891b2)';
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '1';
+                particle.style.opacity = '0.6';
+                
+                // 随机位置
+                particle.style.left = Math.random() * window.innerWidth + 'px';
+                particle.style.top = Math.random() * window.innerHeight + 'px';
+                
+                document.body.appendChild(particle);
+                
+                // 动画
+                const animation = particle.animate([
+                    { transform: 'translateY(0px)', opacity: 0.6 },
+                    { transform: 'translateY(-100px)', opacity: 0 }
+                ], {
+                    duration: 3000,
+                    easing: 'ease-out'
+                });
+                
+                animation.onfinish = () => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                };
+            }
+
+            // 定期创建粒子
+            setInterval(createParticle, 2000);
+
+            // 添加按钮点击波纹效果
+            document.querySelectorAll('button, .perIntro').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.position = 'absolute';
+                    ripple.style.width = size + 'px';
+                    ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.pointerEvents = 'none';
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        if (ripple.parentNode) {
+                            ripple.parentNode.removeChild(ripple);
+                        }
+                    }, 600);
+                });
+            });
+
+            // 添加波纹动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // 平滑滚动效果
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 
 </body>
 

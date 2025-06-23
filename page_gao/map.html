@@ -1,352 +1,1472 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <meta charset="UTF-8">
-    <title>天地图+点数据增删查改</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.3.0/ol.css">
-    <style>
-        #map {
-            width: 100%;
-            height: 600px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人足迹管理系统</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        .toolbar {
-            margin: 10px;
-        }
+    body {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+      color: #1e293b;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
 
-        #city-select {
-            color: black; /* 设置为黑色字体 */
-            background-color: rgb(255, 255, 255); /* 可选：显式设置背景色 */
-        }
-    </style>
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(59,130,246,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      z-index: 2;
+    }
+
+    header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      z-index: 1000;
+      text-align: center;
+      padding: 15px 25px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #64748b;
+      font-weight: 400;
+    }
+
+    .map-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    #map {
+      height: 100%;
+      width: 100%;
+      background: #f8fafc;
+    }
+
+    .floating-panel {
+      position: absolute;
+      top: 100px;
+      right: 20px;
+      width: 380px;
+      max-height: calc(100vh - 140px);
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .floating-panel:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 25px 50px rgba(59, 130, 246, 0.2);
+    }
+
+    .panel-header {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      padding: 18px 24px;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-content {
+      padding: 24px;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+
+    .panel-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .panel-content::-webkit-scrollbar-track {
+      background: rgba(6, 182, 212, 0.1);
+      border-radius: 3px;
+    }
+
+    .panel-content::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      border-radius: 3px;
+    }
+
+    .section {
+      margin-bottom: 28px;
+      background: rgba(248, 250, 252, 0.8);
+      border-radius: 18px;
+      padding: 22px;
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.15);
+      border-color: rgba(6, 182, 212, 0.4);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #0891b2;
+      font-weight: 600;
+    }
+
+    .section-title i {
+      font-size: 1.2rem;
+      color: #06b6d4;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #475569;
+      font-size: 0.9rem;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid rgba(6, 182, 212, 0.2);
+      background: rgba(255, 255, 255, 0.9);
+      color: #1e293b;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    input:focus, select:focus {
+      border-color: #06b6d4;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+      transform: translateY(-1px);
+    }
+
+    input::placeholder {
+      color: #94a3b8;
+    }
+
+    button {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
+      background: linear-gradient(135deg, #0891b2, #0e7490);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #f87171, #ef4444);
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-info {
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn-info:hover {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .stat-result {
+      margin-top: 15px;
+      padding: 16px;
+      background: rgba(6, 182, 212, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      color: #1e293b;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .weather-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 16px;
+      background: rgba(6, 182, 212, 0.1);
+      border-radius: 16px;
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      margin-top: 15px;
+    }
+
+    .weather-icon {
+      font-size: 2rem;
+      color: #06b6d4;
+      width: 50px;
+      text-align: center;
+    }
+
+    .weather-info {
+      flex: 1;
+    }
+
+    .temp {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0891b2;
+      margin-bottom: 5px;
+    }
+
+    .condition {
+      font-size: 1rem;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .weather-details {
+      display: flex;
+      gap: 15px;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .bottom-panel {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 50px;
+      padding: 8px;
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      pointer-events: auto;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .btn-group button {
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      min-width: 120px;
+      margin-top: 0;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      left: 220px;
+      z-index: 1000;
+      color: #64748b;
+      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 8px 15px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(26, 32, 44, 0.95);
+      color: #e2e8f0;
+      padding: 16px 30px;
+      border-radius: 50px;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 500;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-8px);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, rgba(26, 32, 44, 0.95), rgba(45, 55, 72, 0.9));
+      width: 420px;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+      position: relative;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      color: #e2e8f0;
+    }
+
+    .modal.show .modal-content {
+      transform: scale(1);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: #a0aec0;
+      font-size: 1.6rem;
+      cursor: pointer;
+      width: auto;
+      padding: 4px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .close-modal:hover {
+      background: rgba(79, 209, 199, 0.1);
+      color: #4fd1c7;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 22px;
+      color: #4fd1c7;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* 地图标记样式 */
+    .marker-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border: 3px solid white;
+      transition: all 0.3s ease;
+    }
+
+    .marker-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .footprint-marker {
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+    }
+
+    .footprint-marker svg {
+      transition: all 0.3s ease;
+    }
+
+    .footprint-marker:hover svg {
+      transform: scale(1.1);
+    }
+
+    .city-marker .marker-icon {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
+
+    /* 年份图例样式 */
+    .year-legend {
+      position: absolute;
+      bottom: 100px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      z-index: 1000;
+      min-width: 150px;
+      max-width: 200px;
+    }
+
+    .legend-title {
+      font-size: 0.9rem;
+      color: #0891b2;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    .legend-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .city-marker .marker-icon {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 1200px) {
+      .floating-panel {
+        width: 350px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .floating-panel {
+        position: fixed;
+        top: 80px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        max-height: calc(100vh - 100px);
+      }
+      
+      header {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        padding: 10px 15px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .bottom-panel {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        transform: none;
+      }
+      
+      .btn-group {
+        justify-content: center;
+      }
+      
+      .btn-group button {
+        min-width: 100px;
+        padding: 8px 15px;
+        font-size: 0.8rem;
+      }
+      
+      .year-legend {
+        bottom: 80px;
+        left: 10px;
+        right: 10px;
+        max-width: none;
+      }
+      
+      .footer {
+        bottom: 10px;
+        left: 10px;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #backBtn {
+        top: 10px;
+        left: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+    }
+
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(45, 55, 72, 0.1);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #4fd1c7, #38b2ac);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #38b2ac, #319795);
+    }
+  </style>
 </head>
-
 <body>
+<div class="container">
+  <header>
+    <h1><i class="fas fa-map-marked-alt"></i> 个人足迹管理系统</h1>
+    <p class="subtitle">记录您的旅行足迹，探索城市之美</p>
+  </header>
 
-<!-- 工具条 -->
-<div class="toolbar">
-    <button id="draw-point">添加</button>
-    <select id="city-select" style="display:none;width: 150px;">
-        <!-- 城市选项将通过 JavaScript 动态填充 -->
-    </select>
-    <button id="delete-feature">删除</button>
-    <button id="select-feature">修改</button>
-    <button id="search-feature">查找</button>
+  <!-- 返回按钮 - 独立位置 -->
+  <button id="backBtn" style="
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    font-size: 1.2rem;
+  " onmouseover="this.style.transform='translateY(-2px) scale(1.1)'; this.style.boxShadow='0 6px 20px rgba(6, 182, 212, 0.4)'" 
+     onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(6, 182, 212, 0.3)'">
+    <i class="fas fa-arrow-left"></i>
+  </button>
+
+  <div class="map-container">
+    <div id="map"></div>
+    <div class="year-legend" id="yearLegend">
+      <div class="legend-title">年份图例</div>
+      <!-- 图例将动态生成 -->
+    </div>
+  </div>
+
+  <div class="floating-panel">
+    <div class="panel-header">
+      <i class="fas fa-cogs"></i>
+      <span>控制面板</span>
+    </div>
+    <div class="panel-content">
+      <div class="section">
+        <h3 class="section-title"><i class="fas fa-search-location"></i> 城市搜索</h3>
+        <div class="form-group">
+          <label for="citySearch">搜索城市</label>
+          <input type="text" id="citySearch" list="cityList" placeholder="输入城市名称">
+          <datalist id="cityList"></datalist>
+        </div>
+        <button id="searchBtn"><i class="fas fa-search"></i> 搜索定位</button>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title"><i class="fas fa-plus-circle"></i> 添加足迹</h3>
+        <div class="form-group">
+          <label for="addCityInput">选择城市</label>
+          <input type="text" id="addCityInput" list="addCityList" placeholder="输入城市名称搜索">
+          <datalist id="addCityList"></datalist>
+        </div>
+        <div class="form-group">
+          <label for="nameInput">姓名</label>
+          <input type="text" id="nameInput" placeholder="输入姓名">
+        </div>
+        <div class="form-group">
+          <label for="timeInput">时间（年份）</label>
+          <input type="number" id="timeInput" min="2000" max="2100" value="2024">
+        </div>
+        <button id="addBtn"><i class="fas fa-plus"></i> 添加足迹</button>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title"><i class="fas fa-chart-pie"></i> 足迹统计</h3>
+        <div class="form-group">
+          <label for="statName">姓名</label>
+          <input type="text" id="statName" placeholder="输入姓名">
+        </div>
+        <div class="form-group">
+          <label for="statProvince">省份</label>
+          <select id="statProvince">
+            <option value="">-- 请选择省份 --</option>
+          </select>
+        </div>
+        <button id="statBtn"><i class="fas fa-calculator"></i> 统计足迹</button>
+        <div class="stat-result" id="statResult">
+          统计结果将显示在这里
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title"><i class="fas fa-info-circle"></i> 城市信息</h3>
+        <div id="cityInfo">
+          <p>选择城市查看详细信息</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-panel">
+    <div class="btn-group">
+      <button id="editBtn"><i class="fas fa-edit"></i> 编辑模式</button>
+      <button id="deleteBtn" class="btn-danger"><i class="fas fa-trash-alt"></i> 删除模式</button>
+      <button id="viewBtn" class="btn-info"><i class="fas fa-eye"></i> 浏览模式</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>个人足迹管理系统 © 2025 | 高家垚 2022302051016</p>
+  </div>
 </div>
 
-<!-- 地图容器 -->
-<div id="map"></div>
+<div class="toast" id="toast">
+  <i class="fas fa-check-circle"></i>
+  <span id="toastMessage">操作成功</span>
+</div>
 
-<!-- 加载 OpenLayers -->
-<script src="https://cdn.jsdelivr.net/npm/ol@v7.3.0/dist/ol.js"></script>
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <button class="close-modal" id="closeEditModal">&times;</button>
+    <h3 class="modal-title">编辑足迹点</h3>
+    <div class="form-group">
+      <label for="editName">姓名</label>
+      <input type="text" id="editName">
+    </div>
+    <div class="form-group">
+      <label for="editTime">时间（年份）</label>
+      <input type="number" id="editTime" min="2000" max="2100">
+    </div>
+    <input type="hidden" id="editId">
+    <button id="saveEditBtn"><i class="fas fa-save"></i> 保存修改</button>
+  </div>
+</div>
+
+<div class="modal" id="deleteModal">
+  <div class="modal-content">
+    <button class="close-modal" id="closeDeleteModal">&times;</button>
+    <h3 class="modal-title">删除足迹点</h3>
+    <p>确定要删除这个足迹点吗？</p>
+    <div class="btn-group" style="margin-top: 20px;">
+      <button id="confirmDeleteBtn" class="btn-danger"><i class="fas fa-trash-alt"></i> 确认删除</button>
+      <button id="cancelDeleteBtn"><i class="fas fa-times"></i> 取消</button>
+    </div>
+    <input type="hidden" id="deleteId">
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
-    // =================== 初始化地图 ===================
-    const tianDiMapLayer = new ol.layer.Tile({
-        source: new ol.source.XYZ({
-            url: 'http://t0.tianditu.gov.cn/vec_w/wmts?tk=69f309a12fd1846d772c35a6d250e1d6&' +
-                'SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&' +
-                'LAYER=vec&STYLE=default&TILEMATRIXSET=w&' +
-                'FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
-            attributions: '天地图底图数据'
-        })
-    });
+  // 初始化地图
+  const map = L.map('map').setView([35, 105], 4);
 
-    // 矢量点图层（WFS）
-    const vectorSource = new ol.source.Vector({
-        format: new ol.format.GeoJSON(),
-        url: function (extent) {
-            return (
-                'http://47.110.54.187:8888/geoserver/wfs?service=WFS&' +
-                'version=2.0.0&request=GetFeature&typeNames=gao:gao&' +
-                'outputFormat=application/json&srsname=EPSG:4326'
-            );
+  // 添加天地图底图
+  L.tileLayer('https://t0.tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=69f309a12fd1846d772c35a6d250e1d6', {
+    attribution: '&copy; <a href="https://www.tianditu.gov.cn/">天地图</a>',
+    maxZoom: 18,
+    minZoom: 1
+  }).addTo(map);
+
+  // 添加天地图注记图层
+  L.tileLayer('https://t0.tianditu.gov.cn/cva_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=69f309a12fd1846d772c35a6d250e1d6', {
+    attribution: '&copy; <a href="https://www.tianditu.gov.cn/">天地图</a>',
+    maxZoom: 18,
+    minZoom: 1
+  }).addTo(map);
+
+
+  // 存储足迹点图层
+  let footprintsLayer = L.layerGroup().addTo(map);
+  let cityMarkers = [];
+  let currentMode = 'view'; // view, edit, delete
+  let selectedFootprint = null;
+
+  // 获取城市列表
+  async function fetchCities() {
+    try {
+      const response = await fetch('http://47.111.136.83:8088/api/cities');
+      const cities = await response.json();
+
+      // 填充搜索框datalist
+      const cityList = document.getElementById('cityList');
+      cityList.innerHTML = '';
+      cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        cityList.appendChild(option);
+      });
+
+      // 填充添加足迹的城市列表
+      const addCityList = document.getElementById('addCityList');
+      addCityList.innerHTML = '';
+      cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        addCityList.appendChild(option);
+      });
+
+      return cities;
+    } catch (error) {
+      console.error('获取城市列表失败:', error);
+      showToast('获取城市列表失败，请重试', 'error');
+    }
+  }
+
+  // 获取省份列表
+  async function fetchProvinces() {
+    try {
+      const response = await fetch('http://47.111.136.83:8088/api/provinces');
+      const provinces = await response.json();
+
+      // 填充省份选择下拉框
+      const statProvince = document.getElementById('statProvince');
+      statProvince.innerHTML = '<option value="">-- 请选择省份 --</option>';
+
+      provinces.forEach(province => {
+        const option = document.createElement('option');
+        option.value = province;
+        option.textContent = province;
+        statProvince.appendChild(option);
+      });
+
+      return provinces;
+    } catch (error) {
+      console.error('获取省份列表失败:', error);
+      showToast('获取省份列表失败，请重试', 'error');
+    }
+  }
+
+  // 获取所有足迹点
+  async function fetchFootprints() {
+    try {
+      const response = await fetch('http://47.111.136.83:8088/api/footprints');
+      const footprints = await response.json();
+      renderFootprints(footprints);
+      updateLegend(footprints);
+      return footprints;
+    } catch (error) {
+      console.error('获取足迹点失败:', error);
+      showToast('获取足迹点失败，请重试', 'error');
+    }
+  }
+
+  // 渲染足迹点
+  function renderFootprints(footprints) {
+    footprintsLayer.clearLayers();
+
+    footprints.forEach(footprint => {
+      // 使用新的DTO格式：latitude和longitude
+      if (footprint.latitude && footprint.longitude) {
+        const color = getYearColor(footprint.time);
+        const marker = L.marker([footprint.latitude, footprint.longitude], {
+          icon: createFootprintIcon(color)
+        });
+
+        marker.bindPopup(`
+                        <b>${footprint.name}</b><br>
+                        ${footprint.city}, ${footprint.province}<br>
+                        时间: ${footprint.time}年
+                    `);
+
+        marker.on('click', () => {
+          if (currentMode === 'edit') {
+            openEditModal(footprint);
+          } else if (currentMode === 'delete') {
+            openDeleteModal(footprint);
+          } else {
+            // 获取城市信息
+            fetchCityInfo(footprint.city);
+          }
+        });
+
+        marker.footprintId = footprint.gid;
+        footprintsLayer.addLayer(marker);
+      }
+    });
+  }
+
+  // 创建自定义足迹点图标
+  function createFootprintIcon(color) {
+    const svgIcon = `
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="16" fill="${color}" opacity="0.9"/>
+        <g transform="translate(2, 1) scale(0.25)">
+          <defs>
+            <style type="text/css">
+              .fil0 {fill:#FEFEFE}
+              .fil1 {fill:#FEFEFE;fill-rule:nonzero}
+            </style>
+          </defs>
+          <g id="圖層_x0020_1">
+            <g id="_2805590610528">
+              <path class="fil0" d="M40.69 70.55l7.4 0 0 24.42c0,2.04 -1.66,3.7 -3.7,3.7 -2.04,0 -3.7,-1.66 -3.7,-3.7l0 -24.42zm-11.1 6.97l0 7.4c-5.52,0.81 -10.93,2.37 -16.05,4.59 -4.09,1.97 -6.14,3.8 -6.14,5.47 0,1.68 3.58,4.14 10.73,7.4 7.99,2.45 16.35,3.71 24.71,3.71 0.51,0 1.05,-0.01 1.55,-0.01 0.35,-0.01 0.73,0 1.09,0 8.53,0 17.04,-1.3 25.17,-3.85 7.15,-2.37 10.73,-4.79 10.73,-7.25 0,-2.47 -2.05,-4.27 -6.14,-5.4 -5.12,-2.19 -10.54,-3.73 -16.05,-4.52l0 -7.4c7.45,0.87 14.69,3.14 21.31,6.66 4.43,1.86 7.57,5.9 8.28,10.65 -0.3,5.23 -4.64,9.59 -13.02,13.09 -9.54,3.57 -19.68,5.41 -29.87,5.41 -0.49,0 -1.01,-0.01 -1.49,-0.01 -0.49,0 -1.01,0.01 -1.51,0.01 -10.19,0 -20.33,-1.84 -29.86,-5.41 -8.39,-3.5 -12.73,-7.87 -13.02,-13.1 0.58,-4.94 3.78,-9.18 8.36,-11.1 6.61,-3.41 13.82,-5.58 21.23,-6.37l0 0z"/>
+              <g>
+                <path class="fil1" d="M26.95 8.5m-8.5 0c0,4.69 3.8,8.49 8.5,8.49 4.69,0 8.49,-3.8 8.49,-8.49 0,-4.69 -3.8,-8.5 -8.49,-8.5 -4.69,0 -8.5,3.8 -8.5,8.5l0 0z"/>
+                <path class="fil1" d="M44.05 5.2m-5.09 0c0,2.81 2.28,5.09 5.09,5.09 2.81,0 5.09,-2.28 5.09,-5.09 0,-2.81 -2.28,-5.09 -5.09,-5.09 -2.81,0 -5.09,2.28 -5.09,5.09l0 0z"/>
+                <path class="fil1" d="M58.37 8.18m-5.09 0c0,2.81 2.28,5.09 5.09,5.09 2.81,0 5.09,-2.28 5.09,-5.09 0,-2.81 -2.28,-5.09 -5.09,-5.09 -2.81,0 -5.09,2.28 -5.09,5.09z"/>
+                <path class="fil1" d="M71.23 15.35m-5.09 0c0,2.81 2.28,5.09 5.09,5.09 2.81,0 5.09,-2.28 5.09,-5.09 0,-2.81 -2.28,-5.09 -5.09,-5.09 -2.81,0 -5.09,2.28 -5.09,5.09z"/>
+                <path class="fil1" d="M38.87 17.05c0,0 -6.43,-0.31 -10.68,3.9 -4.25,4.21 -4.32,7.78 -2.05,11.48 2.27,3.7 7.18,3.49 6.82,11.94 -0.36,8.46 -3.8,8.52 -4.31,13.55 -0.52,5.03 0.67,11.83 12.13,13.56 11.46,1.74 22.84,-7.35 25.36,-15.54 2.53,-8.19 5.98,-15.12 5.57,-22.31 -0.48,-8.38 -4.52,-16.5 -14.58,-16.54 -10.06,-0.05 -18.26,-0.05 -18.26,-0.05z"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+    `;
+
+    return L.divIcon({
+      className: 'footprint-marker',
+      html: svgIcon,
+      iconSize: [32, 32],
+      iconAnchor: [16, 32]
+    });
+  }
+
+  // 生成年份颜色
+  function getYearColor(year) {
+    const colors = [
+      '#f56565', // 红色
+      '#48bb78', // 绿色
+      '#4299e1', // 蓝色
+      '#ed8936', // 橙色
+      '#9f7aea', // 紫色
+      '#38b2ac', // 青色
+      '#ed64a6', // 粉色
+      '#ecc94b', // 黄色
+      '#4a5568', // 灰色
+      '#2d3748'  // 深灰色
+    ];
+    
+    // 根据年份计算颜色索引，确保相同年份总是相同颜色
+    const yearIndex = Math.abs(year) % colors.length;
+    return colors[yearIndex];
+  }
+
+  // 更新图例
+  function updateLegend(footprints) {
+    const legendContainer = document.getElementById('yearLegend');
+    
+    // 获取所有不重复的年份
+    const years = [...new Set(footprints.map(f => f.time))].sort((a, b) => a - b);
+    
+    if (years.length === 0) {
+      legendContainer.innerHTML = '<div class="legend-item">暂无足迹点</div>';
+      return;
+    }
+    
+    const legendHTML = years.map(year => {
+      const color = getYearColor(year);
+      return `
+        <div class="legend-item">
+          <div class="legend-color" style="background: ${color}"></div>
+          <span>${year}年足迹</span>
+        </div>
+      `;
+    }).join('');
+    
+    legendContainer.innerHTML = legendHTML;
+  }
+
+  // 添加足迹点
+  async function addFootprint() {
+    const city = document.getElementById('addCityInput').value;
+    const name = document.getElementById('nameInput').value;
+    const time = parseInt(document.getElementById('timeInput').value);
+
+    if (!city || !name || !time) {
+      showToast('请填写完整信息', 'error');
+      return;
+    }
+
+    try {
+      // 获取城市信息以确定坐标
+      const cityInfo = await fetchCityInfo(city);
+      if (!cityInfo) {
+        showToast('获取城市信息失败', 'error');
+        return;
+      }
+
+      const footprint = {
+        name: name,
+        province: cityInfo.province,
+        city: city,
+        time: time,
+        latitude: cityInfo.latitude,
+        longitude: cityInfo.longitude
+      };
+
+      const response = await fetch('http://47.111.136.83:8088/api/footprint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
         },
-        strategy: ol.loadingstrategy.bbox
-    });
+        body: JSON.stringify(footprint)
+      });
 
-    const vectorLayer = new ol.layer.Vector({
-        source: vectorSource,
-        updateWhileInteracting: true,
-        style: new ol.style.Style({
-            image: new ol.style.Icon({
-                src: 'http://47.110.54.187:8888/geoserver/www/icon/footprint.svg',
-                scale: 0.5,
-                crossOrigin: 'anonymous'
-            })
+      if (response.ok) {
+        const newFootprint = await response.json();
+        showToast('足迹点添加成功');
+        fetchFootprints();
+
+        // 清空表单
+        document.getElementById('addCityInput').value = '';
+        document.getElementById('nameInput').value = '';
+      } else {
+        showToast('添加足迹点失败', 'error');
+      }
+    } catch (error) {
+      console.error('添加足迹点失败:', error);
+      showToast('添加足迹点失败', 'error');
+    }
+  }
+
+  // 获取城市信息
+  async function fetchCityInfo(cityName) {
+    try {
+      const response = await fetch(`http://47.111.136.83:8088/api/city/${encodeURIComponent(cityName)}`);
+      if (response.ok) {
+        const cityInfo = await response.json();
+
+        // 更新城市信息显示
+        document.getElementById('cityInfo').innerHTML = `
+                        <h4>${cityInfo.city}, ${cityInfo.province}</h4>
+                        <p>坐标: ${cityInfo.longitude.toFixed(6)}, ${cityInfo.latitude.toFixed(6)}</p>
+                    `;
+
+        // 获取实时天气数据
+        try {
+          console.log('开始获取天气数据...');
+          const weatherData = await fetchWeatherData(cityInfo.latitude, cityInfo.longitude);
+          console.log('天气数据结果:', weatherData);
+          
+          if (weatherData && weatherData.weather && weatherData.temperature) {
+            const weatherInfo = `
+              <div class="weather-card">
+                <div class="weather-icon">
+                  <i class="fas ${getWeatherIcon(weatherData.weather)}"></i>
+                </div>
+                <div class="weather-info">
+                  <div class="temp">${weatherData.temperature}°C</div>
+                  <div class="condition">${weatherData.weather}</div>
+                  <div class="weather-details">
+                    <span>湿度: ${weatherData.humidity || '--'}%</span>
+                    <span>风速: ${weatherData.windpower || '--'}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+            document.getElementById('cityInfo').innerHTML += weatherInfo;
+          } else {
+            console.log('天气数据无效，显示默认信息');
+            showDefaultWeather();
+          }
+        } catch (weatherError) {
+          console.error('获取天气数据失败:', weatherError);
+          showDefaultWeather();
+        }
+
+        return cityInfo;
+      } else {
+        showToast('获取城市信息失败', 'error');
+        return null;
+      }
+    } catch (error) {
+      console.error('获取城市信息失败:', error);
+      showToast('获取城市信息失败', 'error');
+      return null;
+    }
+  }
+
+  // 显示默认天气信息
+  function showDefaultWeather() {
+  const defaultWeatherInfo = `
+    <div class="weather-card">
+      <div class="weather-icon">
+        <i class="fas fa-cloud"></i>
+      </div>
+      <div class="weather-info">
+        <div class="temp">--°C</div>
+        <div class="condition">天气数据获取中...</div>
+      </div>
+    </div>
+  `;
+  document.getElementById('cityInfo').innerHTML += defaultWeatherInfo;
+}
+
+
+  const gaodeKey = 'ff5448486b28e8a6054fca3e571bfbc7';
+  // 获取天气数据（使用高德地图API）
+  async function fetchWeatherData(lat, lon) {
+    // 高德天气API需要城市编码，这里使用经纬度获取城市信息
+    // 先通过逆地理编码获取城市信息，再获取天气
+    const geocodeUrl = `https://restapi.amap.com/v3/geocode/regeo?location=${lon},${lat}&key=${gaodeKey}`;
+    
+    try {
+      // 第一步：通过经纬度获取城市信息
+      const geocodeResponse = await fetch(geocodeUrl);
+      if (geocodeResponse.ok) {
+        const geocodeData = await geocodeResponse.json();
+        console.log('逆地理编码数据:', geocodeData);
+        
+        if (geocodeData.status === '1' && geocodeData.regeocode) {
+          const adcode = geocodeData.regeocode.addressComponent.adcode;
+          const cityName = geocodeData.regeocode.addressComponent.city || 
+                          geocodeData.regeocode.addressComponent.district;
+          
+          // 第二步：通过城市编码获取天气
+          const weatherUrl = `https://restapi.amap.com/v3/weather/weatherInfo?city=${adcode}&key=${gaodeKey}`;
+          const weatherResponse = await fetch(weatherUrl);
+          
+          if (weatherResponse.ok) {
+            const weatherData = await weatherResponse.json();
+            console.log('高德天气数据:', weatherData);
+
+            if (weatherData.status === '1' && weatherData.lives && weatherData.lives.length > 0) {
+              const live = weatherData.lives[0];
+              // 返回标准化的天气数据
+              return {
+                weather: live.weather,
+                temperature: live.temperature,
+                humidity: live.humidity,
+                windpower: live.windpower,
+                winddirection: live.winddirection,
+                city: cityName
+              };
+            } else {
+              console.error('高德天气数据无效:', weatherData.info || '未知错误');
+              return null;
+            }
+          } else {
+            console.error('高德天气API请求失败:', weatherResponse.status);
+            return null;
+          }
+        } else {
+          console.error('逆地理编码失败:', geocodeData.info || '未知错误');
+          return null;
+        }
+      } else {
+        console.error('逆地理编码API请求失败:', geocodeResponse.status);
+        return null;
+      }
+    } catch (error) {
+      console.error('获取天气数据失败:', error);
+      return null;
+    }
+  }
+
+  // 根据天气状况获取图标
+  function getWeatherIcon(weatherDesc) {
+  const iconMap = {
+    '晴': 'fa-sun',
+    '多云': 'fa-cloud',
+    '阴': 'fa-cloud',
+    '阵雨': 'fa-cloud-shower-heavy',
+    '雷阵雨': 'fa-bolt',
+    '冰雹': 'fa-hail',
+    '雨夹雪': 'fa-snowflake',
+    '小雨': 'fa-cloud-rain',
+    '中雨': 'fa-cloud-showers-heavy',
+    '大雨': 'fa-cloud-showers-heavy',
+    '暴雨': 'fa-cloud-meatball',
+    '大暴雨': 'fa-cloud-meatball',
+    '特大暴雨': 'fa-cloud-meatball',
+    '阵雪': 'fa-snowflake',
+    '小雪': 'fa-snowflake',
+    '中雪': 'fa-snowflake',
+    '大雪': 'fa-snowflake',
+    '暴雪': 'fa-snowflake',
+    '雾': 'fa-smog',
+    '霾': 'fa-smog',
+    '风': 'fa-wind',
+    '大风': 'fa-wind',
+    '沙尘': 'fa-dust',
+    '扬沙': 'fa-dust',
+    '浮尘': 'fa-dust',
+    '霜冻': 'fa-temperature-low',
+    '强对流': 'fa-bolt',
+    '寒潮': 'fa-temperature-low',
+    '其他': 'fa-cloud'
+  };
+
+  return iconMap[weatherDesc] || 'fa-cloud';
+}
+
+  // 定位到城市
+  function locateCity(cityName) {
+    fetchCityInfo(cityName).then(cityInfo => {
+      if (cityInfo) {
+        map.setView([cityInfo.latitude, cityInfo.longitude], 10);
+
+        // 清除之前的城市标记
+        cityMarkers.forEach(marker => map.removeLayer(marker));
+        cityMarkers = [];
+
+        // 添加新标记
+        const marker = L.marker([cityInfo.latitude, cityInfo.longitude], {
+          icon: L.divIcon({
+            className: 'city-marker',
+            html: `<div class="marker-icon" style="background-color: #2196F3">
+                                <i class="fas fa-city"></i>
+                            </div>`,
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+          })
+        }).addTo(map);
+
+        marker.bindPopup(`
+                        <b>${cityInfo.city}</b><br>
+                        ${cityInfo.province}
+                    `);
+
+        cityMarkers.push(marker);
+      }
+    });
+  }
+
+  // 统计足迹
+  async function countFootprints() {
+    const name = document.getElementById('statName').value;
+    const province = document.getElementById('statProvince').value;
+
+    if (!name || !province) {
+      showToast('请填写姓名并选择省份', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://47.111.136.83:8088/api/stats?name=${encodeURIComponent(name)}&province=${encodeURIComponent(province)}`);
+      if (response.ok) {
+        const count = await response.json();
+        document.getElementById('statResult').innerHTML = `
+                        <span style="color: #667eea; font-weight: 600">${name}</span> 在
+                        <span style="color: #48bb78; font-weight: 600">${province}</span> 有
+                        <span style="font-size: 1.5em; color: #f56565; font-weight: 700">${count}</span> 个足迹点
+                    `;
+      } else {
+        showToast('统计失败', 'error');
+      }
+    } catch (error) {
+      console.error('统计失败:', error);
+      showToast('统计失败', 'error');
+    }
+  }
+
+  // 打开编辑模态框
+  function openEditModal(footprint) {
+    document.getElementById('editName').value = footprint.name;
+    document.getElementById('editTime').value = footprint.time;
+    document.getElementById('editId').value = footprint.gid;
+    document.getElementById('editModal').classList.add('show');
+  }
+
+  // 保存编辑
+  async function saveEdit() {
+    const id = document.getElementById('editId').value;
+    const name = document.getElementById('editName').value;
+    const time = parseInt(document.getElementById('editTime').value);
+
+    if (!name || !time) {
+      showToast('请填写完整信息', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://47.111.136.83:8088/api/footprint/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          time: time
         })
-    });
+      });
 
-    // 面图层（WMS）
-    const wmsPolygonLayer = new ol.layer.Tile({
-        source: new ol.source.TileWMS({
-            url: 'http://47.110.54.187:8888/geoserver/wms',
-            params: {
-                LAYERS: 'gao:province',
-                TILED: true,
-                VERSION: '1.3.0'
-            },
-            serverType: 'geoserver',
-            crossOrigin: 'anonymous'
-        }),
-        visible: true,
-        opacity: 0.6
-    });
+      if (response.ok) {
+        showToast('足迹点更新成功');
+        document.getElementById('editModal').classList.remove('show');
+        fetchFootprints();
+      } else {
+        showToast('更新足迹点失败', 'error');
+      }
+    } catch (error) {
+      console.error('更新足迹点失败:', error);
+      showToast('更新足迹点失败', 'error');
+    }
+  }
 
-    // 创建地图
-    const map = new ol.Map({
-        target: 'map',
-        layers: [tianDiMapLayer, wmsPolygonLayer, vectorLayer],
-        view: new ol.View({
-            center: [114.306124, 30.572352],
-            zoom: 5,
-            projection: 'EPSG:4326'
-        })
-    });
+  // 打开删除模态框
+  function openDeleteModal(footprint) {
+    document.getElementById('deleteId').value = footprint.gid;
+    document.getElementById('deleteModal').classList.add('show');
+  }
 
-    // =================== 工具条功能实现 ===================
+  // 确认删除
+  async function confirmDelete() {
+    const id = document.getElementById('deleteId').value;
 
-    let draw, select, modify;
+    try {
+      const response = await fetch(`http://47.111.136.83:8088/api/footprint/${id}`, {
+        method: 'DELETE'
+      });
 
-    function clearInteractions() {
-        map.getInteractions().forEach(interaction => {
-            if (interaction instanceof ol.interaction.Draw ||
-                interaction instanceof ol.interaction.Select) {
-                map.removeInteraction(interaction);
-            }
-        });
+      if (response.ok) {
+        showToast('足迹点已删除');
+        document.getElementById('deleteModal').classList.remove('show');
+        fetchFootprints();
+      } else {
+        showToast('删除足迹点失败', 'error');
+      }
+    } catch (error) {
+      console.error('删除足迹点失败:', error);
+      showToast('删除足迹点失败', 'error');
+    }
+  }
+
+  // 显示提示消息
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+
+    toastMessage.textContent = message;
+
+    // 设置图标
+    const icon = toast.querySelector('i');
+    if (type === 'error') {
+      icon.className = 'fas fa-exclamation-circle';
+      toast.style.background = 'rgba(195, 20, 50, 0.9)';
+    } else {
+      icon.className = 'fas fa-check-circle';
+      toast.style.background = 'rgba(46, 204, 113, 0.9)';
     }
 
-    document.getElementById('draw-point').addEventListener('click', () => {
-        clearInteractions();
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
 
-        // 显示下拉框
-        const citySelect = document.getElementById('city-select');
-        citySelect.style.display = 'inline-block';
+  // 初始化应用
+  async function initApp() {
+    await fetchCities();
+    await fetchProvinces();
+    await fetchFootprints();
 
-        // 清空已有选项
-        citySelect.innerHTML = '';
+    // 检查按钮是否存在
+    const deleteBtn = document.getElementById('deleteBtn');
+    const editBtn = document.getElementById('editBtn');
+    const viewBtn = document.getElementById('viewBtn');
+    
+    console.log('删除按钮元素:', deleteBtn);
+    console.log('编辑按钮元素:', editBtn);
+    console.log('浏览按钮元素:', viewBtn);
 
-        // 请求 gao:city 数据
-        const cityUrl = 'http://47.110.54.187:8888/geoserver/wfs?service=WFS&' +
-            'version=2.0.0&request=GetFeature&typeNames=gao:city&' +
-            'outputFormat=application/json&srsname=EPSG:4326';
-
-        fetch(cityUrl)
-            .then(res => res.json())
-            .then(data => {
-                const features = new ol.format.GeoJSON().readFeatures(data);
-                features.forEach(feature => {
-                    const option = document.createElement('option');
-                    option.value = JSON.stringify({
-                        city: feature.get('city'),
-                        province: feature.get('province'), // 自动获取 Province
-                        geometry: feature.getGeometry().getCoordinates()
-                    });
-                    option.textContent = feature.get('city'); // 显示 City
-                    citySelect.appendChild(option);
-                });
-            });
-
-        // 监听下拉框变化
-        citySelect.onchange = () => {
-            const selected = JSON.parse(citySelect.value);
-            const [lon, lat] = selected.geometry;
-
-            // 弹窗只获取 Name 和 Time
-            const name = prompt('请输入 Name:');
-            const time = prompt('请输入 Time:');
-
-            if (!name || !time) return;
-
-            // 获取当前矢量图层数量生成新 ID
-            const id = vectorSource.getFeatures().length + 1;
-
-            // 创建新 Feature
-            const newFeature = new ol.Feature(new ol.geom.Point([lon, lat]));
-            newFeature.setId('gao.gao.' + id);
-            newFeature.setProperties({
-                id: id,
-                name: name,
-                province: selected.province, // 自动填充 Province
-                city: selected.city,         // 自动填充 City
-                time: time
-            });
-
-            // 添加到矢量源
-            vectorSource.addFeature(newFeature);
-
-            // 保存到 Geoserver
-            saveFeatureToGeoserver(newFeature);
-        };
+    // 设置模式按钮事件
+    editBtn.addEventListener('click', () => {
+      console.log('编辑按钮被点击');
+      currentMode = 'edit';
+      showToast('已进入编辑模式，点击足迹点进行编辑');
     });
 
-    function saveFeatureToGeoserver(feature) {
-        const format = new ol.format.GeoJSON();
-        const geojson = format.writeFeatureObject(feature);
-
-        fetch('http://47.110.54.187:8888/geoserver/wfs', {
-            method: 'POST',
-            body: `
-      <wfs:Transaction service="WFS" version="2.0.0"
-        xmlns:wfs="http://www.opengis.net/wfs/2.0"
-        xmlns:gao="http://www.example.com/gao">
-        <wfs:Insert>
-          ${format.writeFeature(geojson)}
-        </wfs:Insert>
-      </wfs:Transaction>
-    `,
-            headers: {
-                'Content-Type': 'text/xml'
-            }
-        }).then(response => {
-            console.log('新增成功');
-            feature.setProperties({saved: true});
-        }).catch(err => {
-            console.error('新增失败:', err);
-        });
-    }
-
-    // --- 删除点 ---
-    document.getElementById('delete-feature').addEventListener('click', () => {
-        clearInteractions();
-        select = new ol.interaction.Select({
-            condition: ol.events.condition.click
-        });
-        map.addInteraction(select);
-
-        select.on('select', e => {
-            const selected = e.selected;
-            if (selected.length > 0) {
-                const feature = selected[0];
-                deleteFeatureFromGeoserver(feature);
-                vectorSource.removeFeature(feature);
-            }
-        });
+    deleteBtn.addEventListener('click', () => {
+      console.log('删除按钮被点击');
+      currentMode = 'delete';
+      showToast('已进入删除模式，点击足迹点进行删除');
     });
 
-    function deleteFeatureFromGeoserver(feature) {
-        const fid = feature.getId(); // 假设图层有 FID 字段
-        fetch('http://47.110.54.187:8888/geoserver/wfs', {
-            method: 'POST',
-            body: `
-        <wfs:Transaction service="WFS" version="2.0.0"
-          xmlns:wfs="http://www.opengis.net/wfs/2.0"
-          xmlns:gao="http://www.example.com/gao">
-          <wfs:Delete typeName="gao:gao">
-            <ogc:Filter>
-              <ogc:PropertyIsEqualTo>
-                <ogc:PropertyName>id</ogc:PropertyName>
-                <ogc:Literal>${fid}</ogc:Literal>
-              </ogc:PropertyIsEqualTo>
-            </ogc:Filter>
-          </wfs:Delete>
-        </wfs:Transaction>
-      `,
-            headers: {
-                'Content-Type': 'text/xml'
-            }
-        }).then(response => {
-            console.log('删除成功');
-        }).catch(err => {
-            console.error('删除失败:', err);
-        });
-    }
-
-    // --- 修改点 ---
-    document.getElementById('select-feature').addEventListener('click', () => {
-        clearInteractions();
-        select = new ol.interaction.Select({
-            condition: ol.events.condition.click
-        });
-        map.addInteraction(select);
-
-        modify = new ol.interaction.Modify({source: vectorSource});
-        map.addInteraction(modify);
-
-        modify.on('modifyend', e => {
-            const features = e.features.getArray();
-            features.forEach(f => updateFeatureOnGeoserver(f));
-        });
+    viewBtn.addEventListener('click', () => {
+      console.log('浏览按钮被点击');
+      currentMode = 'view';
+      showToast('已进入浏览模式');
     });
 
-    function updateFeatureOnGeoserver(feature) {
-        // 使用WFS格式生成器
-        const wfsFormat = new ol.format.WFS();
-        const featureId = feature.getId(); // 获取要素ID
+    // 添加足迹按钮
+    document.getElementById('addBtn').addEventListener('click', addFootprint);
 
-        // 构建事务请求
-        const transaction = wfsFormat.writeTransaction(
-            null, // 无新增
-            [feature], // 更新要素
-            null, // 无删除
-            {
-                featureNS: 'http://www.example.com/gao', // 命名空间URI
-                featurePrefix: 'gao', // 工作区前缀
-                featureType: 'gao', // 图层名
-                version: '2.0.0'   // WFS版本
-            }
-        );
-
-        // 发起请求
-        fetch('http://47.110.54.187:8888/geoserver/wfs', {
-            method: 'POST',
-            body: new XMLSerializer().serializeToString(transaction),
-            headers: {'Content-Type': 'text/xml'}
-        })
-            .then(response => response.text())
-            .then(str => {
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(str, "text/xml");
-                // 检查事务结果
-                if (xmlDoc.getElementsByTagName('wfs:totalUpdated')[0]?.textContent === "1") {
-                    console.log('要素更新成功');
-                } else {
-                    const error = xmlDoc.getElementsByTagName('ows:ExceptionText')[0]?.textContent;
-                    console.error('更新失败:', error || '未知错误');
-                }
-            })
-            .catch(err => console.error('请求失败:', err));
-    }
-
-    // --- 查找点 ---
-    document.getElementById('search-feature').addEventListener('click', () => {
-
-        const keyword = prompt('请输入要查找的城市名称:');
-        if (!keyword) return;
-
-        const url = 'http://47.110.54.187:8888/geoserver/wfs?' +
-            'service=WFS&' +
-            'version=2.0.0&' +
-            'request=GetFeature&' +
-            'typeName=gao:gao&' + // 指定图层名称
-            'outputFormat=application/json&' + // 返回 GeoJSON 格式
-            'srsname=EPSG:4326&' + // 坐标系统
-            'CQL_FILTER=' + encodeURIComponent(`City ILIKE '%${keyword}%'`); // 查询条件
-
-        fetch(url)
-            .then(res => {
-                if (!res.ok) throw new Error('请求失败，状态码：' + res.status);
-                return res.json();
-            })
-            .then(data => {
-                const features = new ol.format.GeoJSON().readFeatures(data);
-                if (features.length === 0) {
-                    alert('未找到相关数据');
-                    return;
-                }
-
-                vectorSource.clear(); // 清除原有数据
-                vectorSource.addFeatures(features); // 添加查询到的点要素
-
-                map.getView().fit(vectorSource.getExtent(), {padding: [100, 100, 100, 100]}); // 调整地图视野
-            })
-            .catch(err => {
-                console.error('查询失败:', err);
-            });
+    // 搜索按钮
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const city = document.getElementById('citySearch').value;
+      if (city) {
+        locateCity(city);
+      } else {
+        showToast('请输入城市名称', 'error');
+      }
     });
 
+    // 统计按钮
+    document.getElementById('statBtn').addEventListener('click', countFootprints);
+
+    // 编辑模态框
+    document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
+    document.getElementById('closeEditModal').addEventListener('click', () => {
+      document.getElementById('editModal').classList.remove('show');
+    });
+
+    // 删除模态框
+    document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+    document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+      document.getElementById('deleteModal').classList.remove('show');
+    });
+    document.getElementById('closeDeleteModal').addEventListener('click', () => {
+      document.getElementById('deleteModal').classList.remove('show');
+    });
+
+    // 按回车键搜索
+    document.getElementById('citySearch').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const city = document.getElementById('citySearch').value;
+        if (city) {
+          locateCity(city);
+        }
+      }
+    });
+
+    // 按回车键验证城市并跳转到姓名输入框
+    document.getElementById('addCityInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const city = document.getElementById('addCityInput').value;
+        if (city) {
+          // 验证城市是否存在
+          const cityList = document.getElementById('addCityList');
+          const options = Array.from(cityList.options).map(option => option.value);
+          if (options.includes(city)) {
+            // 城市存在，跳转到姓名输入框
+            document.getElementById('nameInput').focus();
+            showToast('城市验证成功，请输入姓名');
+          } else {
+            showToast('请输入有效的城市名称', 'error');
+          }
+        }
+      }
+    });
+  }
+
+  // 启动应用
+  document.addEventListener('DOMContentLoaded', initApp);
+
+  // 返回按钮事件
+  document.getElementById('backBtn').addEventListener('click', () => {
+    window.location.href = '../gao.html';
+  });
 </script>
 </body>
-
 </html>
