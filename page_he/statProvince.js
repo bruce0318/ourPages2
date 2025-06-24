@@ -89,13 +89,13 @@ export async function statProvince(map) {
             });
             
             // content += `<div><h3>共有${uniqueUser.size}人来过${input}，走过${uniqueCity.size}个城市：</h3></div>`;  // 小组足迹地图
-            content += `<div><h3>何灿非走过${input}的${uniqueCity.size}个城市：</h3></div>`;  // 个人足迹地图
+            content += `<div><p class="location-title">何灿非走过${input}的${uniqueCity.size}个城市：</p></div>`;  // 个人足迹地图
 
             // 添加每条足迹记录
             pointsData.features.forEach(record => {
                 const props = record.properties;
                 // content += `<p>${props.name}在${props.time}年去过${props.city}</p>`; // 小组足迹地图
-                content += `<p>在${props.time}年去过${props.city}</p>`; // 个人足迹地图
+                content += `<p class="visit-info">在${props.time}年去过${props.city}</p>`; // 个人足迹地图
             });
         }
 

@@ -7,6 +7,12 @@ export async function statYear(start, end) {
     if(start < 2015){
         startYear = 2004;
     }
+
+    if(startYear > endYear){
+        alert("起始年份不能大于结束年份，请确保时间范围正确！");
+        return;
+    }
+        
     
     try{
         const body = { startYear, endYear };
@@ -33,5 +39,4 @@ export async function statYear(start, end) {
         console.error("加载失败：", err);
         alert("加载失败，请稍后重试。");
     }
-    alert("加载成功");
 }

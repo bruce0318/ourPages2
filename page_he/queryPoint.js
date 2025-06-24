@@ -116,12 +116,12 @@ function highlightQueryPoint(map,geoData) {
     // 信息窗口内容
     let content = `
     <div class="info-window">
-        <h3>${firstProps.province ? `${firstProps.province}·` : ''}${firstProps.city}</h3>
+        <p class="location-title">${firstProps.province ? `${firstProps.province}·` : ''}${firstProps.city}</p>
     </div>`;
 
     geoData.features.forEach(record => { 
         const props = record.properties;
-        content += `<p>${props.name}在${props.time}年来过这里</p>`;
+        content += `<p class="visit-info">${props.name}在${props.time}年来过这里</p>`;
     });
 
     // 创建并打开信息窗口

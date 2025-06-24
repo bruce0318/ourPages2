@@ -1,718 +1,935 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Title -->
     <title>何灿非的个人主页</title>
-    <!-- Custom Stylesheets -->
-    <link rel="stylesheet"  href="css/He_Style.css" />
-
+    <link rel="stylesheet" href="css/He_Style_new.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 基础样式将在外部CSS中实现 */
+    </style>
 </head>
 <body>
-
-
-    <!-------------------- Header Area (Start) -------------------->
+    <!-- 导航栏 -->
     <header class="header">
-
-        <a class="navbar-brand js-scroll-trigger" href="index.html">
-            <img class="img-fluid" src="images/logo.png" alt="" style="height: 50px;"></img>
-        </a>
-
-        <!-- Navbar -->
-        <nav class="navbar">
-            <a href="#home">主页</a>
-            <a href="#about">个人信息</a>
-            <a href="#edu-bg">教育背景</a>
-            <a href="#ability">专业技能</a>
-            <a href="#portfolio">兴趣爱好</a>
-            <a href="#footprint">个人足迹</a>
-            <a href="#contact">联系方式</a>
-        </nav>
-
-        <!-- Menubar -->
-        <div class="fas fa-bars" id="menu-btn"></div>
-        
+        <div class="header-container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.png" alt="个人Logo" class="logo">
+            </a>
+            <nav class="navbar">
+                <a href="#home" class="active">主页</a>
+                <a href="#about">个人信息</a>
+                <a href="#edu-bg">教育背景</a>
+                <a href="#ability">专业技能</a>
+                <a href="#portfolio">兴趣爱好</a>
+                <a href="#footprint">个人足迹</a>
+                <a href="#contact">联系方式</a>
+            </nav>
+            <div class="menu-toggle" id="menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
     </header>
-    <!-------------------- Header Area (End) -------------------->
- 
 
-    <!-------------------- Home Area (Start) -------------------->
+    <!-- 主页区域 -->
     <section class="home" id="home">
-        <div class="content">
-            <div class="text">
-                <h1>你好，我是何灿非。欢迎来到我的个人主页</h1>
-                <p>Hi! I am Canfei He. Welcome to my personal webpage!</p>
-                <h2>我是一名大三GISer，于数据算法间体会空间的科学，于点线设计中领略地图的艺术</h2>
-            </div>          
+        <div class="home-content">
+            <h1>你好，我是何灿非</h1>
+            <h2>欢迎来到我的个人网页</h2>
+            <p class="intro">我是一名大三GISer</p>
+            <p class="intro">于数据算法间体会空间的科学，于点线设计中领略地图的艺术</p>
+            <a href="#about" class="btn-explore">探索更多 <i class="fas fa-arrow-down"></i></a>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
         </div>
     </section>
-    <!-------------------- Home Area (End) -------------------->
 
-
-    <!-------------------- About Area (Start) -------------------->
-    <section class="about" id="about">
-
-        <div class="heading">
+    <!-- 个人信息 -->
+    <section class="section about" id="about">
+        <div class="section-header">
             <h2><span>个人信息</span></h2>
         </div>
-
-        <div class="box-container">
-            <div class="image">
-                <img src="images/he/He.jpg" alt="About-Image" />
+        <div class="about-container">
+            <div class="profile-image">
+                <img src="images/he/He.jpg" alt="何灿非">
             </div>
-    
-            <div class="content">
-                <h2>何灿非</h2>  
-                <div class="about-info">
-                    <div class="info">
-                        <h4>年龄: <span>21</span></h4>
-                        <h4>籍贯: <span>广西南宁</span></h4>
-                        <h4>学校: <span>武汉大学</span></h4>
-                        <h4>专业: <span>地理信息科学（数字地图与空间信息工程）</span></h4>
-                        <h4>学号: <span>2022302051046</span></h4>
-                        <h4>生日: <span>2004-04-15</span></h4>
+            <div class="profile-info">
+                <h3>何灿非</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span>年龄:</span>
+                        <p>21</p>
                     </div>
-                </div>               
+                    <div class="info-item">
+                        <span>籍贯:</span>
+                        <p>广西南宁</p>
+                    </div>
+                    <div class="info-item">
+                        <span>学校:</span>
+                        <p>武汉大学</p>
+                    </div>
+                    <div class="info-item">
+                        <span>专业:</span>
+                        <p>地理信息科学（数字地图与空间信息工程）</p>
+                    </div>
+                    <div class="info-item">
+                        <span>学号:</span>
+                        <p>2022302051046</p>
+                    </div>
+                    <div class="info-item">
+                        <span>生日:</span>
+                        <p>2004-04-15</p>
+                    </div>
+                </div>
             </div>
         </div>
-
     </section>
-    <!-------------------- About Area (End) -------------------->
 
-    
-    <!-------------------- edu-bg Area (Start) -------------------->
-    <section class="edu-bg" id="edu-bg">
-
-        <div class="heading">
+    <!-- 教育背景 -->
+    <section class="section edu-bg" id="edu-bg">
+        <div class="section-header">
             <h2><span>教育背景</span></h2>
         </div>
-
-        <div class="box-container">
-
-            <div class="education">
-
-                <div class="experience-item">
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-icon">
                     <i class="fas fa-graduation-cap"></i>
-                    <div class="content">
-                        <span>2022.09至今</span>
-                        <h3>本科：武汉大学资源与环境科学学院</h3>
-                        <p>地理信息科学（数字地图与空间信息工程）专业</p>
-                        <p>主修地理信息系统原理、空间分析、空间数据库、WebGIS与位置服务等课程</p>
-                    </div>
                 </div>
-    
-                <div class="experience-item">
-                    <i class="fas fa-graduation-cap"></i>
-                    <div class="content">
-                        <span>2019.09 - 2022.06</span>
-                        <h3>高中：广西南宁市第二中学</h3>
-                        <p>2019级理科实验9班</p>
-                        <p>曾任班长、语文科代表</p>
-                    </div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2022.09至今</span>
+                    <h3>本科：武汉大学资源与环境科学学院</h3>
+                    <p>地理信息科学（数字地图与空间信息工程）专业</p>
+                    <p>主修地理信息系统原理、空间分析、空间数据库、WebGIS与位置服务等课程</p>
                 </div>
-        
-                <div class="experience-item">
-                    <i class="fas fa-graduation-cap"></i>
-                    <div class="content">
-                        <span>2016.09 - 2019.06</span>
-                        <h3>初中：广西大学附属中学</h3>
-                        <p>2016级13班</p>
-                    </div>
-                </div>
-
             </div>
-
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2019.09 - 2022.06</span>
+                    <h3>高中：广西南宁市第二中学</h3>
+                    <p>2019级理科实验9班</p>
+                    <p>曾任班长、语文科代表</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2016.09 - 2019.06</span>
+                    <h3>初中：广西大学附属中学</h3>
+                    <p>2016级13班</p>
+                </div>
+            </div>
         </div>
     </section>
-    <!-------------------- edu-bg Area (End) -------------------->
 
-
-    <!-------------------- Ability Area (Start) -------------------->
-    <section class="ability" id="ability">
-
-        <div class="heading">
+    <!-- 专业技能 -->
+    <section class="section ability" id="ability">
+        <div class="section-header">
             <h2><span>专业技能</span></h2>
         </div>
-
-        <div class="box-container">
-
-            <div class="ability-item" style="background-image: url('images/he/ability1.png');">
-                <i class="fas fa-code"></i>
-                <h3>空间信息可视化</h3>
-                <p>使用ArcGIS Pro等桌面软件对带有复杂属性的空间信息以地图的方式呈现</p>
+        <div class="skills-container">
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-map"></i>
+                </div>
+                <div class="skill-content">
+                    <h3>空间信息可视化</h3>
+                    <p>使用ArcGIS Pro等桌面软件对带有复杂属性的空间信息以地图的方式呈现</p>
+                </div>
             </div>
-
-            <div class="ability-item" style="background-image: url('images/he/ability2.png');">
-                <i class="fas fa-paint-brush"></i>
-                <h3>空间数据分析</h3>
-                <p>使用Python等数据分析工具，结合ArcGIS实现空间数据的清洗、整理、分析</p>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="skill-content">
+                    <h3>空间数据分析</h3>
+                    <p>使用Python等数据分析工具，结合ArcGIS实现空间数据的清洗、整理、分析</p>
+                </div>
             </div>
-
-            <div class="ability-item" style="background-image: url('images/he/ability3.png');">
-                <i class="fas fa-camera"></i>
-                <h3>动态创意地图设计</h3>
-                <p>使用GeoScene Online、MapBox等在线制图平台进行动态创意地图的设计与制作</p>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <div class="skill-content">
+                    <h3>动态创意地图设计</h3>
+                    <p>使用GeoScene Online、MapBox等在线制图平台进行动态创意地图的设计与制作</p>
+                </div>
             </div>
-
-            <div class="ability-item" style="background-image: url('images/he/ability4.png');">
-                <i class="fas fa-bullhorn"></i>
-                <h3>WebGIS开发</h3>
-                <p>使用HTML+CSS+JavaScript+MapBox API进行WebGIS开发</p> 
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="skill-content">
+                    <h3>WebGIS开发</h3>
+                    <p>使用HTML+CSS+JavaScript+MapBox API进行WebGIS开发</p>
+                </div>
             </div>
-
-            <div class="ability-item" style="background-image: url('images/he/ability5.png');">
-                <i class="far fa-file-video"></i>
-                <h3>GIS软件二次开发</h3>
-                <p>基于ArcEngine框架，使用C#进行ArcMap二次开发</p>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="skill-content">
+                    <h3>GIS软件二次开发</h3>
+                    <p>基于ArcEngine框架，使用C#进行ArcMap二次开发</p>
+                </div>
             </div>
-
-            <div class="ability-item" style="background-image: url('images/he/ability6.png');">
-                <i class="fas fa-search-dollar"></i>
-                <h3>国土空间规划</h3>
-                <p>结合国土空间规划专业知识完成国土空间规划案与规划图制作</p>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-drafting-compass"></i>
+                </div>
+                <div class="skill-content">
+                    <h3>国土空间规划</h3>
+                    <p>结合国土空间规划专业知识完成国土空间规划案与规划图制作</p>
+                </div>
             </div>
-
         </div>
-
     </section>
-    <!-------------------- Ability Area (End) -------------------->
 
-
-    <!-------------------- Interest Area (Start) -------------------->
-    <section class="portfolio" id="portfolio">
-
-        <div class="heading">
+    <!-- 兴趣爱好 -->
+    <section class="section portfolio" id="portfolio">
+        <div class="section-header">
             <h2><span>兴趣爱好</span></h2>
         </div>
-
-        <div class="gallery">
-            <div class="box-container">
-                <div class="portfolio-item image web">
-                    <img src="images/he/football.jpg" alt="Portfolio-Image" />
-                    <div class="content">
-                        <h4>足球</h4>
-                        <p>唯有足球不可辜负</p>
-                        <a data-effect="mfp-newspaper" href="assets/images/Portfolio/portfolio-1.png" class="view-btn"><i class="fas fa-search-plus"></i></a>
-                    </div>
+        <div class="hobbies-container">
+            <div class="hobby-card">
+                <div class="hobby-img">
+                    <img src="images/he/football.jpg" alt="足球">
                 </div>
-    
-                <div class="portfolio-item image web">
-                    <img src="images/he/travel.jpg" alt="Portfolio-Image" />
-                    <div class="content">
-                        <h4>旅行</h4>
-                        <p>见世面就是看见世界的每一面</p>
-                        <a data-effect="mfp-newspaper" href="assets/images/Portfolio/portfolio-2.png" class="view-btn"><i class="fas fa-search-plus"></i></a>
-                    </div>
+                <div class="hobby-content">
+                    <h3>足球</h3>
+                    <p>唯有足球不可辜负</p>
                 </div>
-    
-                <div class="portfolio-item image design">
-                    <img src="images/he/movie.jpg" alt="Portfolio-Image" />
-                    <div class="content">
-                        <h4>电影</h4>
-                        <p>光影斑驳中窥见一段人生</p>
-                        <a data-effect="mfp-newspaper" href="assets/images/Portfolio/portfolio-3.png" class="view-btn"><i class="fas fa-search-plus"></i></a>
-                    </div>
+            </div>
+            <div class="hobby-card">
+                <div class="hobby-img">
+                    <img src="images/he/travel.jpg" alt="旅行">
                 </div>
-    
-                <div class="portfolio-item image design">
-                    <img src="images/he/badminton.jpg" alt="Portfolio-Image" />
-                    <div class="content">
-                        <h4>羽毛球</h4>
-                        <p>一来一往间挥洒汗水</p>
-                        <a data-effect="mfp-newspaper" href="assets/images/Portfolio/portfolio-4.png" class="view-btn"><i class="fas fa-search-plus"></i></a>
-                    </div>
+                <div class="hobby-content">
+                    <h3>旅行</h3>
+                    <p>见世面就是看见世界的每一面</p>
                 </div>
-                <div class="portfolio-item image photography">
-                    <img src="images/he/reading.jpg" alt="Portfolio-Image" />
-                    <div class="content">
-                        <h4>阅读</h4>
-                        <p>读书是一个人的狂欢</p>
-                        <a data-effect="mfp-newspaper" href="assets/images/Portfolio/portfolio-5.png" class="view-btn"><i class="fas fa-search-plus"></i></a>
-                    </div>
+            </div>
+            <div class="hobby-card">
+                <div class="hobby-img">
+                    <img src="images/he/movie.jpg" alt="电影">
                 </div>
-    
-                <div class="portfolio-item image photography">
-                    <img src="images/he/food.jpg" alt="Portfolio-Image" />
-                    <div class="content">
-                        <h4>干饭</h4>
-                        <p>粤菜乃人间第一仙品</p>
-                        <a data-effect="mfp-newspaper" href="assets/images/Portfolio/portfolio-6.png" class="view-btn"><i class="fas fa-search-plus"></i></a>
-                    </div>
+                <div class="hobby-content">
+                    <h3>电影</h3>
+                    <p>光影斑驳中窥见一段人生</p>
+                </div>
+            </div>
+            <div class="hobby-card">
+                <div class="hobby-img">
+                    <img src="images/he/badminton.jpg" alt="羽毛球">
+                </div>
+                <div class="hobby-content">
+                    <h3>羽毛球</h3>
+                    <p>一来一往间挥洒汗水</p>
+                </div>
+            </div>
+            <div class="hobby-card">
+                <div class="hobby-img">
+                    <img src="images/he/reading.jpg" alt="阅读">
+                </div>
+                <div class="hobby-content">
+                    <h3>阅读</h3>
+                    <p>读书是一个人的狂欢</p>
+                </div>
+            </div>
+            <div class="hobby-card">
+                <div class="hobby-img">
+                    <img src="images/he/food.jpg" alt="干饭">
+                </div>
+                <div class="hobby-content">
+                    <h3>干饭</h3>
+                    <p>粤菜乃人间第一仙品</p>
                 </div>
             </div>
         </div>
-
     </section>
-    <!-------------------- Interest Area (End) -------------------->
 
-
-    <!-------------------- Footprint Area (Start) -------------------->
-    <section class="footprint" id="footprint">
-
-        <div class="heading">
+    <!-- 个人足迹 -->
+    <section class="section footprint" id="footprint">
+        <div class="section-header">
             <h2><span>个人足迹</span></h2>
         </div>
-
-        <div class="mapSection">
-            <h2 class="section-title">足迹地图</h2>
-            <h3 class="section-tips">点击地图右上方按钮可加载或移除足迹,点击地图中的足迹点可查看详细信息</h3>
-            <div id="map-container">                
-                <div class="map-controls">
-                    <!-- 足迹操作组 -->
-                    <div class="map-control-group">
-                        <button id="load-layer-btn" class="map-btn">加载足迹城市</button>
-                        <button id="remove-layer-btn" class="map-btn" disabled>移除足迹城市</button>
-                        <button id="load-layer-fromDB-btn" class="map-btn">刷新足迹城市</button>
-                        <button id="load-geoserver_layer-btn" class="map-btn">加载足迹省份</button>
-                        <button id="remove-geoserver_layer-btn" class="map-btn">移除足迹省份</button>
-                        <button id="add-point-btn" class="map-btn">新增足迹点</button>
-                        <button id="delete-point-btn" class="map-btn">删除足迹点</button>
-                        <button id="update-point-btn" class="map-btn">修改足迹点年份</button>
-                    </div>
-
-                    <!-- 搜索组 -->
-                    <div class="map-control-group">
-                        <div>
-                            <input id="query-input" type="text" placeholder="输入城市名称" class="compact-input">
-                            <button id="query-point-btn" class="map-btn">查询城市</button>
+        
+        <!-- 足迹地图 -->
+        <div class="sub-section">
+            <h3>足迹地图</h3>
+            <p class="section-tip">点击地图右侧的按钮可对地图中的足迹点进行相关操作，点击地图中的足迹点可查看详细信息</p>
+            <div class="map-dashboard">
+                <div class="map-container" id="map-container">
+                    <!-- 左上角统计信息 -->
+                    <div class="map-overlay">
+                        <div class="map-title">中国足迹地图</div>
+                        <div class="map-stats">
+                            <div class="stat-item">
+                                <span id="city-count">0</span>
+                                <p>访问城市</p>
+                            </div>
+                            <div class="stat-item">
+                                <span id="province-count">0</span>
+                                <p>访问省份</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- 省份统计组 -->
-                    <div class="map-control-group">
-                        <select id="province-select" class="compact-select">
-                            <!-- 省份选项... -->
-                            <option value="">选择省份</option>
-                            <option value="北京市">北京市</option>
-                            <option value="天津市">天津市</option>
-                            <option value="河北省">河北省</option>
-                            <option value="山西省">山西省</option>
-                            <option value="内蒙古自治区">内蒙古自治区</option>
-                            <option value="辽宁省">辽宁省</option>
-                            <option value="吉林省">吉林省</option>
-                            <option value="黑龙江省">黑龙江省</option>
-                            <option value="上海市">上海市</option>
-                            <option value="江苏省">江苏省</option>
-                            <option value="浙江省">浙江省</option>
-                            <option value="安徽省">安徽省</option>
-                            <option value="福建省">福建省</option>
-                            <option value="江西省">江西省</option>
-                            <option value="山东省">山东省</option>
-                            <option value="河南省">河南省</option>
-                            <option value="湖北省">湖北省</option>
-                            <option value="湖南省">湖南省</option>
-                            <option value="广东省">广东省</option>
-                            <option value="广西壮族自治区">广西壮族自治区</option>
-                            <option value="海南省">海南省</option>
-                            <option value="重庆市">重庆市</option>
-                            <option value="四川省">四川省</option>
-                            <option value="贵州省">贵州省</option>
-                            <option value="云南省">云南省</option>
-                            <option value="西藏自治区">西藏自治区</option>
-                            <option value="陕西省">陕西省</option>
-                            <option value="甘肃省">甘肃省</option>
-                            <option value="青海省">青海省</option>
-                            <option value="宁夏回族自治区">宁夏回族自治区</option>
-                            <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
-                            <option value="台湾省">台湾省</option>
-                            <option value="香港特别行政区">香港特别行政区</option>
-                            <option value="澳门特别行政区">澳门特别行政区</option>
+                    <!-- 右上角控件组 -->
+                    <div class="map-controls">
+                        <div class="control-group">
+                            <h4>地图操作</h4>
+                            <div class="btn-row">
+                                <button id="load-layer-fromDB-btn" class="control-btn wrap">
+                                    <i class="fas fa-layer-group"></i> 加载足迹城市
+                                </button>
+                                <button id="remove-layer-btn" class="control-btn wrap" disabled>
+                                    <i class="fas fa-times-circle"></i> 移除足迹城市
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h4>足迹管理</h4>
+                            <div class="btn-row">
+                                <button id="add-point-btn" class="control-btn wrap">
+                                    <i class="fas fa-plus-circle"></i> 新增
+                                </button>
+                                <button id="delete-point-btn" class="control-btn wrap">
+                                    <i class="fas fa-trash-alt"></i> 删除
+                                </button>
+                                <button id="update-point-btn" class="control-btn wrap">
+                                    <i class="fas fa-edit"></i> 修改
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h4>数据查询</h4>
+                            <div class="search-box">
+                                <input type="text" id="query-input" placeholder="输入城市名称" class="compact-input">
+                                <button id="query-point-btn" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-search"></i> 查询
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h4>统计分析</h4>
+                            <div class="select-box">
+                                <select id="province-select" class="compact-select">
+                                    <option value="">选择省份</option>
+                                    <option value="北京市">北京市</option>
+                                    <option value="天津市">天津市</option>
+                                    <option value="河北省">河北省</option>
+                                    <option value="山西省">山西省</option>
+                                    <option value="内蒙古自治区">内蒙古自治区</option>
+                                    <option value="辽宁省">辽宁省</option>
+                                    <option value="吉林省">吉林省</option>
+                                    <option value="黑龙江省">黑龙江省</option>
+                                    <option value="上海市">上海市</option>
+                                    <option value="江苏省">江苏省</option>
+                                    <option value="浙江省">浙江省</option>
+                                    <option value="安徽省">安徽省</option>
+                                    <option value="福建省">福建省</option>
+                                    <option value="江西省">江西省</option>
+                                    <option value="山东省">山东省</option>
+                                    <option value="河南省">河南省</option>
+                                    <option value="湖北省">湖北省</option>
+                                    <option value="湖南省">湖南省</option>
+                                    <option value="广东省">广东省</option>
+                                    <option value="广西壮族自治区">广西壮族自治区</option>
+                                    <option value="海南省">海南省</option>
+                                    <option value="重庆市">重庆市</option>
+                                    <option value="四川省">四川省</option>
+                                    <option value="贵州省">贵州省</option>
+                                    <option value="云南省">云南省</option>
+                                    <option value="西藏自治区">西藏自治区</option>
+                                    <option value="陕西省">陕西省</option>
+                                    <option value="甘肃省">甘肃省</option>
+                                    <option value="青海省">青海省</option>
+                                    <option value="宁夏回族自治区">宁夏回族自治区</option>
+                                    <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
+                                    <option value="台湾省">台湾省</option>
+                                    <option value="香港特别行政区">香港特别行政区</option>
+                                    <option value="澳门特别行政区">澳门特别行政区</option>
+                                </select>
+                                <button id="stat-province-btn" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-chart-pie"></i> 统计
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h4>时间筛选</h4>
+                            <div class="time-range">
+                                <div class="range-display compact-text">
+                                    <span id="start-year-display">2015年以前</span>
+                                    <span>至</span>
+                                    <span id="end-year-display">2025年</span>
+                                </div>
+                                <div class="slider-container">
+                                    <input type="range" id="year-start" min="2014" max="2025" value="2014" class="compact-slider">
+                                    <input type="range" id="year-end" min="2015" max="2025" value="2025" class="compact-slider">
+                                </div>
+                            </div>
+                            <div class="time-buttons">
+                                <button id="stat-year-btn" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-filter"></i> 按年份筛选
+                                </button>
+                                <button id="reset-time-filter" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-redo"></i> 重置筛选
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 足迹城市一览 -->
+        <div class="sub-section">
+            <h3>足迹城市一览</h3>
+            <p class="section-tip">鼠标移动至卡片上方可查看城市信息与查询城市实时天气</p>
+            <div class="city-showcase">
+                <div class="region-selector">
+                    <button class="region-btn activate" data-region="settle">定居</button>
+                    <button class="region-btn" data-region="south">华南</button>
+                    <button class="region-btn" data-region="east">华东</button>
+                    <button class="region-btn" data-region="west">西南</button>
+                    <button class="region-btn" data-region="central">华中</button>
+                    <button class="region-btn" data-region="north">华北</button>
+                    <button class="region-btn" data-region="northwest">西北</button>
+                </div>
 
-                        </select>
-                        <button id="stat-province-btn" class="map-btn">统计省份足迹</button>
+                <div class="city-carousel-container">
+                    <div class="city-carousel">
+                        <!-- 定居 -->
+                        <div class="city-group" data-region="settle">
+                            <h4 class="group-title">定居</h4>
+                            <div class="city-cards">
+                                <div class="city-card">
+                                    <img src="images/he/nanning.jpg" alt="南宁">
+                                    <div class="card-overlay">
+                                        <h4>广西·南宁</h4>
+                                        <p>半城绿树半城楼，一首山歌一生情</p>
+                                        <button class="weather-btn" data-city="南宁">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/wuhan.jpg" alt="武汉">
+                                    <div class="card-overlay">
+                                        <h4>湖北·武汉</h4>
+                                        <p>黄鹤楼高江水阔，樱花雨细楚风轻</p>
+                                        <button class="weather-btn" data-city="武汉">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 华南 -->
+                        <div class="city-group" data-region="south">
+                            <h4 class="group-title">华南</h4>
+                            <div class="city-cards">
+                                <div class="city-card">
+                                    <img src="images/he/guilin.jpg" alt="桂林">
+                                    <div class="card-overlay">
+                                        <h4>广西·桂林</h4>
+                                        <p>青山如黛水如镜，画卷铺开客自来</p>
+                                        <button class="weather-btn" data-city="桂林">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/beihai.jpg" alt="北海">
+                                    <div class="card-overlay">
+                                        <h4>广西·北海</h4>
+                                        <p>银滩踏浪帆影动，南海听风椰影斜</p>
+                                        <button class="weather-btn" data-city="北海">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/liuzhou.jpg" alt="柳州">
+                                    <div class="card-overlay">
+                                        <h4>广西·柳州</h4>
+                                        <p>柳岸飞花春色满，龙城唱晚汽笛长</p>
+                                        <button class="weather-btn" data-city="柳州">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div> 
+                                <div class="city-card">
+                                    <img src="images/he/wuzhou.jpg" alt="梧州">
+                                    <div class="card-overlay">
+                                        <h4>广西·梧州</h4>
+                                        <p>三江并汇舟如织，五岭环城树似屏</p>
+                                        <button class="weather-btn" data-city="梧州">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/guangzhou.jpg" alt="广州">
+                                    <div class="card-overlay">
+                                        <h4>广东·广州</h4>
+                                        <p>千年商都香四溢，一道早茶味满城</p>
+                                        <button class="weather-btn" data-city="广州">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/shenzhen.jpg" alt="深圳">
+                                    <div class="card-overlay">
+                                        <h4>广东·深圳</h4>
+                                        <p>科技筑梦星辰近，春潮涌动鹏城新</p>
+                                        <button class="weather-btn" data-city="深圳">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>   
+                                <div class="city-card">
+                                    <img src="images/he/zhuhai.jpg" alt="珠海">
+                                    <div class="card-overlay">
+                                        <h4>广东·珠海</h4>
+                                        <p>百岛如珠连碧水，海风轻拂伴潮声</p>
+                                        <button class="weather-btn" data-city="珠海">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/hongkong.jpg" alt="香港">
+                                    <div class="card-overlay">
+                                        <h4>香港</h4>
+                                        <p>维港灯明星月远，山城路曲韵情长</p>
+                                        <button class="weather-btn" data-city="香港">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/macau.jpg" alt="澳门">
+                                    <div class="card-overlay">
+                                        <h4>澳门</h4>
+                                        <p>钟声依旧葡风暖，小巷斜阳古韵浓</p>
+                                        <button class="weather-btn" data-city="澳门">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 华东 -->
+                        <div class="city-group" data-region="east">
+                            <h4 class="group-title">华东</h4>
+                            <div class="city-cards">
+                                <div class="city-card">
+                                    <img src="images/he/shanghai.jpg" alt="上海">
+                                    <div class="card-overlay">
+                                        <h4>上海</h4>
+                                        <p>海派风华生旧梦，浦江灯火照新程</p>
+                                        <button class="weather-btn" data-city="上海">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/hangzhou.jpg" alt="杭州">
+                                    <div class="card-overlay">
+                                        <h4>浙江·杭州</h4>
+                                        <p>湖映残霞波不动，柳摇微雨画初开</p>
+                                        <button class="weather-btn" data-city="杭州">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/ningbo.jpg" alt="宁波">
+                                    <div class="card-overlay">
+                                        <h4>浙江·宁波</h4>
+                                        <p>书香旧港藏风骨，潮起东海见精神</p>
+                                        <button class="weather-btn" data-city="宁波">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/xiamen.jpg" alt="厦门">
+                                    <div class="card-overlay">
+                                        <h4>福建·厦门</h4>
+                                        <p>鼓浪涛声牵远客，鹭岛花影映斜晖</p>
+                                        <button class="weather-btn" data-city="厦门">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/qingdao.jpg" alt="青岛">
+                                    <div class="card-overlay">
+                                        <h4>山东·青岛</h4>
+                                        <p>红瓦绿树映碧海，啤酒泡沫起欢声</p>
+                                        <button class="weather-btn" data-city="青岛">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/yantai.jpg" alt="烟台">
+                                    <div class="card-overlay">
+                                        <h4>山东·烟台</h4>
+                                        <p>海市云开仙岛近，葡香风暖渔舟归</p>
+                                        <button class="weather-btn" data-city="烟台">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 西南 -->
+                        <div class="city-group" data-region="west">
+                            <h4 class="group-title">西南</h4>
+                            <div class="city-cards">
+                                <div class="city-card">
+                                    <img src="images/he/chongqing.jpg" alt="重庆">
+                                    <div class="card-overlay">
+                                        <h4>重庆</h4>
+                                        <p>山绕江行楼入雾，灯随路转火通明</p>
+                                        <button class="weather-btn" data-city="重庆">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/dali.jpg" alt="大理">
+                                    <div class="card-overlay">
+                                        <h4>云南·大理</h4>
+                                        <p>风过洱海帆影碎，雪落苍山画意生</p>
+                                        <button class="weather-btn" data-city="大理">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/lijiang.jpg" alt="丽江">
+                                    <div class="card-overlay">
+                                        <h4>云南·丽江</h4>
+                                        <p>古巷花开人未动，木楼月照水无声</p>
+                                        <button class="weather-btn" data-city="丽江">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 华中 -->
+                        <div class="city-group" data-region="central">
+                            <h4 class="group-title">华中</h4>
+                            <div class="city-cards">
+                                <div class="city-card">
+                                    <img src="images/he/changsha.jpg" alt="长沙">
+                                    <div class="card-overlay">
+                                        <h4>湖南·长沙</h4>
+                                        <p>橘子洲头云作画，坡子街里火锅香</p>
+                                        <button class="weather-btn" data-city="长沙">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/jiujiang.jpg" alt="九江">
+                                    <div class="card-overlay">
+                                        <h4>江西·九江</h4>
+                                        <p>庐山云隐诗千首，江水东流梦一城</p>
+                                        <button class="weather-btn" data-city="九江">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                                <div class="city-card">
+                                    <img src="images/he/suizhou.jpg" alt="随州">
+                                    <div class="card-overlay">
+                                        <h4>湖北·随州</h4>
+                                        <p>钟鸣古调惊天地，帝起炎乡照万年</p>
+                                        <button class="weather-btn" data-city="随州">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div> 
+
+                        <!-- 华北 -->
+                        <div class="city-group" data-region="north">
+                            <h4 class="group-title">华北</h4>
+                            <div class="city-cards">
+                                <div class="city-card">
+                                    <img src="images/he/beijing.jpg" alt="北京">
+                                    <div class="card-overlay">
+                                        <h4>北京</h4>
+                                        <p>皇城古韵承千载，燕京新风耀九州</p>
+                                        <button class="weather-btn" data-city="北京">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 西北 -->
+                        <div class="city-group" data-region="northwest">
+                            <h4 class="group-title">西北</h4>
+                            <div class="city-cards">
+                                <div class="city-card">
+                                    <img src="images/he/xian.jpg" alt="西安">
+                                    <div class="card-overlay">
+                                        <h4>西安</h4>
+                                        <p>千年长安展新颜，丝路起点连世界</p>
+                                        <button class="weather-btn" data-city="西安">获取天气</button>
+                                        <div class="weather-info"></div>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div> 
                     </div>
                     
-                <div class="time-filter">
-                    <label>年份范围：</label>
-                    <div class="slider-container">
-                        <span id="start-year-display">2015年以前</span>
-                        <input type="range" id="year-start" min="2014" max="2025" value="2014" step="1">
-                        <input type="range" id="year-end" min="2015" max="2025" value="2025" step="1">
-                        <span id="end-year-display">2025年</span>
-                    </div>
-                    <div class="time-filter-buttons">
-                        <button id="stat-year-btn" class="map-btn">按时间筛选</button>
-                        <button id="reset-time-filter" class="map-btn">重置筛选</button>
-                    </div>
-                </div>
-            </div>                
-        </div>
-
-        <div class="heading"> 
-            <h4>城市一览</h4>
-            <h3>鼠标移动至卡片上方可查看城市信息与查询城市实时天气</h3>
-        </div>
-
-        <div class="city-group">
-            <h3 class="group-title">定居</h3>
-            <div class="city-cards">
-                <div class="city-card">
-                    <img src="images/he/nanning.jpg" alt="南宁">
-                    <div class="card-overlay">
-                        <h4>广西·南宁</h4>
-                        <p>半城绿树半城楼，一首山歌一生情</p>
-                        <button class="btn weather-btn" data-city="南宁">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/wuhan.jpg" alt="武汉">
-                    <div class="card-overlay">
-                        <h4>湖北·武汉</h4>
-                        <p>黄鹤楼高江水阔，樱花雨细楚风轻</p>
-                        <button class="btn weather-btn" data-city="武汉">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="city-group">
-            <h3 class="group-title">华南</h3>
-            <div class="city-cards">
-                <div class="city-card">
-                    <img src="images/he/guilin.jpg" alt="桂林">
-                    <div class="card-overlay">
-                        <h4>广西·桂林</h4>
-                        <p>青山如黛水如镜，画卷铺开客自来</p>
-                        <button class="btn weather-btn" data-city="桂林">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/beihai.jpg" alt="北海">
-                    <div class="card-overlay">
-                        <h4>广西·北海</h4>
-                        <p>银滩踏浪帆影动，南海听风椰影斜</p>
-                        <button class="btn weather-btn" data-city="北海">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/liuzhou.jpg" alt="柳州">
-                    <div class="card-overlay">
-                        <h4>广西·柳州</h4>
-                        <p>柳岸飞花春色满，龙城唱晚汽笛长</p>
-                        <button class="btn weather-btn" data-city="柳州">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div> 
-                
-                <div class="city-card">
-                    <img src="images/he/wuzhou.jpg" alt="梧州">
-                    <div class="card-overlay">
-                        <h4>广西·梧州</h4>
-                        <p>三江并汇舟如织，五岭环城树似屏</p>
-                        <button class="btn weather-btn" data-city="梧州">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-                
-                <div class="city-card">
-                    <img src="images/he/guangzhou.jpg" alt="广州">
-                    <div class="card-overlay">
-                        <h4>广东·广州</h4>
-                        <p>千年商都香四溢，一道早茶味满城</p>
-                        <button class="btn weather-btn" data-city="广州">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/shenzhen.jpg" alt="深圳">
-                    <div class="card-overlay">
-                        <h4>广东·深圳</h4>
-                        <p>科技筑梦星辰近，春潮涌动鹏城新</p>
-                        <button class="btn weather-btn" data-city="深圳">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>   
-
-                <div class="city-card">
-                    <img src="images/he/zhuhai.jpg" alt="珠海">
-                    <div class="card-overlay">
-                        <h4>广东·珠海</h4>
-                        <p>百岛如珠连碧水，海风轻拂伴潮声</p>
-                        <button class="btn weather-btn" data-city="珠海">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-                
-                <div class="city-card">
-                    <img src="images/he/hongkong.jpg" alt="香港">
-                    <div class="card-overlay">
-                        <h4>香港</h4>
-                        <p>维港灯明星月远，山城路曲韵情长</p>
-                        <button class="btn weather-btn" data-city="香港">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/macau.jpg" alt="澳门">
-                    <div class="card-overlay">
-                        <h4>澳门</h4>
-                        <p>钟声依旧葡风暖，小巷斜阳古韵浓</p>
-                        <button class="btn weather-btn" data-city="澳门">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="city-group">
-            <h3 class="group-title">华东</h3>
-            <div class="city-cards">
-                <div class="city-card">
-                    <img src="images/he/shanghai.jpg" alt="上海">
-                    <div class="card-overlay">
-                        <h4>上海</h4>
-                        <p>海派风华生旧梦，浦江灯火照新程</p>
-                        <button class="btn weather-btn" data-city="上海">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/hangzhou.jpg" alt="杭州">
-                    <div class="card-overlay">
-                        <h4>浙江·杭州</h4>
-                        <p>湖映残霞波不动，柳摇微雨画初开</p>
-                        <button class="btn weather-btn" data-city="杭州">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/ningbo.jpg" alt="宁波">
-                    <div class="card-overlay">
-                        <h4>浙江·宁波</h4>
-                        <p>书香旧港藏风骨，潮起东海见精神</p>
-                        <button class="btn weather-btn" data-city="宁波">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/xiamen.jpg" alt="厦门">
-                    <div class="card-overlay">
-                        <h4>福建·厦门</h4>
-                        <p>鼓浪涛声牵远客，鹭岛花影映斜晖</p>
-                        <button class="btn weather-btn" data-city="厦门">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/qingdao.jpg" alt="青岛">
-                    <div class="card-overlay">
-                        <h4>山东·青岛</h4>
-                        <p>红瓦绿树映碧海，啤酒泡沫起欢声</p>
-                        <button class="btn weather-btn" data-city="青岛">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/yantai.jpg" alt="烟台">
-                    <div class="card-overlay">
-                        <h4>山东·烟台</h4>
-                        <p>海市云开仙岛近，葡香风暖渔舟归</p>
-                        <button class="btn weather-btn" data-city="烟台">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="city-group">
-            <h3 class="group-title">西南</h3>
-            <div class="city-cards">
-                <div class="city-card">
-                    <img src="images/he/chongqing.jpg" alt="重庆">
-                    <div class="card-overlay">
-                        <h4>重庆</h4>
-                        <p>山绕江行楼入雾，灯随路转火通明</p>
-                        <button class="btn weather-btn" data-city="重庆">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/dali.jpg" alt="大理">
-                    <div class="card-overlay">
-                        <h4>云南·大理</h4>
-                        <p>风过洱海帆影碎，雪落苍山画意生</p>
-                        <button class="btn weather-btn" data-city="大理">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/lijiang.jpg" alt="丽江">
-                    <div class="card-overlay">
-                        <h4>云南·丽江</h4>
-                        <p>古巷花开人未动，木楼月照水无声</p>
-                        <button class="btn weather-btn" data-city="丽江">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
+                    <button class="carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-next"><i class="fas fa-chevron-right"></i></button>
+                    <div class="carousel-indicators"></div>
                 </div>
             </div>
         </div>
         
-        <div class="city-group">
-            <h3 class="group-title">华中</h3>
-            <div class="city-cards">
-                <div class="city-card">
-                    <img src="images/he/changsha.jpg" alt="长沙">
-                    <div class="card-overlay">
-                        <h4>湖南·长沙</h4>
-                        <p>橘子洲头云作画，坡子街里火锅香</p>
-                        <button class="btn weather-btn" data-city="长沙">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/jiujiang.jpg" alt="九江">
-                    <div class="card-overlay">
-                        <h4>江西·九江</h4>
-                        <p>庐山云隐诗千首，江水东流梦一城</p>
-                        <button class="btn weather-btn" data-city="九江">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-
-                <div class="city-card">
-                    <img src="images/he/suizhou.jpg" alt="随州">
-                    <div class="card-overlay">
-                        <h4>湖北·随州</h4>
-                        <p>钟鸣古调惊天地，帝起炎乡照万年</p>
-                        <button class="btn weather-btn" data-city="随州">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-            </div>  
-        </div> 
-
-        <div class="city-group">
-            <h3 class="group-title">华北</h3>
-            <div class="city-cards">
-                <div class="city-card">
-                    <img src="images/he/beijing.jpg" alt="北京">
-                    <div class="card-overlay">
-                        <h4>北京</h4>
-                        <p>皇城古韵承千载，燕京新风耀九州</p>
-                        <button class="btn weather-btn" data-city="北京">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-            </div>  
-        </div> 
-        
-        <div class="city-group">
-            <h3 class="group-title">西北</h3>
-            <div class="city-cards">
-                <div class="city-card">
-                    <img src="images/he/xian.jpg" alt="西安">
-                    <div class="card-overlay">
-                        <h4>西安</h4>
-                        <p>千年长安展新颜，丝路起点连世界</p>
-                        <button class="btn weather-btn" data-city="西安">获取城市实时天气</button>
-                        <div class="weather-info"></div>
-                    </div>
-                </div>
-            </div>  
-        </div> 
-
-        <div class="chartSection">
-            <h2 class="section-title">各省走过的城市数量统计</h2>
-            <div id="chart-container" style="width: 100%; height: 500%;"></div>
+        <!-- 省份足迹统计 -->
+        <div class="sub-section">
+            <h3>各省走过的城市数量统计</h3>
+            <div class="chart-container" id="chart-container"></div>
         </div>
-
     </section>
-    <!-------------------- Footprint Area (End) -------------------->
 
-    <!-------------------- Contact Area (Start) -------------------->
-    <section class="contact" id="contact">
-
-        <div class="heading">
+    <!-- 联系方式 -->
+    <section class="section contact" id="contact">
+        <div class="section-header">
             <h2><span>联系方式</span></h2>
         </div>
-
-        <div class="box-container">
-
+        <div class="contact-container">
             <div class="contact-info">
-                <h3>与我联系</h3>
-                <p>以下是我的联系方式</p>
-    
-                <div class="info-item">
-                    <h4>电话:</h4>
-                    <h5>+86 133 7700 4415</h5>
+                <div class="contact-row">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-detail">
+                            <h4>电话</h4>
+                            <p>+86 133 7700 4415</p>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-detail">
+                            <h4>邮箱</h4>
+                            <p>1216072419@qq.com</p>
+                        </div>
+                    </div>
                 </div>
-    
-                <div class="info-item">
-                    <h4>邮箱:</h4>
-                    <h5>1216072419@qq.com</h5>
-                </div>
-
-                <div class="info-item">
-                    <h4>个人网页:</h4>
-                    <h5>http://47.110.54.187:8888/ourPages2/he.html</h5>
-                </div>
-
-                <div class="info-item">
-                    <h4>github:</h4>
-                    <h5>https://github.com/ChanfHo</h5>
+                <div class="contact-row">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-globe-asia"></i>
+                        </div>
+                        <div class="contact-detail">
+                            <h4>个人网页</h4>
+                            <p>http://47.111.136.83:8080/ourPages2/he.html</p>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <div class="contact-detail">
+                            <h4>GitHub</h4>
+                            <p>https://github.com/ChanfHo</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-    
-            <form method="post" class="contact-form" id="contactUs-Form">
-                    
-                <input type="text" name="name" class="box" id="name" placeholder="姓名" required />
-                <input type="email" name="email" class="box" id="email" placeholder="邮箱" required />
-                <input type="text" name="subject" class="box" id="subject" placeholder="项目" required />
-                <textarea cols="30" rows="10" name="comment" id="comment" class="box" placeholder="信息"></textarea>
-                <button type="submit" class="btn" name="submit" id="submit">与我联系</button>
-                
-                <span class="alert" id="msg"></span>
-                
-            </form>
-            
         </div>
-
     </section>
-    <!-------------------- Contact Area (End) -------------------->
 
-
-
-    <!-------------------- Footer Area (Start) -------------------->
-    <footer>
-        <div class="content">
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
             <p>制作者：<span>何灿非</span> | 学号：2022302051046</p>
         </div>
     </footer>
-    <!-------------------- Footer Area (End) -------------------->
 
+    <!-- 返回顶部按钮 -->
+    <div class="scroll-top" id="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
 
-
-    <!---------------- js引用 ---------------->
+    <!-- JavaScript -->
     <script src="page_he/city.js"></script>
     <script src="page_he/getWeather.js"></script>
     <script src="page_he/chart.js"></script>
     <script type="module" src="page_he/mapShow.js"></script>
+    
+    <script>
+        function initCityCarousel() {
+            const carousel = document.querySelector('.city-carousel');
+            const prevBtn = document.querySelector('.carousel-prev');
+            const nextBtn = document.querySelector('.carousel-next');
+            const indicatorsContainer = document.querySelector('.carousel-indicators');
+            const cityGroups = document.querySelectorAll('.city-group');
+            const regionBtns = document.querySelectorAll('.region-btn');
+            const cityCarouselContainer = document.querySelector('.city-carousel-container');
+        
+            
+            let currentIndex = 0;
+            const groupWidth = 100;
+            let autoSlideInterval;
+            
+            // 创建指示器
+            indicatorsContainer.innerHTML = '';
+            cityGroups.forEach((_, index) => {
+                const indicator = document.createElement('div');
+                indicator.classList.add('indicator');
+                if (index === 0) indicator.classList.add('active');
+                indicator.addEventListener('click', () => goToSlide(index));
+                indicatorsContainer.appendChild(indicator);
+            });
+            
+            const indicators = document.querySelectorAll('.indicator');
+            
+            // 导航按钮事件
+            prevBtn.addEventListener('click', () => {
+                currentIndex = currentIndex > 0 ? currentIndex - 1 : cityGroups.length - 1;
+                updateCarousel();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                currentIndex = currentIndex < cityGroups.length - 1 ? currentIndex + 1 : 0;
+                updateCarousel();
+            });
+            
+            // 区域筛选
+            regionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    regionBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const region = this.dataset.region;
+                    const targetIndex = Array.from(cityGroups).findIndex(
+                        group => group.dataset.region === region
+                    );
+                    
+                    if (targetIndex !== -1) {
+                        goToSlide(targetIndex);
+                    }
+                });
+            });
+            
+            // 自动轮播控制
+            function startAutoSlide() {
+                autoSlideInterval = setInterval(() => {
+                    currentIndex = currentIndex < cityGroups.length - 1 ? currentIndex + 1 : 0;
+                    updateCarousel();
+                }, 5000);
+            }
+            
+            function stopAutoSlide() {
+                clearInterval(autoSlideInterval);
+            }
+            
+            // 轮播图切换
+            function goToSlide(index) {
+                currentIndex = index;
+                updateCarousel();
+            }
+            
+            function updateCarousel() {
+                carousel.style.transform = `translateX(-${currentIndex * groupWidth}%)`;
+                
+                // 更新指示器状态
+                indicators.forEach((indicator, idx) => {
+                    indicator.classList.toggle('active', idx === currentIndex);
+                });
+                
+                // 更新区域按钮激活状态
+                const currentRegion = cityGroups[currentIndex].dataset.region;
+                regionBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.region === currentRegion);
+                });
+                
+                // 更新轮播标题
+                const currentTitle = cityGroups[currentIndex].querySelector('.group-title').textContent;
+                // document.getElementById('carousel-title').textContent = currentTitle;
+            }
+            
+            // 自动轮播控制
+            carousel.addEventListener('mouseenter', stopAutoSlide);
+            carousel.addEventListener('mouseleave', startAutoSlide);
+            
+            // 初始化
+            updateCarousel();
+            startAutoSlide();
+        }
 
-    <!---------------- echarts图表引用 ---------------->
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+        // 在现有的DOMContentLoaded事件监听器中添加此函数调用
+        document.addEventListener('DOMContentLoaded', function() {
+            initCityCarousel();
+            // 其他初始化代码保持不变...
+        });
+                
+        // 返回顶部功能
+        function initScrollTop() {
+            const scrollTopBtn = document.getElementById('scroll-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollTopBtn.style.display = 'flex';
+                } else {
+                    scrollTopBtn.style.display = 'none';
+                }
+            });
+            
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // 初始化函数
+        document.addEventListener('DOMContentLoaded', function() {
+            initCityCarousel();
+            initScrollTop();
+            
+            // 导航激活状态
+            const navLinks = document.querySelectorAll('.navbar a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 移动端菜单切换
+            document.getElementById('menu-btn').addEventListener('click', function() {
+                document.querySelector('.navbar').classList.toggle('active');
+            });
+            
+            // 天气按钮功能
+            document.querySelectorAll('.weather-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cityName = event.target.getAttribute('data-city');
+                    const weatherInfoElement = event.target.nextElementSibling;
+                    
+                    // 显示加载状态
+                    weatherInfoElement.textContent = '获取天气中...'
 
+                    getWeather(cityName, weatherInfoElement);
+                })
+            })
+        })
 
-
+    </script>
 </body>
 </html>

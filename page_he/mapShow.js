@@ -4,6 +4,7 @@ import {updatePoint} from './updatePoint.js'
 import {queryPoint} from './queryPoint.js'
 import {statProvince} from './statProvince.js' 
 import {statYear} from './statYear.js'
+import { calculateStatistics, updateStatistics, initStatistics } from './mapStat.js';
 
 // 初始化地图实例
 let map = null;
@@ -26,7 +27,7 @@ window.initMapCallback = function() {
     map = new AMap.Map('map-container', {
         zoom: 4, 
         center: [104.195, 35.861],
-        viewMode: '2D',     
+        viewMode: '3D',     
         resizeEnable: true  
     });
 
@@ -40,7 +41,8 @@ window.initMapCallback = function() {
     overlayGroup = new AMap.OverlayGroup();
     map.add(overlayGroup);
 
-    //初始化其他地图功能
+    // 初始化统计数据
+    initStatistics();
 
 }
 
@@ -112,6 +114,10 @@ export async function reloadLayerFromDB(){
                 }
             });
         }
+
+         // 计算并更新统计数据
+        const { cityCount, provinceCount } = calculateStatistics(geoData);
+        updateStatistics(cityCount, provinceCount);
         
         // 自适应视野
         map.setFitView(overlayGroup.getOverlays());
@@ -172,8 +178,8 @@ export function createPointMarker(feature) {
     //信息窗口代码
     marker.content = `
     <div class="info-window">
-        <h3>${getLocationDisplay(props)}</h3>
-        <p>${props.name}在${props.time}年来过这里</p>
+        <p class="location-title">${getLocationDisplay(props)}</p>
+        <p class="visit-info">${props.name}在${props.time}年来过这里</p>
     </div>
 `;
 
@@ -223,66 +229,12 @@ export function createPolygon(feature) {
   overlayGroup.addOverlay(polygon);
 }
 
-
-
-//加载GeoServer的WMS图层
-function loadGeoServerWMSLayer() {
-    if (wmsTileLayer) {
-        wmsTileLayer.setMap(null);
-    }
-
-    wmsTileLayer = new AMap.TileLayer({
-        getTileUrl: function (x, y, z) {
-            const bbox = getTileBBox(x, y, z);
-            return `http://localhost:8080/geoserver/he/wms?service=WMS&version=1.1.1&request=GetMap
-                &layers=he:he_province
-                &styles=
-                &bbox=${bbox}
-                &width=256&height=256
-                &srs=EPSG:3857
-                &format=image/png
-                &transparent=true`.replace(/\s+/g, '');
-        },
-        zIndex: 12
-    });
-
-    wmsTileLayer.setMap(map);
-    console.log('GeoServer WMS 图层已加载');
-}
-
-// 计算WMS图层每个瓦片的BBOX（Web墨卡托 EPSG:3857）
-function getTileBBox(x, y, z) {
-    const tileSize = 256;
-    const initialResolution = 2 * Math.PI * 6378137 / tileSize;
-    const originShift = 2 * Math.PI * 6378137 / 2.0;
-
-    const resolution = initialResolution / Math.pow(2, z);
-
-    const minx = x * tileSize * resolution - originShift;
-    const maxx = (x + 1) * tileSize * resolution - originShift;
-    const miny = originShift - (y + 1) * tileSize * resolution;
-    const maxy = originShift - y * tileSize * resolution;
-
-    return [minx, miny, maxx, maxy].join(',');
-}
-
 // 移除图层
 export function removeLayer() {
     overlayGroup.clearOverlays();
 
     //禁用移除按钮
     document.getElementById('remove-layer-btn').disabled = true;
-}
-
-// 移除GeoServer的WMS图层
-function removeGeoServerWMSLayer() {
-    if (wmsTileLayer) {
-        wmsTileLayer.setMap(null); // 从地图中移除
-        wmsTileLayer = null;       // 释放引用，避免重复叠加
-        console.log('GeoServer WMS 图层已移除');
-    } else {
-        console.log('未加载 GeoServer WMS 图层');
-    }
 }
 
 // 判断直辖市和特别行政区
@@ -326,11 +278,8 @@ export function setButtonsDisabled(disabled) {
 }
 
 // 按钮事件绑定
-document.getElementById('load-layer-btn').addEventListener('click', loadGeoJSONLayer);
 document.getElementById('remove-layer-btn').addEventListener('click', removeLayer);
-document.getElementById('load-layer-fromDB-btn').addEventListener('click', reloadLayerFromDB)
-document.getElementById('load-geoserver_layer-btn').addEventListener('click', loadGeoServerWMSLayer);
-document.getElementById('remove-geoserver_layer-btn').addEventListener('click', removeGeoServerWMSLayer);
+document.getElementById('load-layer-fromDB-btn').addEventListener('click', reloadLayerFromDB);
 document.getElementById('add-point-btn').addEventListener('click', () => {addPoint(map, overlayGroup);});
 document.getElementById('delete-point-btn').addEventListener('click', () => {deletePoint(overlayGroup);});
 document.getElementById('update-point-btn').addEventListener('click', () => {updatePoint(overlayGroup);});
