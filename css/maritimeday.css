@@ -101,9 +101,26 @@ html, body {
   font-size: 1.1rem;            /* 增大字体 */
   transition: background-color 0.2s;
 }
-.filter-button-group .btn:hover {
+.filter-button-group button.btn:hover {
   background-color: #fff;       
 }
-.filter-button-group .btn.active {
+.filter-button-group button.btn.active {
   background-color: #1f1f1f;;       /* 选中态变纯黑 */
 }
+
+.section.nopadbottom {
+    padding-bottom: 0 !important;
+}
+
+/*
+.btn{
+  background-color: #323232;
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  transition: background-color 0.2s;
+}
+*/
+

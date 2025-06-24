@@ -31,15 +31,45 @@
     
     <!-- Custom CSS to fix layout issues -->
     <style>
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff;
+      }
       .copyrights {
         margin-bottom: 0 !important;
         padding-bottom: 0 !important;
       }
-      /* Add a more aggressive rule to remove bottom spacing */
+      body > .container:last-child {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+      }
+      /* 更加激进地去除底部间距 */
       body.politics_version, html {
         padding-bottom: 0 !important;
         margin-bottom: 0 !important;
         height: auto !important;
+      }
+      /* 分类按钮样式 */
+      .filter-button-group .btn {
+        background: #fff;
+        color: #222;
+        border: 1px solid #222;
+        margin: 0 6px 6px 0;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .filter-button-group .btn.active,
+      .filter-button-group .btn:active {
+        background: #222 !important;
+        color: #fff !important;
+        border-color: #222 !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      .filter-button-group .btn:hover {
+        background: #222;
+        color: #fff;
+        border-color: #222;
       }
     </style>
     
@@ -282,6 +312,7 @@
                             class="btn btn-danger mx-1">🗑 删除模式
                     </button>
                     <button id="btnTogglePolyline" class="btn btn-info mx-1">🗺️ 显示轨迹</button>
+                    <button id="btnStats" class="btn btn-info mx-1">📈 统计信息</button>
                 </div>
 
             </div>
@@ -423,7 +454,7 @@
     </div><!-- end section -->
 
 
-    <div id="portfolio" class="section lb">
+    <div id="portfolio" class="section lb nopadbottom">
     <div class="container">
         <!-- 区块标题 -->
         <div class="section-title text-left">
@@ -791,5 +822,19 @@
     <script src="js/custom.js"></script>
     <script src="js/jquery.vide.js"></script>
     <script src="page_huang/contact_huang.js"></script>
+    <!-- 新增统计信息弹窗 -->
+    <div class="modal fade" id="statsModal" tabindex="-1" aria-labelledby="statsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
+          <div class="modal-header" style="background: #323232; color: #fff;">
+            <h3 class="modal-title" id="statsModalLabel" style="font-size: 24px;font-weight: bold;color: #fff;">统计信息</h3>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="关闭"></button>
+          </div>
+          <div class="modal-body" id="statsModalBody">
+            <!-- 统计内容由JS动态填充 -->
+          </div>
+        </div>
+      </div>
+    </div>
 </body>
 </html>

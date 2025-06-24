@@ -8,6 +8,10 @@ let timelineData = [];
 let markersByYear = new Map(); // Store markers by year for interaction
 let travelPolyline = null; // To hold the travel path
 let isPolylineVisible = false; // Toggles the travel path visibility
+let timelineAnimTimer = null;  // 动画定时器
+let timelineAnimIndex = 0;     // 当前动画索引
+let timelineAnimPlaying = false; // 是否正在播放
+let debounceTimer = null;
 
 // 天地图矢量底图
 var tdtVec = L.tileLayer('http://t{s}.tianditu.gov.cn/vec_w/wmts?' +
@@ -155,7 +159,9 @@ function renderMarkers(data) {
       })
       .bindPopup(`<div style="max-height: 200px; overflow: auto;">${makePopupHtml(locData.footprints)}</div>`, {
         maxWidth: 350,
-        minWidth: 250
+        minWidth: 250,
+        autoClose: false,
+        closeOnClick: false
       });
     
     // Associate footprint data with the marker
@@ -370,19 +376,19 @@ function makePopupHtml(group) {
       </div>
     `).join('');
   } else if (currentMode === 'delete') {
-    return group.map(fp => `
+  return group.map(fp => `
       <div style="margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
-        <strong>ID：</strong>${fp.id}<br>
-        <strong>名称：</strong>${fp.name}<br>
-        <strong>年份：</strong>${fp.year}<br>
+      <strong>ID：</strong>${fp.id}<br>
+      <strong>名称：</strong>${fp.name}<br>
+      <strong>年份：</strong>${fp.year}<br>
         <strong>省份：</strong>${fp.province || '未知'}<br>
-        <strong>城市：</strong>${fp.city}<br>
+      <strong>城市：</strong>${fp.city}<br>
         <button class="btn btn-danger btn-sm delete-btn" data-id="${fp.id}" style="margin-top: 5px;">
           🗑️ 删除此记录
         </button>
-      </div>
-    `).join('');
-  }
+    </div>
+  `).join('');
+}
 }
 
 function drawTravelPolyline(data) {
@@ -670,7 +676,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // 个人地图
   document.getElementById('btnClear').addEventListener('click', () => {
     switchMode('view');
-    loadFootprints();
+loadFootprints();
   });
 
   // 编辑模式
@@ -684,8 +690,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // 添加点位
-  document.getElementById('btnAddMode').addEventListener('click', function() {
-    document.getElementById('addForm').reset();
+document.getElementById('btnAddMode').addEventListener('click', function() {
+  document.getElementById('addForm').reset();
     currentEditId = null;
     // (使用jQuery)
     $('#addModal').modal('show');
@@ -711,6 +717,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 默认加载
   loadFootprints();
+
+  // 统计按钮
+  const statsBtn = document.getElementById('btnStats');
+  if (statsBtn) {
+    statsBtn.addEventListener('click', function() {
+      const statsModalBody = document.getElementById('statsModalBody');
+      if (statsModalBody) {
+        statsModalBody.innerHTML = getStatsHtml(timelineData);
+      }
+      $('#statsModal').modal('show');
+    });
+  }
 });
 
 // 添加一些CSS样式
@@ -859,5 +877,251 @@ style.textContent = `
   .highlight-marker {
     filter: drop-shadow(0 0 5px #00aaff) drop-shadow(0 0 10px #00aaff);
   }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    #operation-panel, #stats-panel, #timeline-section {
+      padding: 8px 4px !important;
+      font-size: 14px !important;
+      margin-top: 10px !important;
+    }
+    #operation-panel .btn, #timeline-section .btn, #timeline-anim-btn {
+      min-width: 80px !important;
+      font-size: 13px !important;
+      padding: 4px 8px !important;
+      margin: 2px !important;
+    }
+    .modal-content {
+      font-size: 14px !important;
+    }
+    #timeline-section {
+      min-width: 0 !important;
+      overflow-x: auto !important;
+    }
+    .timeline-node {
+      min-width: 60px !important;
+      width: 60px !important;
+      height: 60px !important;
+      font-size: 12px !important;
+    }
+    #timeline-chart {
+      height: 120px !important;
+    }
+    #stats-panel {
+      flex-direction: column !important;
+      gap: 6px !important;
+    }
+  }
 `;
 document.head.appendChild(style);
+
+// --- 时间线动画功能 ---
+/**
+ * 播放足迹时间线动画，依次高亮/弹窗/缩放每个年份的足迹点
+ */
+function playTimelineAnimation() {
+  if (!timelineData || timelineData.length === 0) return;
+  stopTimelineAnimation();
+  timelineAnimPlaying = true;
+  const years = [...new Set(timelineData.map(fp => fp.year))].sort((a, b) => a - b);
+  timelineAnimIndex = 0;
+  function step() {
+    if (!timelineAnimPlaying || timelineAnimIndex >= years.length) {
+      stopTimelineAnimation();
+      return;
+    }
+    const year = years[timelineAnimIndex];
+    // 触发时间线高亮和地图缩放
+    const chartDiv = document.getElementById('timeline-chart');
+    const node = chartDiv?.querySelector(`.timeline-node[data-year="${year}"]`);
+    if (node) {
+      // node.scrollIntoView({behavior: 'smooth', inline: 'center'}); // 已禁用页面自动滚动
+      node.classList.add('active');
+      filterFootprintsByYear(year, node);
+      // 自动缩放到该年份点（保留地图聚焦）
+      const markersForYear = markersByYear.get(year) || [];
+      if (markersForYear.length > 0) {
+        const featureGroup = L.featureGroup(markersForYear);
+        map.fitBounds(featureGroup.getBounds().pad(0.1));
+        setTimeout(() => {
+          markersForYear.forEach(marker => {
+            if (marker && marker.openPopup) {
+              marker.openPopup();
+            }
+          });
+        }, 400);
+      }
+    }
+    timelineAnimIndex++;
+    timelineAnimTimer = setTimeout(step, 1200);
+  }
+  step();
+}
+
+/**
+ * 停止时间线动画
+ */
+function stopTimelineAnimation() {
+  timelineAnimPlaying = false;
+  if (timelineAnimTimer) clearTimeout(timelineAnimTimer);
+  // 取消高亮
+  const chartDiv = document.getElementById('timeline-chart');
+  chartDiv?.querySelectorAll('.timeline-node.active').forEach(n => n.classList.remove('active'));
+}
+
+// --- 时间线动画按钮 ---
+function addTimelineAnimButton() {
+  const timelineSection = document.getElementById('timeline-section');
+  if (!timelineSection) return;
+  let btn = document.getElementById('timeline-anim-btn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'timeline-anim-btn';
+    btn.className = 'btn btn-outline-primary btn-sm ms-2';
+    btn.style.marginLeft = '10px';
+    btn.innerHTML = '▶️ 播放时间线';
+    timelineSection.querySelector('.section-title')?.appendChild(btn);
+  }
+  btn.onclick = function() {
+    if (timelineAnimPlaying) {
+      stopTimelineAnimation();
+      btn.innerHTML = '▶️ 播放时间线';
+    } else {
+      playTimelineAnimation();
+      btn.innerHTML = '⏸️ 暂停';
+    }
+  };
+}
+
+// 在generateTimeline后调用
+const oldGenerateTimeline = generateTimeline;
+generateTimeline = function(data) {
+  oldGenerateTimeline(data);
+  addTimelineAnimButton();
+  updateStatsPanel(data);
+};
+
+// =====================
+// 8. 数据加载与CRUD（加防抖）
+// =====================
+
+function loadFootprintsDebounced(province) {
+  debounce(() => loadFootprints(province), 500);
+}
+function loadAllFootprintsDebounced() {
+  debounce(() => loadAllFootprints(), 500);
+}
+
+// =====================
+// 9. 统计面板（已废弃，保留函数但不再插入DOM）
+// =====================
+function updateStatsPanel(data) { /* 空实现，兼容旧调用 */ }
+
+// --- 统计信息弹窗 ---
+function getStatsHtml(data) {
+  if (!data || data.length === 0) {
+    return '<div class="text-center text-muted">暂无足迹数据</div>';
+  }
+  const total = data.length;
+  const provinces = new Set(data.map(fp => fp.province).filter(Boolean));
+  const cities = new Set(data.map(fp => fp.city).filter(Boolean));
+  const years = data.map(fp => fp.year).filter(Boolean).sort((a, b) => a - b);
+  let maxDist = 0;
+  for (let i = 0; i < data.length; i++) {
+    for (let j = i + 1; j < data.length; j++) {
+      const a = data[i], b = data[j];
+      if (a.geom && b.geom && a.geom.coordinates && b.geom.coordinates) {
+        const d = calcDistance(a.geom.coordinates, b.geom.coordinates);
+        if (d > maxDist) maxDist = d;
+      }
+    }
+  }
+  return `
+    <div class="row g-3 justify-content-center">
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+          <div style="font-size:2.2rem;">📍</div>
+          <div class="fw-bold" style="font-size:1.2rem;">总足迹数</div>
+          <div class="display-6">${total}</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+          <div style="font-size:2.2rem;">🗺️</div>
+          <div class="fw-bold" style="font-size:1.2rem;">省份数</div>
+          <div class="display-6">${provinces.size}</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+          <div style="font-size:2.2rem;">🏙️</div>
+          <div class="fw-bold" style="font-size:1.2rem;">城市数</div>
+          <div class="display-6">${cities.size}</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+          <div style="font-size:2.2rem;">⏳</div>
+          <div class="fw-bold" style="font-size:1.2rem;">最早年份</div>
+          <div class="display-6">${years[0] || '-'}</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+          <div style="font-size:2.2rem;">🕰️</div>
+          <div class="fw-bold" style="font-size:1.2rem;">最新年份</div>
+          <div class="display-6">${years[years.length-1] || '-'}</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm border-0 text-center p-3">
+          <div style="font-size:2.2rem;">📏</div>
+          <div class="fw-bold" style="font-size:1.2rem;">最远距离</div>
+          <div class="display-6">${maxDist ? maxDist.toFixed(1) : '-'} km</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * 计算两点经纬度距离（单位：km）
+ */
+function calcDistance(coord1, coord2) {
+  const [lng1, lat1] = coord1;
+  const [lng2, lat2] = coord2;
+  const R = 6371; // 地球半径km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLng/2) * Math.sin(dLng/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// =====================
+// 10. 模式切换与事件绑定（适配防抖/动画/移动端）
+// =====================
+
+document.addEventListener('DOMContentLoaded', function() {
+  // 省份查询（加防抖）
+  document.getElementById('btnSearchProvince').addEventListener('click', () => {
+    const prov = document.getElementById('provinceInput').value.trim();
+    loadFootprintsDebounced(prov);
+  });
+
+  // 全部足迹（加防抖）
+  document.getElementById('btnLoad').addEventListener('click', () => {
+    switchMode('view');
+    loadAllFootprintsDebounced();
+  });
+
+  // 个人地图
+  document.getElementById('btnClear').addEventListener('click', () => {
+    switchMode('view');
+    loadFootprintsDebounced();
+  });
+
+  // ... existing code ...
+});

@@ -1254,7 +1254,7 @@ xclip
 }
 
 .hover-up{
-	background: #076799;
+	background: #323232;
 }
 
 .service-widget .post-media_pp .hover-up{
@@ -2227,7 +2227,7 @@ select.mobile-device {
     box-sizing: border-box;
     width: 100%;
     text-align: left;
-    padding: 30px 0px;
+    padding: 40px 0px;
     overflow: hidden;
 }
 
@@ -2581,4 +2581,11 @@ select.mobile-device {
 }
 .marker-cluster-large {
   background-color: rgba(253,156,115,0.6);
+}
+
+.filter-button-group button.btn:hover {
+    background-color: #fff;       
+  }
+.filter-button-group button.btn.active {
+    background-color: #1f1f1f;;       /* 选中态变纯黑 */
 }
