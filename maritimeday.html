@@ -282,7 +282,7 @@
 
                 <!-- 省份查询 -->
                 <div class="col-md-4">
-                    <div class="input-group">
+                    <div class="input-group mb-2">
                         <input type="text"
                             id="provinceInput"
                             class="form-control"
@@ -290,6 +290,17 @@
                             style="margin-right:12px;">
                         <button id="btnSearchProvince"
                                 class="btn btn-outline-secondary">🔍 省份查询
+                        </button>
+                    </div>
+                    <!-- 天气查询 -->
+                    <div class="input-group">
+                        <input type="text"
+                            id="weatherCityInput"
+                            class="form-control"
+                            placeholder="如：北京"
+                            style="margin-right:12px;">
+                        <button id="btnWeatherQuery"
+                                class="btn btn-outline-info">☁️ 天气查询
                         </button>
                     </div>
                 </div>
@@ -321,10 +332,10 @@
         <!-- —— 操作区结束 —— -->
 
         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
+          <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
               <div class="modal-header">
-              <h5 class="modal-title" id="addModalLabel">添加足迹</h5>
+              <h5 class="modal-title" id="addModalLabel" style="color: #e8e8e8; font-weight: bold; font-size: 20px;" >添加足迹</h5>
               <button type="button" class="btn-close" data-dismiss="modal" aria-label="关闭"></button>
               </div>
               <div class="modal-body">

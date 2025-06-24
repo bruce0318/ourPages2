@@ -13,6 +13,9 @@ let timelineAnimIndex = 0;     // 当前动画索引
 let timelineAnimPlaying = false; // 是否正在播放
 let debounceTimer = null;
 
+// 高德天气API KEY
+const AMAP_WEATHER_KEY = 'ee5799788e6ca447ac8e5e4d9590360c';
+
 // 天地图矢量底图
 var tdtVec = L.tileLayer('http://t{s}.tianditu.gov.cn/vec_w/wmts?' +
     'service=WMTS&request=GetTile&version=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&' +
@@ -416,6 +419,74 @@ function drawTravelPolyline(data) {
   }).addTo(polylineLayer);
 }
 
+// 查询天气并弹窗显示（自动获取adcode）
+function queryWeather(cityName) {
+  if (!cityName) {
+    showCustomModal('提示', '请输入城市名！');
+    return;
+  }
+  // 先用高德地理编码API获取adcode
+  const geoUrl = `https://restapi.amap.com/v3/geocode/geo?address=${encodeURIComponent(cityName)}&key=${AMAP_WEATHER_KEY}`;
+  fetch(geoUrl)
+    .then(res => res.json())
+    .then(geoData => {
+      if (geoData.status !== '1' || !geoData.geocodes || !geoData.geocodes.length) {
+        showCustomModal('提示', '未能识别该城市，请输入如"北京"或"东城区"');
+        return;
+      }
+      const adcode = geoData.geocodes[0].adcode;
+      if (!adcode) {
+        showCustomModal('提示', '未能获取城市编码，请检查输入');
+        return;
+      }
+      // 查天气
+      const url = `https://restapi.amap.com/v3/weather/weatherInfo?city=${adcode}&key=${AMAP_WEATHER_KEY}`;
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status !== '1' || !data.lives || !data.lives.length) {
+            showCustomModal('提示', '天气查询失败，请检查城市名或稍后再试');
+            return;
+          }
+          const w = data.lives[0];
+          const html = `
+            <div style=\"font-size:18px;font-weight:bold;color:#323232;\">${w.province} ${w.city} 天气</div>
+            <div>天气：${w.weather}</div>
+            <div>温度：${w.temperature}℃</div>
+            <div>风向：${w.winddirection}</div>
+            <div>风力：${w.windpower}</div>
+            <div>湿度：${w.humidity}%</div>
+            <div>发布时间：${w.reporttime}</div>
+          `;
+          showCustomModal('天气信息', html);
+        })
+        .catch(() => {
+          showCustomModal('提示', '天气查询失败，请检查网络或稍后再试');
+        });
+    })
+    .catch(() => {
+      showCustomModal('提示', '城市编码查询失败，请检查网络或稍后再试');
+    });
+}
+
+// 统一风格弹窗
+function showCustomModal(title, html) {
+  const modal = document.createElement('div');
+  modal.className = 'modal fade';
+  modal.innerHTML = `
+    <div class=\"modal-dialog modal-dialog-centered\"><div class=\"modal-content\">
+      <div class=\"modal-header\" style=\"background: #323232; color: #fff;\">
+        <h3 class=\"modal-title\" style=\"font-size: 24px;font-weight: bold;color: #fff;\">${title}</h3>
+        <button type=\"button\" class=\"btn-close\" data-dismiss=\"modal\" aria-label=\"关闭\"></button>
+      </div>
+      <div class=\"modal-body\">${html}</div>
+    </div></div>
+  `;
+  document.body.appendChild(modal);
+  $(modal).modal('show');
+  $(modal).on('hidden.bs.modal', function() { modal.remove(); });
+}
+
 // 加载足迹数据
 function loadFootprints(province) {
   showMapLoader();
@@ -676,7 +747,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // 个人地图
   document.getElementById('btnClear').addEventListener('click', () => {
     switchMode('view');
-loadFootprints();
+    loadFootprints();
   });
 
   // 编辑模式
@@ -690,8 +761,8 @@ loadFootprints();
   });
 
   // 添加点位
-document.getElementById('btnAddMode').addEventListener('click', function() {
-  document.getElementById('addForm').reset();
+  document.getElementById('btnAddMode').addEventListener('click', function() {
+    document.getElementById('addForm').reset();
     currentEditId = null;
     // (使用jQuery)
     $('#addModal').modal('show');
@@ -714,6 +785,17 @@ document.getElementById('btnAddMode').addEventListener('click', function() {
       togglePolylineBtn.innerHTML = '🗺️ 显示轨迹';
     }
   });
+
+  // 天气查询按钮事件
+  const weatherBtn = document.getElementById('btnWeatherQuery');
+  if (weatherBtn) {
+    weatherBtn.addEventListener('click', function() {
+      const cityInput = document.getElementById('weatherCityInput');
+      if (cityInput) {
+        queryWeather(cityInput.value.trim());
+      }
+    });
+  }
 
   // 默认加载
   loadFootprints();
@@ -833,8 +915,9 @@ style.textContent = `
   }
   
   .modal-header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
+    background: #323232;
+    color: #f0f0f0;
+    font-weight: bold;
     border-radius: 12px 12px 0 0;
   }
   
@@ -1123,5 +1206,4 @@ document.addEventListener('DOMContentLoaded', function() {
     loadFootprintsDebounced();
   });
 
-  // ... existing code ...
 });
