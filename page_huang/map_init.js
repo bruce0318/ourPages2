@@ -131,10 +131,13 @@ function hideMapLoader() {
   if (loader) loader.style.display = 'none';
 }
 
-// 渲染地图标记
+/**
+ * 渲染地图上的足迹点
+ * @param {Array} data - 足迹数据数组
+ */
 function renderMarkers(data) {
   footprintLayer.clearLayers();
-  markersByYear.clear(); // Clear the old mapping
+  markersByYear.clear(); // 清空年份映射
 
   if (!data || data.length === 0) {
     return;
@@ -142,7 +145,7 @@ function renderMarkers(data) {
 
   const markerData = new Map();
 
-  // Consolidate data for each unique location
+  // 合并同一地理位置的足迹
   data.forEach(fp => {
     if (!fp.geom || !fp.geom.coordinates) return;
     const key = fp.geom.coordinates.join(',');
@@ -155,23 +158,25 @@ function renderMarkers(data) {
     markerData.get(key).footprints.push(fp);
   });
 
-  // Create markers
+  // 创建并添加marker
   markerData.forEach(locData => {
+    const cityName = locData.footprints[0]?.city || '';
+    const popupHtml = `<div style="max-height: 200px; overflow: auto;">
+      ${makePopupHtml(locData.footprints)}
+      <button class="btn btn-sm btn-info mt-2 weather-btn" data-city="${cityName}">☁️ 查询天气</button>
+    </div>`;
     const marker = L.marker(locData.latlng, {
         title: locData.footprints.map(fp => `${fp.city} (${fp.year})`).join('\n')
       })
-      .bindPopup(`<div style="max-height: 200px; overflow: auto;">${makePopupHtml(locData.footprints)}</div>`, {
-        maxWidth: 350,
-        minWidth: 250,
+      .bindPopup(popupHtml, {
+        maxWidth: 250,
+        minWidth: 200,
         autoClose: false,
         closeOnClick: false
       });
-    
-    // Associate footprint data with the marker
     marker.footprintData = locData.footprints;
     footprintLayer.addLayer(marker);
-
-    // Populate markersByYear map
+    // 填充年份映射
     locData.footprints.forEach(fp => {
       if (!markersByYear.has(fp.year)) {
         markersByYear.set(fp.year, []);
@@ -272,7 +277,7 @@ function generateTimeline(data) {
           <div class="timeline-node" data-year="${item.year}" style="
             width: ${Math.max(30, item.count * 10)}px; 
             height: ${Math.max(30, item.count * 10)}px; 
-            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            background: linear-gradient(45deg,rgb(77, 77, 77), #323232);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -419,7 +424,10 @@ function drawTravelPolyline(data) {
   }).addTo(polylineLayer);
 }
 
-// 查询天气并弹窗显示（自动获取adcode）
+/**
+ * 查询天气并弹窗显示
+ * @param {string} cityName - 城市名
+ */
 function queryWeather(cityName) {
   if (!cityName) {
     showCustomModal('提示', '请输入城市名！');
@@ -693,19 +701,23 @@ function switchMode(mode) {
   loadFootprints();
 }
 
-// 事件监听器
-map.on('popupopen', e => {
+// 绑定popup打开事件，给天气按钮加事件
+map.on('popupopen', function(e) {
   const container = e.popup._contentNode;
-
-  // 编辑按钮
+  const weatherBtn = container.querySelector('.weather-btn');
+  if (weatherBtn) {
+    weatherBtn.onclick = function() {
+      const city = weatherBtn.getAttribute('data-city');
+      if (city) queryWeather(city);
+    };
+  }
+  // 其他如编辑、删除按钮事件...
   container.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
       editFootprint(id);
     });
   });
-
-  // 删除按钮
   container.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
@@ -747,7 +759,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // 个人地图
   document.getElementById('btnClear').addEventListener('click', () => {
     switchMode('view');
-    loadFootprints();
+loadFootprints();
   });
 
   // 编辑模式
@@ -761,8 +773,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // 添加点位
-  document.getElementById('btnAddMode').addEventListener('click', function() {
-    document.getElementById('addForm').reset();
+document.getElementById('btnAddMode').addEventListener('click', function() {
+  document.getElementById('addForm').reset();
     currentEditId = null;
     // (使用jQuery)
     $('#addModal').modal('show');
@@ -811,6 +823,8 @@ document.addEventListener('DOMContentLoaded', function() {
       $('#statsModal').modal('show');
     });
   }
+
+  document.getElementById('btnStatsChart').onclick = showStatsChart;
 });
 
 // 添加一些CSS样式
@@ -1030,7 +1044,7 @@ function playTimelineAnimation() {
           markersForYear.forEach(marker => {
             if (marker && marker.openPopup) {
               marker.openPopup();
-            }
+          }
           });
         }, 400);
       }
@@ -1207,3 +1221,78 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
 });
+
+/**
+ * 展示ECharts统计图表弹窗
+ * 支持年份分布柱状图、省份分布饼图
+ */
+function showStatsChart() {
+  // 统计数据
+  const data = timelineData || [];
+  if (!data.length) {
+    showCustomModal('统计图表', '<div class="text-center text-muted">暂无足迹数据</div>');
+    return;
+  }
+  // 年份统计
+  const yearMap = {};
+  // 省份统计
+  const provinceMap = {};
+  data.forEach(fp => {
+    if (fp.year) yearMap[fp.year] = (yearMap[fp.year] || 0) + 1;
+    if (fp.province) provinceMap[fp.province] = (provinceMap[fp.province] || 0) + 1;
+  });
+  const years = Object.keys(yearMap).sort();
+  const yearCounts = years.map(y => yearMap[y]);
+  const provinces = Object.keys(provinceMap);
+  const provinceCounts = provinces.map(p => provinceMap[p]);
+
+  // 弹窗内容
+  const html = `
+    <div style="width:100%;max-width:600px;">
+      <div id="echarts-year-bar" style="width:100%;height:300px;margin-bottom:24px;"></div>
+      <div id="echarts-province-pie" style="width:100%;height:400px;"></div>
+    </div>
+  `;
+  showCustomModal('足迹统计图表', html);
+
+  // 等待modal渲染后初始化ECharts
+  setTimeout(() => {
+    // 年份柱状图
+    const barChart = echarts.init(document.getElementById('echarts-year-bar'));
+    barChart.setOption({
+      title: { text: '各年份足迹数', left: 'center', textStyle: { fontSize: 16 } },
+      tooltip: {},
+      xAxis: { type: 'category', data: years },
+      yAxis: { type: 'value' },
+      series: [{
+        data: yearCounts,
+        type: 'bar',
+        itemStyle: { color: '#323232', borderRadius: [4,4,0,0] }
+      }]
+    });
+    // 省份饼图
+    const pieChart = echarts.init(document.getElementById('echarts-province-pie'));
+    pieChart.setOption({
+      title: { text: '省份分布', left: 'center', textStyle: { fontSize: 16 } },
+      tooltip: { trigger: 'item' },
+      legend: { bottom: 0, left: 'center', itemGap: 24 },
+      series: [{
+        name: '省份',
+        type: 'pie',
+        radius: '60%',
+        center: ['50%', '45%'],
+        data: provinces.map((p, i) => ({ value: provinceCounts[i], name: p })),
+        emphasis: {
+          itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.2)' }
+        }
+      }]
+    });
+    window.addEventListener('resize', () => { barChart.resize(); pieChart.resize(); });
+  }, 300);
+}
+
+// 防抖函数，防止高频操作导致多次请求
+function debounce(fn, delay) {
+  if (window._debounceTimer) clearTimeout(window._debounceTimer);
+  window._debounceTimer = setTimeout(fn, delay);
+}
