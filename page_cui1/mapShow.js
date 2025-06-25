@@ -178,7 +178,7 @@ export function createPointMarker(feature) {
 
     const marker = new AMap.Marker({
         position: new AMap.LngLat(lng, lat),
-        offset: new AMap.Pixel(0, 0),
+        offset: new AMap.Pixel(-16, -16),
         icon: new AMap.Icon({
             image: blueMarkerSVG,
             size: new AMap.Size(32, 32),

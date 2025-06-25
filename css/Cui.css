@@ -1479,3 +1479,320 @@ section {
     padding: 0;
     font-size: 1.2rem;
 }
+
+/* 个人信息卡片美化 */
+.message-box {
+    background: rgba(255,255,255,0.98);
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(52,152,219,0.10);
+    padding: 32px 36px 28px 36px;
+    margin-bottom: 18px;
+    max-width: 420px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.message-box h2 {
+    font-size: 1.4rem;
+    color: #3498db;
+    font-weight: bold;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.message-box h3 {
+    font-size: 1.08rem;
+    color: #2471a3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+.message-box h3:before {
+    content: '\f007';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: #5dade2;
+    margin-right: 8px;
+    font-size: 1.25em;
+    width: 1.7em;
+    height: 1.7em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.7em;
+    border-radius: 50%;
+    background: rgba(90,173,226,0.08);
+}
+.message-box h3:nth-child(2):before {
+    transform: translateY(5px);
+}
+.message-box h3:nth-child(3):before { content: '\f183'; } /* 性别 */
+.message-box h3:nth-child(4):before { content: '\f19d'; } /* 专业 */
+.message-box h3:nth-child(5):before { content: '\f501'; } /* 学历 */
+.message-box h3:nth-child(6):before { content: '\f19c'; } /* 学校 */
+.message-box h3:nth-child(7):before { content: '\f0e0'; } /* 联系方式 */
+@media (max-width: 600px) {
+    .message-box {
+        padding: 18px 8px 16px 8px;
+        max-width: 98vw;
+    }
+    .message-box h2 {
+        font-size: 1.15rem;
+    }
+    .message-box h3 {
+        font-size: 0.98rem;
+        padding: 0;
+    }
+}
+
+/* 联系方式底部卡片美化 */
+.contact-section-bottom {
+    margin: 0;
+    padding: 0 0 48px 0;
+    background: none;
+}
+.contact-row-box {
+    max-width: 1200px;
+    width: 98vw;
+    margin: 0 auto;
+    align-items: flex-start;
+    background: linear-gradient(120deg, #eaf6fd 0%, #fafdff 100%);
+    border-radius: 28px;
+    box-shadow: 0 8px 32px rgba(52,152,219,0.13);
+    padding: 36px 32px 30px 32px;
+    border: 1.5px solid #e0e7ef;
+}
+.contact-title {
+    font-size: 1.6rem;
+    color: #3498db;
+    font-weight: bold;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.contact-info-row {
+    flex-direction: row;
+    gap: 28px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.contact-info-item {
+    font-size: 1.12rem;
+    color: #2471a3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fafdff;
+    border-radius: 18px;
+    padding: 14px 28px 14px 18px;
+    box-shadow: 0 2px 8px rgba(52,152,219,0.08);
+    transition: box-shadow 0.18s, background 0.18s;
+    border: 1px solid #e0e7ef;
+    min-width: 180px;
+    position: relative;
+}
+.contact-info-item:hover {
+    background: #eaf6fd;
+    box-shadow: 0 4px 16px rgba(52,152,219,0.16);
+    border-color: #b5d6f6;
+}
+.contact-info-item i {
+    color: #fff;
+    background: linear-gradient(135deg, #5dade2 0%, #3498db 100%);
+    font-size: 1.35em;
+    width: 2.3em;
+    height: 2.3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 2px 8px rgba(52,152,219,0.10);
+    flex-shrink: 0;
+    transition: background 0.18s;
+}
+.contact-info-item:hover i {
+    background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
+}
+.contact-value {
+    color: #b0b0b0;
+    font-style: italic;
+    margin-left: 6px;
+}
+@media (max-width: 900px) {
+    .contact-info-row {
+        flex-direction: column;
+        gap: 14px;
+    }
+    .contact-row-box {
+        max-width: 98vw;
+        padding: 0 4px;
+    }
+}
+@media (max-width: 600px) {
+    .contact-row-box {
+        padding: 14px 2px 10px 2px;
+        border-radius: 16px;
+    }
+    .contact-title {
+        font-size: 1.15rem;
+    }
+    .contact-info-item {
+        font-size: 0.98rem;
+        padding: 10px 8px 10px 8px;
+        min-width: 120px;
+    }
+    .contact-info-item i {
+        font-size: 1.1em;
+        width: 1.7em;
+        height: 1.7em;
+        margin-right: 7px;
+    }
+}
+
+/* 兴趣爱好部分美化 */
+#hobby.section {
+    background: linear-gradient(120deg, #eaf6fd 0%, #fafdff 100%);
+    padding-bottom: 48px;
+}
+.section-title.text-left h3 {
+    font-size: 2rem;
+    color: #3498db;
+    font-weight: bold;
+    margin-bottom: 18px;
+    letter-spacing: 2px;
+    border-left: 6px solid #5dade2;
+    padding-left: 16px;
+}
+.services-inner-box {
+    background: rgba(255,255,255,0.98);
+    border-radius: 22px;
+    box-shadow: 0 4px 24px rgba(52,152,219,0.10);
+    padding: 28px 18px 18px 18px;
+    margin-bottom: 24px;
+    transition: box-shadow 0.18s, transform 0.18s, background 0.18s;
+    border: 1.5px solid #e0e7ef;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 250px;
+}
+.services-inner-box:hover {
+    box-shadow: 0 8px 32px rgba(52,152,219,0.18);
+    background: #eaf6fd;
+    transform: translateY(-6px) scale(1.03);
+    border-color: #b5d6f6;
+}
+.services-inner-box .img img {
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(52,152,219,0.13);
+    border: 2.5px solid #e0e7ef;
+    background: #fff;
+    margin-bottom: 12px;
+    transition: box-shadow 0.18s, border 0.18s;
+}
+.services-inner-box:hover .img img {
+    box-shadow: 0 8px 32px rgba(52,152,219,0.18);
+    border-color: #5dade2;
+}
+.services-inner-box h2 {
+    font-size: 1.25rem;
+    color: #3498db;
+    font-weight: bold;
+    margin: 12px 0 8px 0;
+    letter-spacing: 1px;
+}
+.services-inner-box p {
+    color: #2471a3;
+    font-size: 1.02rem;
+    margin: 0;
+    text-align: center;
+}
+@media (max-width: 600px) {
+    .services-inner-box {
+        padding: 14px 4px 10px 4px;
+        border-radius: 14px;
+        min-height: 180px;
+    }
+    .services-inner-box h2 {
+        font-size: 1.05rem;
+    }
+    .services-inner-box p {
+        font-size: 0.95rem;
+    }
+    .services-inner-box .img img {
+        border-radius: 10px;
+    }
+}
+
+/* 专业技能区美化 */
+.ability-section {
+    background: linear-gradient(120deg, #eaf6fd 0%, #fafdff 100%);
+    padding-bottom: 48px;
+}
+.ability-row {
+    margin-top: 18px;
+}
+.ability-card {
+    background: rgba(255,255,255,0.98);
+    border-radius: 22px;
+    box-shadow: 0 4px 24px rgba(52,152,219,0.10);
+    padding: 18px 12px 18px 12px;
+    margin-bottom: 24px;
+    transition: box-shadow 0.18s, transform 0.18s, background 0.18s;
+    border: 1.5px solid #e0e7ef;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 260px;
+}
+.ability-card:hover {
+    box-shadow: 0 8px 32px rgba(52,152,219,0.18);
+    background: #eaf6fd;
+    transform: translateY(-6px) scale(1.03);
+    border-color: #b5d6f6;
+}
+.ability-img-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 14px;
+}
+.ability-img {
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(52,152,219,0.13);
+    border: 2.5px solid #e0e7ef;
+    background: #fff;
+    transition: box-shadow 0.18s, border 0.18s;
+}
+.ability-card:hover .ability-img {
+    box-shadow: 0 8px 32px rgba(52,152,219,0.18);
+    border-color: #5dade2;
+}
+.ability-desc {
+    color: #2471a3;
+    font-size: 1.05rem;
+    margin: 0;
+    text-align: center;
+    margin-top: 8px;
+}
+@media (max-width: 600px) {
+    .ability-card {
+        padding: 10px 2px 10px 2px;
+        border-radius: 14px;
+        min-height: 180px;
+    }
+    .ability-desc {
+        font-size: 0.95rem;
+    }
+    .ability-img {
+        border-radius: 10px;
+    }
+}
