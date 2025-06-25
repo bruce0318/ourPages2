@@ -44,6 +44,14 @@ window.initMapCallback = function() {
     // 初始化统计数据
     initStatistics();
 
+    if(typeof AMap !== 'undefined' && window.map){
+        // 比例尺
+        window.map.addControl(new AMap.Scale());
+        // 指南针+缩放
+        window.map.addControl(new AMap.ControlBar({
+            position: {right: '10px', top: '60px'}
+        }));
+    }
 }
 
 
@@ -408,6 +416,23 @@ if(statTopBtn){
     statTopBtn.addEventListener('click', function(){
         document.getElementById('province-select').value = document.getElementById('province-select-top').value;
         document.getElementById('stat-province-btn').click();
+    });
+}
+
+// 右下角统计面板显示/隐藏按钮
+const showOverlayBtn = document.getElementById('show-overlay-btn');
+const mapOverlay = document.querySelector('.map-overlay');
+let overlayInBottomRight = false;
+if(showOverlayBtn && mapOverlay){
+    showOverlayBtn.addEventListener('click', function(){
+        overlayInBottomRight = !overlayInBottomRight;
+        if(overlayInBottomRight){
+            mapOverlay.classList.add('bottom-right');
+            mapOverlay.style.display = 'block';
+        }else{
+            mapOverlay.classList.remove('bottom-right');
+            mapOverlay.style.display = '';
+        }
     });
 }
 

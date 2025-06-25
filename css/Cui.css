@@ -1315,9 +1315,12 @@ section {
 .map-bottom-btn {
     width: 100%;
     display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
     margin-top: 8px;
     gap: 18px;
+    flex-wrap: wrap;
 }
 .circle-btn {
     width: 44px;
@@ -1345,7 +1348,7 @@ section {
     content: attr(data-tooltip);
     position: absolute;
     left: 50%;
-    bottom: 120%;
+    top: 120%;
     transform: translateX(-50%);
     background: #3498db;
     color: #fff;
@@ -1361,6 +1364,20 @@ section {
 }
 .circle-btn[data-tooltip]::after {
     opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 120%;
+    transform: translateX(-50%);
+    background: #3498db;
+    color: #fff;
+    padding: 5px 14px;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 8px rgba(52,152,219,0.18);
+    z-index: 99;
+    transition: opacity 0.1s;
 }
 .circle-btn[data-tooltip]:hover::after {
     opacity: 1;
@@ -1438,14 +1455,10 @@ section {
 
 /* 年份筛选区美化 */
 .year-filter-box {
+    margin-left: 24px;
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-left: 24px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 18px;
-    box-shadow: 0 2px 10px rgba(52,152,219,0.10);
-    padding: 8px 18px;
 }
 .year-slider-wrap {
     display: flex;
@@ -1621,7 +1634,7 @@ section {
     background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
 }
 .contact-value {
-    color: #b0b0b0;
+    color: #222 !important;
     font-style: italic;
     margin-left: 6px;
 }
@@ -1795,4 +1808,150 @@ section {
     .ability-img {
         border-radius: 10px;
     }
+}
+
+/* 技能图片放大预览弹窗样式 */
+.img-modal-mask {
+    position: fixed;
+    left: 0; top: 0; right: 0; bottom: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(36, 113, 163, 0.25);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s;
+}
+.img-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(52,152,219,0.18);
+    padding: 18px 18px 10px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90vw;
+    max-height: 80vh;
+    animation: scaleIn 0.2s;
+}
+.img-modal-big {
+    max-width: 70vw;
+    max-height: 60vh;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(52,152,219,0.13);
+    background: #fafdff;
+    border: 2.5px solid #e0e7ef;
+}
+.img-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+    z-index: 40;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.img-modal-close:hover {
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(52,152,219,0);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes scaleIn {
+    from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; }
+}
+
+/* 地图模式提示框美化 */
+.map-mode-tip, #query-mode-info, #delete-point-info, #stat-mode-info, #update-point-info {
+    background: #f3f8fb !important;
+    color: #3a4a5a !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 18px rgba(52,152,219,0.10) !important;
+    border: 1.5px solid #b5d6f6 !important;
+    padding: 12px 28px !important;
+    font-size: 1.06rem !important;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    z-index: 1000;
+    position: relative;
+}
+.map-mode-tip i, #query-mode-info i, #delete-point-info i, #stat-mode-info i, #update-point-info i {
+    color: #6fa8dc;
+    font-size: 1.2em;
+    margin-right: 6px;
+}
+.map-mode-tip button, #query-mode-info button, #delete-point-info button, #stat-mode-info button, #update-point-info button {
+    margin-left: 16px;
+    background: #6fa8dc;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 14px;
+    font-size: 0.98em;
+    cursor: pointer;
+    transition: background 0.18s;
+}
+.map-mode-tip button:hover, #query-mode-info button:hover, #delete-point-info button:hover, #stat-mode-info button:hover, #update-point-info button:hover {
+    background: #4176a0;
+}
+
+/* 右下角map-overlay样式 */
+.map-overlay.bottom-right {
+    top: unset !important;
+    left: unset !important;
+    right: 18px !important;
+    bottom: 18px !important;
+    z-index: 1001 !important;
+    box-shadow: 0 8px 32px rgba(52,152,219,0.18) !important;
+    border: 1.5px solid #5dade2 !important;
+    background: #fff !important;
+    border-radius: 16px !important;
+    padding: 16px 18px !important;
+    min-width: 200px;
+}
+
+/* 足迹点InfoWindow弹窗进一步优化 */
+.info-window, .amap-info-content, .amap-info-window {
+    background: #fff !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(52,152,219,0.10) !important;
+    border: 1.5px solid #e0e7ef !important;
+    padding: 18px 22px 14px 22px !important;
+    min-width: 220px;
+    max-width: 320px;
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+}
+.info-window h3, .amap-info-content h3 {
+    color: #5dade2;
+    font-size: 1.08rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    margin-top: 0;
+    letter-spacing: 1px;
+}
+.info-window p, .amap-info-content p {
+    color: #3a4a5a;
+    font-size: 0.99rem;
+    margin: 0 0 6px 0;
+    line-height: 1.6;
+}
+.info-window img, .amap-info-content img {
+    border-radius: 10px;
+    margin-top: 8px;
+    box-shadow: 0 2px 8px rgba(52,152,219,0.10);
+    max-width: 100%;
+    border: 1.5px solid #e0e7ef;
+}
+
+/* 1. 去除InfoWindow上方白色长条 */
+.amap-info-sharp, .amap-info-top {
+    display: none !important;
 }

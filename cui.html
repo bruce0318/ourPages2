@@ -41,7 +41,7 @@
                 <a href="#ability">专业技能</a>
                 <a href="#hobby">兴趣爱好</a>
                 <a href="#footprint">个人足迹</a>
-                <a href="#contact">联系方式</a>
+                <a href="#contact1">联系方式</a>
             </nav>
             <div class="menu-toggle" id="menu-btn">
                 <i class="fas fa-bars"></i>
@@ -52,7 +52,7 @@
     <section id="home" class="main-banner parallaxie" style="background: url('images/cui/background.jpg') !important;">
         <div class="heading">
             <h1>你好 我是崔泽铭</h1>
-            <p>"只有今天开始努力的人 <br>明天才会到来"</p>
+            <p>"只有今天开始努力的人 <br>明天才会到来"<br>话虽如此，累的时候好好休息一下也没关系的~</p>
             <h3 class="cd-headline clip is-full-width">
                 <span>你将在这里看到 </span>
                 <span class="cd-words-wrapper">
@@ -122,37 +122,37 @@
         <div class="container">
             <div class="section-title text-left">
                 <h3>专业技能</h3>
-                <p>（此处可插入你的技能介绍、证书、项目等，图片和文字均可自定义）</p>
+                <p></p>
             </div>
             <div class="row ability-row">
                 <div class="col-md-4">
                     <div class="ability-card">
                         <div class="ability-img-wrap">
-                            <img src="images/skill1.png" alt="技能1" class="ability-img" style="width:100%;height:160px;object-fit:cover;">
+                            <img src="images/cui/skill1.jpg" alt="技能1" class="ability-img skill-img-preview" data-img="images/cui/skill1.jpg" style="width:100%;height:160px;object-fit:cover;cursor:pointer;">
                         </div>
-                        <div class="ability-desc">技能1描述（请填写）</div>
+                        <div class="ability-desc">普通地图制图</div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="ability-card">
                         <div class="ability-img-wrap">
-                            <img src="images/skill2.png" alt="技能2" class="ability-img" style="width:100%;height:160px;object-fit:cover;">
+                            <img src="images/cui/skill2.jpg" alt="技能2" class="ability-img skill-img-preview" data-img="images/cui/skill2.jpg" style="width:100%;height:160px;object-fit:cover;cursor:pointer;">
                         </div>
-                        <div class="ability-desc">技能2描述（请填写）</div>
+                        <div class="ability-desc">专题地图制图（课外实践）</div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="ability-card">
                         <div class="ability-img-wrap">
-                            <img src="images/skill3.png" alt="技能3" class="ability-img" style="width:100%;height:160px;object-fit:cover;">
+                            <img src="images/cui/skill3.jpg" alt="技能3" class="ability-img skill-img-preview" data-img="images/cui/skill3.jpg" style="width:100%;height:160px;object-fit:cover;cursor:pointer;">
                         </div>
-                        <div class="ability-desc">技能3描述（请填写）</div>
+                        <div class="ability-desc">庐山实习管理系统小程序开发</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    
+
     <div id="hobby" class="section lb">
         <div class="container">
             <div class="section-title text-left">
@@ -442,11 +442,14 @@
                     <i class="fas fa-redo"></i>
                 </button>
             </div>
+            <button id="show-overlay-btn" class="circle-btn" data-tooltip="显示统计面板">
+                <i class="fas fa-chart-bar"></i>
+            </button>
         </div>
     </section>
 
     <!-- 页脚下方联系方式区域 -->
-    <section class="contact-section contact-section-bottom">
+    <section id="contact1" class="contact-section contact-section-bottom">
         <div class="contact-card-box contact-row-box">
             <h2 class="contact-title"><i class="fas fa-address-book"></i> 联系方式</h2>
             <div class="contact-info-list contact-info-row">
@@ -646,6 +649,45 @@
             })
         })
 
+        // 技能图片放大预览
+        document.addEventListener('DOMContentLoaded', function() {
+            var imgs = document.querySelectorAll('.skill-img-preview');
+            var modal = document.getElementById('img-modal-mask');
+            var modalImg = document.getElementById('img-modal-big');
+            var modalClose = document.getElementById('img-modal-close');
+            imgs.forEach(function(img) {
+                img.addEventListener('click', function() {
+                    modal.style.display = 'flex';
+                    // 加时间戳防止缓存
+                    modalImg.src = img.getAttribute('data-img') + '?t=' + Date.now();
+                });
+            });
+            modalClose.addEventListener('click', function() {
+                modal.style.display = 'none';
+                modalImg.src = '';
+            });
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    modalImg.src = '';
+                }
+            });
+        });
+
     </script>
+
+    <!-- 技能图片放大预览弹窗 -->
+    <div id="img-modal-mask" class="img-modal-mask" style="display:none;">
+        <div class="img-modal-content">
+            <span class="img-modal-close" id="img-modal-close">
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                    <circle cx="18" cy="18" r="16" fill="white" stroke="#5dade2" stroke-width="2"/>
+                    <line x1="12" y1="12" x2="24" y2="24" stroke="#5dade2" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="24" y1="12" x2="12" y2="24" stroke="#5dade2" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <img id="img-modal-big" src="" alt="技能大图" class="img-modal-big">
+        </div>
+    </div>
 </body>
 </html>
