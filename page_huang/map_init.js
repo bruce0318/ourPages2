@@ -404,7 +404,6 @@ function drawTravelPolyline(data) {
 
   if (!data || data.length < 2) return;
 
-  // Sort data chronologically
   const sortedData = [...data].sort((a, b) => a.year - b.year);
 
   const latLngs = sortedData
