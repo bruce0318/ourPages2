@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>崔泽铭的个人主页</title>
+    <link rel="stylesheet" href="css/He_Style_new.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 基础样式将在外部CSS中实现 */
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="header-container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.png" alt="个人Logo" class="logo">
+            </a>
+            <nav class="navbar">
+                <a href="#home" class="active">主页</a>
+                <a href="#about">个人信息</a>
+                <a href="#edu-bg">教育背景</a>
+                <a href="#ability">专业技能</a>
+                <a href="#portfolio">兴趣爱好</a>
+                <a href="#footprint">个人足迹</a>
+                <a href="#contact">联系方式</a>
+            </nav>
+            <div class="menu-toggle" id="menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- 个人足迹 -->
+    <section class="section footprint" id="footprint">
+        <div class="section-header">
+            <h2><span>个人足迹</span></h2>
+        </div>
+        
+        <!-- 足迹地图 -->
+        <div class="sub-section">
+            <h3>足迹地图</h3>
+            <p class="section-tip">点击地图右侧的按钮可对地图中的足迹点进行相关操作，点击地图中的足迹点可查看详细信息</p>
+            <div class="map-dashboard">
+                <div class="map-container" id="map-container">
+                    <!-- 左上角统计信息 -->
+                    <div class="map-overlay">
+                        <div class="map-title">中国足迹地图</div>
+                        <div class="map-stats">
+                            <div class="stat-item">
+                                <span id="city-count">0</span>
+                                <p>访问城市</p>
+                            </div>
+                            <div class="stat-item">
+                                <span id="province-count">0</span>
+                                <p>访问省份</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右上角控件组 -->
+                    <div class="map-controls">
+                        <div class="control-group">
+                            <h4>地图操作</h4>
+                            <div class="btn-row">
+                                <button id="load-layer-fromDB-btn" class="control-btn wrap">
+                                    <i class="fas fa-layer-group"></i> 加载足迹城市
+                                </button>
+                                <button id="remove-layer-btn" class="control-btn wrap" disabled>
+                                    <i class="fas fa-times-circle"></i> 移除足迹城市
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h4>足迹管理</h4>
+                            <div class="btn-row">
+                                <button id="add-point-btn" class="control-btn wrap">
+                                    <i class="fas fa-plus-circle"></i> 新增
+                                </button>
+                                <button id="delete-point-btn" class="control-btn wrap">
+                                    <i class="fas fa-trash-alt"></i> 删除
+                                </button>
+                                <button id="update-point-btn" class="control-btn wrap">
+                                    <i class="fas fa-edit"></i> 修改
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h4>数据查询</h4>
+                            <div class="search-box">
+                                <input type="text" id="query-input" placeholder="输入城市名称" class="compact-input">
+                                <button id="query-point-btn" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-search"></i> 查询
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h4>统计分析</h4>
+                            <div class="select-box">
+                                <select id="province-select" class="compact-select">
+                                    <option value="">选择省份</option>
+                                    <option value="北京市">北京市</option>
+                                    <option value="天津市">天津市</option>
+                                    <option value="河北省">河北省</option>
+                                    <option value="山西省">山西省</option>
+                                    <option value="内蒙古自治区">内蒙古自治区</option>
+                                    <option value="辽宁省">辽宁省</option>
+                                    <option value="吉林省">吉林省</option>
+                                    <option value="黑龙江省">黑龙江省</option>
+                                    <option value="上海市">上海市</option>
+                                    <option value="江苏省">江苏省</option>
+                                    <option value="浙江省">浙江省</option>
+                                    <option value="安徽省">安徽省</option>
+                                    <option value="福建省">福建省</option>
+                                    <option value="江西省">江西省</option>
+                                    <option value="山东省">山东省</option>
+                                    <option value="河南省">河南省</option>
+                                    <option value="湖北省">湖北省</option>
+                                    <option value="湖南省">湖南省</option>
+                                    <option value="广东省">广东省</option>
+                                    <option value="广西壮族自治区">广西壮族自治区</option>
+                                    <option value="海南省">海南省</option>
+                                    <option value="重庆市">重庆市</option>
+                                    <option value="四川省">四川省</option>
+                                    <option value="贵州省">贵州省</option>
+                                    <option value="云南省">云南省</option>
+                                    <option value="西藏自治区">西藏自治区</option>
+                                    <option value="陕西省">陕西省</option>
+                                    <option value="甘肃省">甘肃省</option>
+                                    <option value="青海省">青海省</option>
+                                    <option value="宁夏回族自治区">宁夏回族自治区</option>
+                                    <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
+                                    <option value="台湾省">台湾省</option>
+                                    <option value="香港特别行政区">香港特别行政区</option>
+                                    <option value="澳门特别行政区">澳门特别行政区</option>
+                                </select>
+                                <button id="stat-province-btn" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-chart-pie"></i> 统计
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h4>时间筛选</h4>
+                            <div class="time-range">
+                                <div class="range-display compact-text">
+                                    <span id="start-year-display">2015年以前</span>
+                                    <span>至</span>
+                                    <span id="end-year-display">2025年</span>
+                                </div>
+                                <div class="slider-container">
+                                    <input type="range" id="year-start" min="2014" max="2025" value="2014" class="compact-slider">
+                                    <input type="range" id="year-end" min="2015" max="2025" value="2025" class="compact-slider">
+                                </div>
+                            </div>
+                            <div class="time-buttons">
+                                <button id="stat-year-btn" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-filter"></i> 按年份筛选
+                                </button>
+                                <button id="reset-time-filter" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-redo"></i> 重置筛选
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+      
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>制作者：<span>崔泽铭</span> | 学号：2021301021090</p>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <div class="scroll-top" id="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- JavaScript 
+    <script src="page_he/city.js"></script>
+    <script src="page_he/getWeather.js"></script>
+    <script src="page_he/chart.js"></script> 
+    -->
+    
+    <script type="module" src="page_cui1/mapShow.js"></script>
+    
+    <script>
+        function initCityCarousel() {
+            const carousel = document.querySelector('.city-carousel');
+            const prevBtn = document.querySelector('.carousel-prev');
+            const nextBtn = document.querySelector('.carousel-next');
+            const indicatorsContainer = document.querySelector('.carousel-indicators');
+            const cityGroups = document.querySelectorAll('.city-group');
+            const regionBtns = document.querySelectorAll('.region-btn');
+            const cityCarouselContainer = document.querySelector('.city-carousel-container');
+        
+            
+            let currentIndex = 0;
+            const groupWidth = 100;
+            let autoSlideInterval;
+            
+            // 创建指示器
+            indicatorsContainer.innerHTML = '';
+            cityGroups.forEach((_, index) => {
+                const indicator = document.createElement('div');
+                indicator.classList.add('indicator');
+                if (index === 0) indicator.classList.add('active');
+                indicator.addEventListener('click', () => goToSlide(index));
+                indicatorsContainer.appendChild(indicator);
+            });
+            
+            const indicators = document.querySelectorAll('.indicator');
+            
+            // 导航按钮事件
+            prevBtn.addEventListener('click', () => {
+                currentIndex = currentIndex > 0 ? currentIndex - 1 : cityGroups.length - 1;
+                updateCarousel();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                currentIndex = currentIndex < cityGroups.length - 1 ? currentIndex + 1 : 0;
+                updateCarousel();
+            });
+            
+            // 区域筛选
+            regionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    regionBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const region = this.dataset.region;
+                    const targetIndex = Array.from(cityGroups).findIndex(
+                        group => group.dataset.region === region
+                    );
+                    
+                    if (targetIndex !== -1) {
+                        goToSlide(targetIndex);
+                    }
+                });
+            });
+            
+            // 自动轮播控制
+            function startAutoSlide() {
+                autoSlideInterval = setInterval(() => {
+                    currentIndex = currentIndex < cityGroups.length - 1 ? currentIndex + 1 : 0;
+                    updateCarousel();
+                }, 5000);
+            }
+            
+            function stopAutoSlide() {
+                clearInterval(autoSlideInterval);
+            }
+            
+            // 轮播图切换
+            function goToSlide(index) {
+                currentIndex = index;
+                updateCarousel();
+            }
+            
+            function updateCarousel() {
+                carousel.style.transform = `translateX(-${currentIndex * groupWidth}%)`;
+                
+                // 更新指示器状态
+                indicators.forEach((indicator, idx) => {
+                    indicator.classList.toggle('active', idx === currentIndex);
+                });
+                
+                // 更新区域按钮激活状态
+                const currentRegion = cityGroups[currentIndex].dataset.region;
+                regionBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.region === currentRegion);
+                });
+                
+                // 更新轮播标题
+                const currentTitle = cityGroups[currentIndex].querySelector('.group-title').textContent;
+                // document.getElementById('carousel-title').textContent = currentTitle;
+            }
+            
+            // 自动轮播控制
+            carousel.addEventListener('mouseenter', stopAutoSlide);
+            carousel.addEventListener('mouseleave', startAutoSlide);
+            
+            // 初始化
+            updateCarousel();
+            startAutoSlide();
+        }
+
+        // 在现有的DOMContentLoaded事件监听器中添加此函数调用
+        document.addEventListener('DOMContentLoaded', function() {
+            initCityCarousel();
+            // 其他初始化代码保持不变...
+        });
+                
+        // 返回顶部功能
+        function initScrollTop() {
+            const scrollTopBtn = document.getElementById('scroll-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollTopBtn.style.display = 'flex';
+                } else {
+                    scrollTopBtn.style.display = 'none';
+                }
+            });
+            
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // 初始化函数
+        document.addEventListener('DOMContentLoaded', function() {
+            initCityCarousel();
+            initScrollTop();
+            
+            // 导航激活状态
+            const navLinks = document.querySelectorAll('.navbar a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 移动端菜单切换
+            document.getElementById('menu-btn').addEventListener('click', function() {
+                document.querySelector('.navbar').classList.toggle('active');
+            });
+            
+            // 天气按钮功能
+            document.querySelectorAll('.weather-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cityName = event.target.getAttribute('data-city');
+                    const weatherInfoElement = event.target.nextElementSibling;
+                    
+                    // 显示加载状态
+                    weatherInfoElement.textContent = '获取天气中...'
+
+                    getWeather(cityName, weatherInfoElement);
+                })
+            })
+        })
+
+    </script>
+</body>
+</html>
