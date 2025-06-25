@@ -131,6 +131,9 @@ export async function reloadLayerFromDB(){
     }
 }
 
+// 创建FontAwesome蓝色地图标记SVG
+const blueMarkerSVG = 'data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="14" fill="%233498db" stroke="white" stroke-width="3"/><path d="M16 8C12.6863 8 10 10.6863 10 14C10 17.3137 16 24 16 24C16 24 22 17.3137 22 14C22 10.6863 19.3137 8 16 8ZM16 16.5C14.6193 16.5 13.5 15.3807 13.5 14C13.5 12.6193 14.6193 11.5 16 11.5C17.3807 11.5 18.5 12.6193 18.5 14C18.5 15.3807 17.3807 16.5 16 16.5Z" fill="white"/></svg>';
+
 //通过本地geojson创建点图层
 export function createPointFromGeojson(feature) {
     const [lng, lat] = feature.geometry.coordinates;
@@ -138,7 +141,12 @@ export function createPointFromGeojson(feature) {
 
     const marker = new AMap.Marker({
         position: new AMap.LngLat(lng, lat),
-        offset: new AMap.Pixel(0, 0)
+        offset: new AMap.Pixel(0, 0),
+        icon: new AMap.Icon({
+            image: blueMarkerSVG,
+            size: new AMap.Size(32, 32),
+            imageSize: new AMap.Size(32, 32)
+        })
     });
 
     marker.cityName = props.name; //添加城市名称属性，方便后续删除点的操作
@@ -170,7 +178,12 @@ export function createPointMarker(feature) {
 
     const marker = new AMap.Marker({
         position: new AMap.LngLat(lng, lat),
-        offset: new AMap.Pixel(0, 0)
+        offset: new AMap.Pixel(0, 0),
+        icon: new AMap.Icon({
+            image: blueMarkerSVG,
+            size: new AMap.Size(32, 32),
+            imageSize: new AMap.Size(32, 32)
+        })
     });
 
     marker.cityName = props.city; //添加城市名称属性，方便后续删除点的操作
@@ -286,34 +299,117 @@ document.getElementById('update-point-btn').addEventListener('click', () => {upd
 document.getElementById('query-point-btn').addEventListener('click', () => {queryPoint(map);});
 document.getElementById('stat-province-btn').addEventListener('click', () => {statProvince(map);});
 
-// 时间轴按钮绑定
-document.getElementById('stat-year-btn').addEventListener('click', () => {
-    const startYear = document.getElementById('year-start').value;
-    const endYear = document.getElementById('year-end').value;
-    statYear(startYear, endYear);
-});
-document.getElementById('reset-time-filter').addEventListener('click', () => {
-    // 重置滑块位置
-    document.getElementById('year-start').value = 2014;
-    document.getElementById('year-end').value = 2025;
-    document.getElementById('start-year-display').textContent = 2015 + '年以前';
-    document.getElementById('end-year-display').textContent = 2025 + '年';
-    // 清除时间筛选效果
-    reloadLayerFromDB();
-});
+// 新增：底部新增、删除、修改按钮触发同样功能
+const addBottomBtn = document.getElementById('add-point-bottom-btn');
+if(addBottomBtn){
+    addBottomBtn.addEventListener('click', function(){
+        document.getElementById('add-point-btn').click();
+    });
+}
+const deleteBottomBtn = document.getElementById('delete-point-bottom-btn');
+if(deleteBottomBtn){
+    deleteBottomBtn.addEventListener('click', function(){
+        document.getElementById('delete-point-btn').click();
+    });
+}
+const updateBottomBtn = document.getElementById('update-point-bottom-btn');
+if(updateBottomBtn){
+    updateBottomBtn.addEventListener('click', function(){
+        document.getElementById('update-point-btn').click();
+    });
+}
 
-// 添加滑块值显示更新
-document.getElementById('year-start').addEventListener('input', function() {
-    if(this.value < 2015){
-        document.getElementById('start-year-display').textContent = '2015年以前';
-    }else{
-    document.getElementById('start-year-display').textContent = this.value  + '年';
+// 新增：底部按钮触发同样功能
+const bottomBtn = document.getElementById('load-layer-bottom-btn');
+if(bottomBtn){
+    bottomBtn.addEventListener('click', function(){
+        document.getElementById('load-layer-fromDB-btn').click();
+    });
+}
+
+// 新增：底部移除按钮触发同样功能
+const removeBottomBtn = document.getElementById('remove-layer-bottom-btn');
+if(removeBottomBtn){
+    removeBottomBtn.addEventListener('click', function(){
+        document.getElementById('remove-layer-btn').click();
+    });
+}
+
+// 年份筛选区逻辑
+const yearRange = document.getElementById('year-range');
+const yearRangeDisplay = document.getElementById('year-range-display');
+let yearStart = 2014;
+let yearEnd = 2025;
+
+// 双滑块实现（单条双滑块）
+// 这里用两个input[type=range]叠加实现
+const yearSliderWrap = document.querySelector('.year-slider-wrap');
+if (yearSliderWrap) {
+    // 移除原单滑块
+    yearSliderWrap.innerHTML = `
+        <input type="range" id="year-start-bottom" min="2014" max="2025" value="2014" class="year-slider">
+        <input type="range" id="year-end-bottom" min="2014" max="2025" value="2025" class="year-slider">
+        <div class="year-labels">
+            <span id="year-range-display">2014 - 2025</span>
+        </div>
+    `;
+    const yearStartInput = document.getElementById('year-start-bottom');
+    const yearEndInput = document.getElementById('year-end-bottom');
+    const yearRangeDisplay = document.getElementById('year-range-display');
+    function updateYearDisplay() {
+        let start = parseInt(yearStartInput.value);
+        let end = parseInt(yearEndInput.value);
+        if (start > end) [start, end] = [end, start];
+        yearStartInput.value = start;
+        yearEndInput.value = end;
+        yearRangeDisplay.textContent = `${start} - ${end}`;
     }
-});
+    yearStartInput.addEventListener('input', updateYearDisplay);
+    yearEndInput.addEventListener('input', updateYearDisplay);
+    updateYearDisplay();
+}
+// 按钮逻辑复用
+const statYearBtnBottom = document.getElementById('stat-year-btn-bottom');
+if(statYearBtnBottom){
+    statYearBtnBottom.addEventListener('click', function(){
+        const start = document.getElementById('year-start-bottom').value;
+        const end = document.getElementById('year-end-bottom').value;
+        // 同步顶部滑块
+        document.getElementById('year-start').value = start;
+        document.getElementById('year-end').value = end;
+        // 手动触发input事件，更新顶部显示
+        document.getElementById('year-start').dispatchEvent(new Event('input'));
+        document.getElementById('year-end').dispatchEvent(new Event('input'));
+        // 触发原有筛选
+        document.getElementById('stat-year-btn').click();
+    });
+}
+const resetTimeBtnBottom = document.getElementById('reset-time-filter-bottom');
+if(resetTimeBtnBottom){
+    resetTimeBtnBottom.addEventListener('click', function(){
+        document.getElementById('reset-time-filter').click();
+        document.getElementById('year-start-bottom').value = 2014;
+        document.getElementById('year-end-bottom').value = 2025;
+        document.getElementById('year-range-display').textContent = '2014 - 2025';
+    });
+}
 
-document.getElementById('year-end').addEventListener('input', function() {
-    document.getElementById('end-year-display').textContent = this.value  + '年';
-});
+// 地图内左上查询按钮
+const queryTopBtn = document.getElementById('query-point-btn-top');
+if(queryTopBtn){
+    queryTopBtn.addEventListener('click', function(){
+        document.getElementById('query-input').value = document.getElementById('query-input-top').value;
+        document.getElementById('query-point-btn').click();
+    });
+}
+// 地图内右上统计按钮
+const statTopBtn = document.getElementById('stat-province-btn-top');
+if(statTopBtn){
+    statTopBtn.addEventListener('click', function(){
+        document.getElementById('province-select').value = document.getElementById('province-select-top').value;
+        document.getElementById('stat-province-btn').click();
+    });
+}
 
 // 初始化入口
 if (typeof AMap !== 'undefined') {

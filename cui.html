@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
-    <!-- Basic -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>崔泽铭的个人主页</title>
+    <link rel="stylesheet" href="css/Cui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 基础样式将在外部CSS中实现 */
+    </style>
 
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <!-- Site Metas -->
-    <title>崔泽铭主页</title>
-    <meta name="keywords" content="">
+     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -28,60 +27,33 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
     <script src="js/modernizr.js"></script> <!-- Modernizr -->
-
-    <!-- 天地图 API（需替换为你自己的 key） -->
-    <script src="https://api.tianditu.gov.cn/api?v=4.0&tk=527522fcd90b3700d477f942a2ee2bf9"></script>
-    <!-- Leaflet 基础库 -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 </head>
-
-<body id="page-top" class="politics_version">
-    <script src="config/config_huang.js"></script>
-    <!-- LOADER -->
-    <div id="preloader">
-        <div id="main-ld">
-            <div id="loader"></div>
-        </div>
-    </div><!-- end loader -->
-    <!-- END LOADER -->
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand js-scroll-trigger" href="index.html">
-                <img class="img-fluid" src="images/logo.png" alt="" /></img>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="header-container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.png" alt="个人Logo" class="logo">
             </a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                aria-label="Toggle navigation">
-                Menu
-                <i class="fa fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav text-uppercase ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger active" href="#home">主页</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#about">基本信息</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#hobby">兴趣爱好</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#blog">最近动态</a>
-                    </li>
-                </ul>
+            <nav class="navbar">
+                <a href="#home" class="active">主页</a>
+                <a href="#about">个人信息</a>
+                <a href="#edu-bg">教育背景</a>
+                <a href="#ability">专业技能</a>
+                <a href="#portfolio">兴趣爱好</a>
+                <a href="#footprint">个人足迹</a>
+                <a href="#contact">联系方式</a>
+            </nav>
+            <div class="menu-toggle" id="menu-btn">
+                <i class="fas fa-bars"></i>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <section id="home" class="main-banner parallaxie" style="background: url('images/cui/background.jpg')">
+    <section id="home" class="main-banner parallaxie" style="background: url('images/cui/background.jpg') !important;">
         <div class="heading">
             <h1>你好 我是崔泽铭</h1>
-            <p>“只有今天开始努力的人 <br>明天才会到来”</p>
+            <p>"只有今天开始努力的人 <br>明天才会到来"</p>
             <h3 class="cd-headline clip is-full-width">
                 <span>你将在这里看到 </span>
                 <span class="cd-words-wrapper">
@@ -120,7 +92,7 @@
         </path>
     </svg>
 
-    <div id="about" class="section wb">
+<div id="about" class="section wb">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -143,87 +115,231 @@
             </div><!-- end row -->
         </div><!-- end container -->
     </div><!-- end section -->
-    <div>
-    <div id="map" style="width: 100%; height: 600px;">
-        <!-- 地图控制界面 -->
-        <div class="map-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1000; background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
-            <!-- 足迹操作组 -->
-            <div class="map-control-group" style="margin-bottom: 10px;">
-                <button id="load-layer-btn" class="map-btn" style="margin: 2px; padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">加载足迹城市</button>
-                <button id="remove-layer-btn" class="map-btn" style="margin: 2px; padding: 5px 10px; background: #6c757d; color: white; border: none; border-radius: 3px; cursor: pointer;" disabled>移除足迹城市</button>
-                <button id="load-layer-fromDB-btn" class="map-btn" style="margin: 2px; padding: 5px 10px; background: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer;">刷新足迹城市</button>
-                <button id="add-point-btn" class="map-btn" style="margin: 2px; padding: 5px 10px; background: #ffc107; color: black; border: none; border-radius: 3px; cursor: pointer;">新增足迹点</button>
-                <button id="delete-point-btn" class="map-btn" style="margin: 2px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">删除足迹点</button>
-                <button id="update-point-btn" class="map-btn" style="margin: 2px; padding: 5px 10px; background: #17a2b8; color: white; border: none; border-radius: 3px; cursor: pointer;">修改足迹点年份</button>
-            </div>
 
-            <!-- 搜索组 -->
-            <div class="map-control-group" style="margin-bottom: 10px;">
-                <div>
-                    <input id="query-input" type="text" placeholder="输入城市名称" class="compact-input" style="padding: 5px; margin-right: 5px; border: 1px solid #ccc; border-radius: 3px;">
-                    <button id="query-point-btn" class="map-btn" style="padding: 5px 10px; background: #6610f2; color: white; border: none; border-radius: 3px; cursor: pointer;">查询城市</button>
-                </div>
-            </div>
-            
-            <!-- 省份统计组 -->
-            <div class="map-control-group" style="margin-bottom: 10px;">
-                <select id="province-select" class="compact-select" style="padding: 5px; margin-right: 5px; border: 1px solid #ccc; border-radius: 3px;">
-                    <option value="">选择省份</option>
-                    <option value="北京市">北京市</option>
-                    <option value="天津市">天津市</option>
-                    <option value="河北省">河北省</option>
-                    <option value="山西省">山西省</option>
-                    <option value="内蒙古自治区">内蒙古自治区</option>
-                    <option value="辽宁省">辽宁省</option>
-                    <option value="吉林省">吉林省</option>
-                    <option value="黑龙江省">黑龙江省</option>
-                    <option value="上海市">上海市</option>
-                    <option value="江苏省">江苏省</option>
-                    <option value="浙江省">浙江省</option>
-                    <option value="安徽省">安徽省</option>
-                    <option value="福建省">福建省</option>
-                    <option value="江西省">江西省</option>
-                    <option value="山东省">山东省</option>
-                    <option value="河南省">河南省</option>
-                    <option value="湖北省">湖北省</option>
-                    <option value="湖南省">湖南省</option>
-                    <option value="广东省">广东省</option>
-                    <option value="广西壮族自治区">广西壮族自治区</option>
-                    <option value="海南省">海南省</option>
-                    <option value="重庆市">重庆市</option>
-                    <option value="四川省">四川省</option>
-                    <option value="贵州省">贵州省</option>
-                    <option value="云南省">云南省</option>
-                    <option value="西藏自治区">西藏自治区</option>
-                    <option value="陕西省">陕西省</option>
-                    <option value="甘肃省">甘肃省</option>
-                    <option value="青海省">青海省</option>
-                    <option value="宁夏回族自治区">宁夏回族自治区</option>
-                    <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
-                    <option value="台湾省">台湾省</option>
-                    <option value="香港特别行政区">香港特别行政区</option>
-                    <option value="澳门特别行政区">澳门特别行政区</option>
-                </select>
-                <button id="stat-province-btn" class="map-btn" style="padding: 5px 10px; background: #fd7e14; color: white; border: none; border-radius: 3px; cursor: pointer;">统计省份足迹</button>
-            </div>
-            
-            <div class="time-filter" style="margin-bottom: 10px;">
-                <label style="display: block; margin-bottom: 5px;">年份范围：</label>
-                <div class="slider-container" style="margin-bottom: 5px;">
-                    <span id="start-year-display" style="font-size: 12px;">2015年以前</span>
-                    <input type="range" id="year-start" min="2014" max="2025" value="2014" step="1" style="width: 100px; margin: 0 5px;">
-                    <input type="range" id="year-end" min="2015" max="2025" value="2025" step="1" style="width: 100px; margin: 0 5px;">
-                    <span id="end-year-display" style="font-size: 12px;">2025年</span>
-                </div>
-                <div class="time-filter-buttons">
-                    <button id="stat-year-btn" class="map-btn" style="padding: 5px 10px; background: #20c997; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">按时间筛选</button>
-                    <button id="reset-time-filter" class="map-btn" style="padding: 5px 10px; background: #6f42c1; color: white; border: none; border-radius: 3px; cursor: pointer;">重置筛选</button>
+
+
+    <!-- 个人足迹 -->
+    <section class="section footprint" id="footprint">
+        <div class="section-header">
+            <h2><span>个人足迹</span></h2>
+        </div>
+        
+        <!-- 足迹地图 -->
+        <div class="sub-section">
+            <h3>足迹地图</h3>
+            <p class="section-tip">点击地图右侧的按钮可对地图中的足迹点进行相关操作，点击地图中的足迹点可查看详细信息</p>
+            <div class="map-dashboard">
+                <div class="map-container" id="map-container">
+                    <!-- 左上角查询功能 -->
+                    <div class="map-query-box card-style">
+                        <input type="text" id="query-input-top" class="pretty-input" placeholder="输入城市名称">
+                        <button id="query-point-btn-top" class="circle-btn map-fab" data-tooltip="查询">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <!-- 右上角统计功能 -->
+                    <div class="map-stat-box card-style">
+                        <select id="province-select-top" class="pretty-select">
+                            <option value="">选择省份</option>
+                            <option value="北京市">北京市</option>
+                            <option value="天津市">天津市</option>
+                            <option value="河北省">河北省</option>
+                            <option value="山西省">山西省</option>
+                            <option value="内蒙古自治区">内蒙古自治区</option>
+                            <option value="辽宁省">辽宁省</option>
+                            <option value="吉林省">吉林省</option>
+                            <option value="黑龙江省">黑龙江省</option>
+                            <option value="上海市">上海市</option>
+                            <option value="江苏省">江苏省</option>
+                            <option value="浙江省">浙江省</option>
+                            <option value="安徽省">安徽省</option>
+                            <option value="福建省">福建省</option>
+                            <option value="江西省">江西省</option>
+                            <option value="山东省">山东省</option>
+                            <option value="河南省">河南省</option>
+                            <option value="湖北省">湖北省</option>
+                            <option value="湖南省">湖南省</option>
+                            <option value="广东省">广东省</option>
+                            <option value="广西壮族自治区">广西壮族自治区</option>
+                            <option value="海南省">海南省</option>
+                            <option value="重庆市">重庆市</option>
+                            <option value="四川省">四川省</option>
+                            <option value="贵州省">贵州省</option>
+                            <option value="云南省">云南省</option>
+                            <option value="西藏自治区">西藏自治区</option>
+                            <option value="陕西省">陕西省</option>
+                            <option value="甘肃省">甘肃省</option>
+                            <option value="青海省">青海省</option>
+                            <option value="宁夏回族自治区">宁夏回族自治区</option>
+                            <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
+                            <option value="台湾省">台湾省</option>
+                            <option value="香港特别行政区">香港特别行政区</option>
+                            <option value="澳门特别行政区">澳门特别行政区</option>
+                        </select>
+                        <button id="stat-province-btn-top" class="circle-btn map-fab" data-tooltip="统计">
+                            <i class="fas fa-chart-pie"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- 左上角统计信息 -->
+                    <div class="map-overlay">
+                        <div class="map-title">中国足迹地图</div>
+                        <div class="map-stats">
+                            <div class="stat-item">
+                                <span id="city-count">57</span>
+                                <p>访问城市</p>
+                            </div>
+                            <div class="stat-item">
+                                <span id="province-count">13</span>
+                                <p>访问省份</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右上角控件组 -->
+                    <div class="map-controls">
+                        <div class="control-group">
+                            <h4>地图操作</h4>
+                            <div class="btn-row">
+                                <button id="load-layer-fromDB-btn" class="control-btn wrap">
+                                    <i class="fas fa-layer-group"></i> 加载足迹城市
+                                </button>
+                                <button id="remove-layer-btn" class="control-btn wrap" disabled>
+                                    <i class="fas fa-times-circle"></i> 移除足迹城市
+                                </button>
+                            </div>
+                        </div> 
+                        
+                        <div class="control-group">
+                            <h4>足迹管理</h4>
+                            <div class="btn-row">
+                                <button id="add-point-btn" class="control-btn wrap">
+                                    <i class="fas fa-plus-circle"></i> 新增
+                                </button>
+                                <button id="delete-point-btn" class="control-btn wrap">
+                                    <i class="fas fa-trash-alt"></i> 删除
+                                </button>
+                                <button id="update-point-btn" class="control-btn wrap">
+                                    <i class="fas fa-edit"></i> 修改
+                                </button>
+                            </div>
+                        </div> -->
+                        
+                        <div class="control-group">
+                            <h4>数据查询</h4>
+                            <div class="search-box">
+                                <input type="text" id="query-input" placeholder="输入城市名称" class="compact-input">
+                                <button id="query-point-btn" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-search"></i> 查询
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h4>统计分析</h4>
+                            <div class="select-box">
+                                <select id="province-select" class="compact-select">
+                                    <option value="">选择省份</option>
+                                    <option value="北京市">北京市</option>
+                                    <option value="天津市">天津市</option>
+                                    <option value="河北省">河北省</option>
+                                    <option value="山西省">山西省</option>
+                                    <option value="内蒙古自治区">内蒙古自治区</option>
+                                    <option value="辽宁省">辽宁省</option>
+                                    <option value="吉林省">吉林省</option>
+                                    <option value="黑龙江省">黑龙江省</option>
+                                    <option value="上海市">上海市</option>
+                                    <option value="江苏省">江苏省</option>
+                                    <option value="浙江省">浙江省</option>
+                                    <option value="安徽省">安徽省</option>
+                                    <option value="福建省">福建省</option>
+                                    <option value="江西省">江西省</option>
+                                    <option value="山东省">山东省</option>
+                                    <option value="河南省">河南省</option>
+                                    <option value="湖北省">湖北省</option>
+                                    <option value="湖南省">湖南省</option>
+                                    <option value="广东省">广东省</option>
+                                    <option value="广西壮族自治区">广西壮族自治区</option>
+                                    <option value="海南省">海南省</option>
+                                    <option value="重庆市">重庆市</option>
+                                    <option value="四川省">四川省</option>
+                                    <option value="贵州省">贵州省</option>
+                                    <option value="云南省">云南省</option>
+                                    <option value="西藏自治区">西藏自治区</option>
+                                    <option value="陕西省">陕西省</option>
+                                    <option value="甘肃省">甘肃省</option>
+                                    <option value="青海省">青海省</option>
+                                    <option value="宁夏回族自治区">宁夏回族自治区</option>
+                                    <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
+                                    <option value="台湾省">台湾省</option>
+                                    <option value="香港特别行政区">香港特别行政区</option>
+                                    <option value="澳门特别行政区">澳门特别行政区</option>
+                                </select>
+                                <button id="stat-province-btn" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-chart-pie"></i> 统计
+                                </button>
+                            </div>
+                        </div>
+                        
+                         <div class="control-group">
+                            <h4>时间筛选</h4>
+                            <div class="time-range">
+                                <div class="range-display compact-text">
+                                    <span id="start-year-display">2015年以前</span>
+                                    <span>至</span>
+                                    <span id="end-year-display">2025年</span>
+                                </div>
+                                <div class="slider-container">
+                                    <input type="range" id="year-start" min="2014" max="2025" value="2014" class="compact-slider">
+                                    <input type="range" id="year-end" min="2015" max="2025" value="2025" class="compact-slider">
+                                </div>
+                            </div>
+                            <div class="time-buttons">
+                                <button id="stat-year-btn" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-filter"></i> 按年份筛选
+                                </button>
+                                <button id="reset-time-filter" class="control-btn wrap compact-btn">
+                                    <i class="fas fa-redo"></i> 重置筛选
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script type="module" src="page_cui/mapShow.js"></script>
-    </div>
+        <div class="map-bottom-btn">
+            <button id="load-layer-bottom-btn" class="circle-btn" data-tooltip="加载足迹城市">
+                <i class="fas fa-layer-group"></i>
+            </button>
+            <button id="remove-layer-bottom-btn" class="circle-btn" data-tooltip="移除足迹城市">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <button id="add-point-bottom-btn" class="circle-btn" data-tooltip="新增足迹点">
+                <i class="fas fa-plus-circle"></i>
+            </button>
+            <button id="delete-point-bottom-btn" class="circle-btn" data-tooltip="删除足迹点">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+            <button id="update-point-bottom-btn" class="circle-btn" data-tooltip="修改足迹点">
+                <i class="fas fa-edit"></i>
+            </button>
+            <!-- 年份筛选区 -->
+            <div class="year-filter-box">
+                <div class="year-slider-wrap">
+                    <input type="range" id="year-range" min="2014" max="2025" value="2014" class="year-slider">
+                    <div class="year-labels">
+                        <span id="year-range-display">2014 - 2025</span>
+                    </div>
+                </div>
+                <button id="stat-year-btn-bottom" class="circle-btn year-btn" data-tooltip="按年份筛选">
+                    <i class="fas fa-filter"></i>
+                </button>
+                <button id="reset-time-filter-bottom" class="circle-btn year-btn" data-tooltip="重置筛选">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+        </div>
+    </section>
 
     <div id="hobby" class="section lb">
         <div class="container">
@@ -259,7 +375,7 @@
                         </div>
                         <h2>旅游</h2>
                         <p>非常擅长规划交通路线，有说走就走的旅行请叫我
-                           <br> “好想出门玩啊.jpg”
+                           <br> "好想出门玩啊.jpg"
                         </p>
                     </div>
                 </div><!-- end col -->
@@ -293,105 +409,28 @@
                 
             </div><!-- end row -->
         </div><!-- end container -->
-    </div><!-- end section -->
-<!--
-    <div id="blog" class="section lb">
-        <div class="container">
-            <div class="section-title text-left">
-                <h3>最近动态</h3>
-                <p></p>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4 col-sm-6 col-lg-4">
-                    <div class="post-box">
-                        <div class="post-thumb">
-                            <img src="images/cui/blog1.jpg" class="img-fluid" alt="post-img" />
-                            <div class="date">
-                                <span>04</span>
-                                <span>Mar</span>
-                            </div>
-                        </div>
-                        <div class="post-info">
-                            <h4>第一次去日本。
-                            </h4>
-                            <ul>
-                                <li>by CG</li>
-                                <li>Mar 04, 2025</li>
-                                <li><a href="#"><b> Comments</b></a></li>
-                            </ul>
-                            <p>直接在k-on圣地演奏相遇天使
-                                <br>——旅游挺好玩的</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 col-lg-4">
-                    <div class="post-box">
-                        <div class="post-thumb">
-                            <img src="images/cui/blog2.jpg" class="img-fluid" alt="post-img" />
-                            <div class="date">
-                                <span>19</span>
-                                <span>Feb</span>
-                            </div>
-                        </div>
-                        <div class="post-info">
-                            <h4>曹操/doge</h4>
-                            <ul>
-                                <li>by LM</li>
-                                <li>Feb 19, 2025</li>
-                                <li><a href="#"><b> Comments</b></a></li>
-                            </ul>
-                            <p>...也是满足了我的好奇心，建议有兴趣的专门抽时间来尝试，赶时间的就算了，中途不能下人的。
-                                <br>—— 自动驾驶汽车体验
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 col-lg-4">
-                    <div class="post-box">
-                        <div class="post-thumb">
-                            <img src="images/cui/blog3.jpg" class="img-fluid" alt="post-img" />
-                            <div class="date">
-                                <span>18</span>
-                                <span>Jan</span>
-                            </div>
-                        </div>
-                        <div class="post-info">
-                            <h4>去那一趟丢半条命？</h4>
-                            <ul>
-                                <li>by KS</li>
-                                <li>Jan 18, 2025</li>
-                                <li><a href="#"><b> Comments</b></a></li>
-                            </ul>
-                            <p>藏族人民创造了灿烂的历史文化。
-                                <br>而我们，将一半的生命留在了雪山。
-                                <br>—— 川西之行
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
     </div>
--->
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>制作者：<span>崔泽铭</span> | 学号：2021301021090</p>
+        </div>
+    </footer>
 
-    <div class="copyrights">
-        <div class="container">
-            <div class="footer-distributed">
-                <div class="footer-left">
-                    <p class="footer-links">
-                        <a href="#home">主页</a>
-                        <a href="#about">基本信息</a>
-                        <a href="#hobby">兴趣爱好</a>
-                        <a href="#blog">最近动态</a>
-                    </p>
-                    <p class="footer-company-name">作者：崔泽铭 &copy; 学号：2021301021090</p>
-                </div>
-            </div>
-        </div><!-- end container -->
-    </div><!-- end copyrights -->
+    <!-- 返回顶部按钮 -->
+    <div class="scroll-top" id="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
 
+    <!-- JavaScript 
+    <script src="page_he/city.js"></script>
+    <script src="page_he/getWeather.js"></script>
+    <script src="page_he/chart.js"></script> 
+    -->
+    
+    <script type="module" src="page_cui1/mapShow.js"></script>
+    
     <a href="#" id="scroll-to-top" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
 
     <!-- ALL JS FILES -->
@@ -407,9 +446,166 @@
     <!-- ALL PLUGINS -->
     <script src="js/custom.js"></script>
     <script src="js/jquery.vide.js"></script>
+    <script>
+        function initCityCarousel() {
+            const carousel = document.querySelector('.city-carousel');
+            const prevBtn = document.querySelector('.carousel-prev');
+            const nextBtn = document.querySelector('.carousel-next');
+            const indicatorsContainer = document.querySelector('.carousel-indicators');
+            const cityGroups = document.querySelectorAll('.city-group');
+            const regionBtns = document.querySelectorAll('.region-btn');
+            const cityCarouselContainer = document.querySelector('.city-carousel-container');
+        
+            
+            let currentIndex = 0;
+            const groupWidth = 100;
+            let autoSlideInterval;
+            
+            // 创建指示器
+            indicatorsContainer.innerHTML = '';
+            cityGroups.forEach((_, index) => {
+                const indicator = document.createElement('div');
+                indicator.classList.add('indicator');
+                if (index === 0) indicator.classList.add('active');
+                indicator.addEventListener('click', () => goToSlide(index));
+                indicatorsContainer.appendChild(indicator);
+            });
+            
+            const indicators = document.querySelectorAll('.indicator');
+            
+            // 导航按钮事件
+            prevBtn.addEventListener('click', () => {
+                currentIndex = currentIndex > 0 ? currentIndex - 1 : cityGroups.length - 1;
+                updateCarousel();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                currentIndex = currentIndex < cityGroups.length - 1 ? currentIndex + 1 : 0;
+                updateCarousel();
+            });
+            
+            // 区域筛选
+            regionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    regionBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const region = this.dataset.region;
+                    const targetIndex = Array.from(cityGroups).findIndex(
+                        group => group.dataset.region === region
+                    );
+                    
+                    if (targetIndex !== -1) {
+                        goToSlide(targetIndex);
+                    }
+                });
+            });
+            
+            // 自动轮播控制
+            function startAutoSlide() {
+                autoSlideInterval = setInterval(() => {
+                    currentIndex = currentIndex < cityGroups.length - 1 ? currentIndex + 1 : 0;
+                    updateCarousel();
+                }, 5000);
+            }
+            
+            function stopAutoSlide() {
+                clearInterval(autoSlideInterval);
+            }
+            
+            // 轮播图切换
+            function goToSlide(index) {
+                currentIndex = index;
+                updateCarousel();
+            }
+            
+            function updateCarousel() {
+                carousel.style.transform = `translateX(-${currentIndex * groupWidth}%)`;
+                
+                // 更新指示器状态
+                indicators.forEach((indicator, idx) => {
+                    indicator.classList.toggle('active', idx === currentIndex);
+                });
+                
+                // 更新区域按钮激活状态
+                const currentRegion = cityGroups[currentIndex].dataset.region;
+                regionBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.region === currentRegion);
+                });
+                
+                // 更新轮播标题
+                const currentTitle = cityGroups[currentIndex].querySelector('.group-title').textContent;
+                // document.getElementById('carousel-title').textContent = currentTitle;
+            }
+            
+            // 自动轮播控制
+            carousel.addEventListener('mouseenter', stopAutoSlide);
+            carousel.addEventListener('mouseleave', startAutoSlide);
+            
+            // 初始化
+            updateCarousel();
+            startAutoSlide();
+        }
 
-    
+        // 在现有的DOMContentLoaded事件监听器中添加此函数调用
+        document.addEventListener('DOMContentLoaded', function() {
+            initCityCarousel();
+            // 其他初始化代码保持不变...
+        });
+                
+        // 返回顶部功能
+        function initScrollTop() {
+            const scrollTopBtn = document.getElementById('scroll-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollTopBtn.style.display = 'flex';
+                } else {
+                    scrollTopBtn.style.display = 'none';
+                }
+            });
+            
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // 初始化函数
+        document.addEventListener('DOMContentLoaded', function() {
+            initCityCarousel();
+            initScrollTop();
+            
+            // 导航激活状态
+            const navLinks = document.querySelectorAll('.navbar a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 移动端菜单切换
+            document.getElementById('menu-btn').addEventListener('click', function() {
+                document.querySelector('.navbar').classList.toggle('active');
+            });
+            
+            // 天气按钮功能
+            document.querySelectorAll('.weather-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cityName = event.target.getAttribute('data-city');
+                    const weatherInfoElement = event.target.nextElementSibling;
+                    
+                    // 显示加载状态
+                    weatherInfoElement.textContent = '获取天气中...'
 
+                    getWeather(cityName, weatherInfoElement);
+                })
+            })
+        })
+
+    </script>
 </body>
-
 </html>
